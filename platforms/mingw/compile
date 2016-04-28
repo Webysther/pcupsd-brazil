@@ -7,69 +7,150 @@ REMOTE_SERVER="192.168.22.4"
 APCUPSD_PATH="/home/wagner/apcupsd-brazil/apcupsd-brazil-${TAG}"
 
 PATH_OLD="${PATH}"
-export PATH="/home/wagner/cross-tools/mingw32/bin:${PATH}"
+export PATH="/home/wagner/apcupsd-brazil/cross-tools/mingw32/bin:${PATH}"
 
-echo -e "APCUPSD_PATH=${APCUPSD_PATH}\n"
-echo -e "PATH=${PATH}\n\n"
+echo -en "APCUPSD_PATH=${APCUPSD_PATH}\n"
+echo -en "PATH=${PATH}\n\n"
 
-rm -Rf ${APCUPSD_PATH} &>/dev/null
-svn checkout https://svn.code.sf.net/p/apcupsd-brazil/code/tags/${TAG} ${APCUPSD_PATH}
-
-mingw32-g++ -v
-echo -e "\n\n"
-
-cd ${APCUPSD_PATH}
-
-#./configure \
-#       --prefix=/apcupsd \
-#       --sbindir=/apcupsd/bin \
-#       --sysconfdir=/apcupsd/etc/apcupsd \
-#       --with-pid-dir=/apcupsd/etc/apcupsd \
-#       --mandir=/apcupsd \
-#       --with-cgi-bin=/apcupsd/etc/apcupsd/cgi \
-#       --enable-pthreads \
-#       --enable-net \
-#       --enable-snmp \
-#       --enable-master-slave
-
-CONFIG=$(./configure --host=mingw32 \
-       --prefix=/apcupsd \
-       --sbindir=/apcupsd/bin \
-       --sysconfdir=/apcupsd/etc/apcupsd \
-       --with-pid-dir=/apcupsd/etc/apcupsd \
-       --mandir=/apcupsd \
-       --enable-net \
-       --disable-apcsmart \
-       --disable-dumb \
-       --disable-snmp \
-       --disable-usb \
-       --disable-net-snmp \
-       --disable-test \
-       --disable-pcnet \
-       --disable-modbus-usb \
-       --disable-modbus \
-       --enable-cgi &>.out
-)
-
-if [[ $? == "0" ]]; then
-	cat .out
-	make
-	cd ${APCUPSD_PATH}/platforms/mingw/
-	make winapcupsd.exe
-	scp ${APCUPSD_PATH}/platforms/mingw/installer/winapcupsd-brazil-${TAG}.exe ${REMOTE_USER}@${REMOTE_SERVER}:/tmp
-	if [[ $? == "0" ]]; then
-		echo -e "\n\nSUCESS!!!\n\n"
-	else
-
-		echo -e "\n\nERROR!!!\n\n";
+apcupsd_error()
+{
+	echo -en "\e[31m\e[5m"
+	echo -en "\nERROR"
+	if [ -z "$1" ]; then
+		echo -n "$1"
 	fi;
-else
-	cat .out
-	echo -e "\n\nERROR!!!\n\n";
+	echo -en "!!!\n\n"
+	echo -en "\e[49m\e[39m\e[0m"
 
+	export PATH="${PATH_OLD}"
+	echo -e "RESTORE PATH=${PATH}"
+	echo -e "********************* FIM ********************"
+
+	exit 2
+}
+
+apcupsd_mingw()
+{
+	echo "mingw..."
+	mingw32-g++ -v &>.out.mingw
+	if [[ $? == "0" ]]; then
+		return 0;
+	fi;
+
+	cat .out.mingw
+	return 1;
+}
+
+apcupsd_svn()
+{
+	echo "svn..."
+	rm -Rf ${APCUPSD_PATH} &>/dev/null
+	svn checkout https://svn.code.sf.net/p/apcupsd-brazil/svn/tags/${TAG} ${APCUPSD_PATH} &>.out.svn
+	if [[ $? == "0" ]]; then
+		return 0;
+	fi;
+
+	cat .out.svn
+	return 1;
+}
+
+apcupsd_configure()
+{
+	echo "configure..."
+	cd ${APCUPSD_PATH}
+	CONFIG=$(./configure --host=mingw32 \
+	       --prefix=/apcupsd \
+	       --sbindir=/apcupsd/bin \
+	       --sysconfdir=/apcupsd/etc/apcupsd \
+	       --with-pid-dir=/apcupsd/etc/apcupsd \
+	       --mandir=/apcupsd \
+	       --enable-net \
+	       --disable-apcsmart \
+	       --disable-dumb \
+	       --disable-snmp \
+	       --disable-usb \
+	       --disable-net-snmp \
+	       --disable-test \
+	       --disable-pcnet \
+	       --disable-modbus-usb \
+	       --disable-modbus \
+	       --enable-cgi &>.out.configure
+	)
+	if [[ $? == "0" ]]; then
+		return 0;
+	fi;
+
+	cat .out.configure
+	return 1;
+}
+
+apcupsd_make()
+{
+	echo "make..."
+	cd ${APCUPSD_PATH}
+	make &>.out.make
+	if [[ $? == "0" ]]; then
+		return 0;
+	fi;
+
+	cat .out.make
+	return 1;
+
+}
+
+apcupsd_installer() 
+{
+	echo "installer..."
+	cd ${APCUPSD_PATH}/platforms/mingw/
+	make winapcupsd.exe &>.out.installer
+	if [[ $? == "0" ]]; then
+		return 0;
+	fi;
+
+	cat .out.installer
+	return 1;
+}
+apcupsd_scp()
+{
+	echo "scp..."
+	scp ${APCUPSD_PATH}/platforms/mingw/installer/winapcupsd-brazil-${TAG}.exe ${REMOTE_USER}@${REMOTE_SERVER}:/tmp &>.out.scp
+	if [[ $? == "0" ]]; then
+		return 0;
+	fi;
+
+	cat .out.scp
+	return 1;
+}
+
+apcupsd_mingw
+if [[ $? != "0" ]]; then
+	apcupsd_error mingw
+fi;
+apcupsd_svn
+if [[ $? != "0" ]]; then
+	apcupsd_error svn
+fi;
+apcupsd_configure
+if [[ $? != "0" ]]; then
+	apcupsd_error configure
+fi;
+apcupsd_make
+if [[ $? != "0" ]]; then
+	apcupsd_error make
+fi;
+apcupsd_installer
+if [[ $? != "0" ]]; then
+	apcupsd_error installer
+fi;
+apcupsd_scp
+if [[ $? != "0" ]]; then
+	apcupsd_error scp
 fi;
 
+echo -en "\e[40m\e[32m\e[5m"
+echo -en "\nSUCESS!!! File: /tmp/winapcupsd-brazil-${TAG}.exe\n\n";
+echo -en "\e[49m\e[39m\e[0m"
 
 export PATH="${PATH_OLD}"
-echo -e "RESTORE PATH=${PATH}\n"
-echo -e "\n\n********************* FIM ********************"
+echo -e "RESTORE PATH=${PATH}"
+echo -e "********************* FIM ********************"
