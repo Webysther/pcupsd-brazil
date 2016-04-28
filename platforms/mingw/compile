@@ -1,0 +1,75 @@
+#!/bin/bash
+
+TAG="0.5.5"
+REMOTE_USER="wagner"
+REMOTE_SERVER="192.168.22.4"
+
+APCUPSD_PATH="/home/wagner/apcupsd-brazil/apcupsd-brazil-${TAG}"
+
+PATH_OLD="${PATH}"
+export PATH="/home/wagner/cross-tools/mingw32/bin:${PATH}"
+
+echo -e "APCUPSD_PATH=${APCUPSD_PATH}\n"
+echo -e "PATH=${PATH}\n\n"
+
+rm -Rf ${APCUPSD_PATH} &>/dev/null
+svn checkout https://svn.code.sf.net/p/apcupsd-brazil/code/tags/${TAG} ${APCUPSD_PATH}
+
+mingw32-g++ -v
+echo -e "\n\n"
+
+cd ${APCUPSD_PATH}
+
+#./configure \
+#       --prefix=/apcupsd \
+#       --sbindir=/apcupsd/bin \
+#       --sysconfdir=/apcupsd/etc/apcupsd \
+#       --with-pid-dir=/apcupsd/etc/apcupsd \
+#       --mandir=/apcupsd \
+#       --with-cgi-bin=/apcupsd/etc/apcupsd/cgi \
+#       --enable-pthreads \
+#       --enable-net \
+#       --enable-snmp \
+#       --enable-master-slave
+
+CONFIG=$(./configure --host=mingw32 \
+       --prefix=/apcupsd \
+       --sbindir=/apcupsd/bin \
+       --sysconfdir=/apcupsd/etc/apcupsd \
+       --with-pid-dir=/apcupsd/etc/apcupsd \
+       --mandir=/apcupsd \
+       --enable-net \
+       --disable-apcsmart \
+       --disable-dumb \
+       --disable-snmp \
+       --disable-usb \
+       --disable-net-snmp \
+       --disable-test \
+       --disable-pcnet \
+       --disable-modbus-usb \
+       --disable-modbus \
+       --enable-cgi &>.out
+)
+
+if [[ $? == "0" ]]; then
+	cat .out
+	make
+	cd ${APCUPSD_PATH}/platforms/mingw/
+	make winapcupsd.exe
+	scp ${APCUPSD_PATH}/platforms/mingw/installer/winapcupsd-brazil-${TAG}.exe ${REMOTE_USER}@${REMOTE_SERVER}:/tmp
+	if [[ $? == "0" ]]; then
+		echo -e "\n\nSUCESS!!!\n\n"
+	else
+
+		echo -e "\n\nERROR!!!\n\n";
+	fi;
+else
+	cat .out
+	echo -e "\n\nERROR!!!\n\n";
+
+fi;
+
+
+export PATH="${PATH_OLD}"
+echo -e "RESTORE PATH=${PATH}\n"
+echo -e "\n\n********************* FIM ********************"
