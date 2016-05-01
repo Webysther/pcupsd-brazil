@@ -1,11 +1,11 @@
-## apcupsd.conf v1.1 ##
+## apcupsd-brazil.conf v1.1 ##
 # 
-#  for apcupsd release @VERSION@ - win32-mingw
+#  for apcupsd-brazil release @VERSION@ - win32-mingw
 #
-# "apcupsd" POSIX config file
+# "apcupsd-brazil" POSIX config file
 
 #
-# Note that the apcupsd daemon must be restarted in order for changes to
+# Note that the apcupsd-brazil daemon must be restarted in order for changes to
 # this configuration file to become active.
 #
 
@@ -19,21 +19,9 @@
 #   set the EEPROM. It should be 8 characters or less.
 UPSNAME winapc
 
-# UPSCABLE <cable>
-#   Defines the type of cable connecting the UPS to your computer.
-#
-#   Possible generic choices for <cable> are:
-#     simple, smart, ether, usb
-#
-#   Or a specific cable model number may be used:
-#     940-0119A, 940-0127A, 940-0128A, 940-0020B,
-#     940-0020C, 940-0023A, 940-0024B, 940-0024C,
-#     940-1524C, 940-0024G, 940-0095A, 940-0095B,
-#     940-0095C, 940-0625A, M-04-02-2000
-#
 UPSCABLE simple
 
-# To get apcupsd to work, in addition to defining the cable
+# To get apcupsd-brazil to work, in addition to defining the cable
 # above, you must also define a UPSTYPE, which corresponds to
 # the type of UPS you have (see the Description for more details).
 # You must also specify a DEVICE, sometimes referred to as a port.
@@ -41,13 +29,13 @@ UPSCABLE simple
 # other UPS types, you must specify an appropriate port or address.
 #
 # UPSTYPE   DEVICE           Description
-# net       hostname:port    Network link to a master apcupsd through apcupsd's 
+# net       hostname:port    Network link to a master apcupsd-brazil through apcupsd-brazil's 
 #                            Network Information Server. This is used if the
 #                            UPS powering your computer is connected to a 
 #                            different computer for monitoring.
 #
-# brazil    /dev/tty**       The Microsol was sold to APC, now, The APC entry models 
-#                             in Brazil uses a protocol derived from the Microsol.
+# brazil    COM1,COM2,COM... The Microsol was sold to APC, now, The APC entry models 
+#                            in Brazil uses a protocol derived from the Microsol.
 #                            Those models use serial cables or USB (in fact, USB-Serial converter).
 #
 
@@ -55,10 +43,10 @@ UPSTYPE brazil
 DEVICE COMx
 
 # POLLTIME <int>
-#   Interval (in seconds) at which apcupsd polls the UPS for status. This
+#   Interval (in seconds) at which apcupsd-brazil polls the UPS for status. This
 #   setting applies both to directly-attached UPSes (UPSTYPE apcsmart, usb, 
 #   dumb) and networked UPSes (UPSTYPE net, snmp). Lowering this setting
-#   will improve apcupsd's responsiveness to certain events at the cost of
+#   will improve apcupsd-brazil's responsiveness to certain events at the cost of
 #   higher CPU utilization. The default of 60 is appropriate for most
 #   situations.
 #POLLTIME 60
@@ -69,7 +57,7 @@ SCRIPTDIR @sysconfdir@
 
 # PWRFAILDIR <path to powerfail directory>
 #   Directory in which to write the powerfail flag file. This file
-#   is created when apcupsd initiates a system shutdown and is
+#   is created when apcupsd-brazil initiates a system shutdown and is
 #   checked in the OS halt scripts to determine if a killpower
 #   (turning off UPS output power) is required.
 PWRFAILDIR @PWRFAILDIR@
@@ -102,16 +90,16 @@ ONBATTERYDELAY 6
 
 # If during a power failure, the remaining battery percentage
 # (as reported by the UPS) is below or equal to BATTERYLEVEL, 
-# apcupsd will initiate a system shutdown.
+# apcupsd-brazil will initiate a system shutdown.
 BATTERYLEVEL 5
 
 # If during a power failure, the remaining runtime in minutes 
 # (as calculated internally by the UPS) is below or equal to MINUTES,
-# apcupsd, will initiate a system shutdown.
+# apcupsd-brazil, will initiate a system shutdown.
 MINUTES 3
 
 # If during a power failure, the UPS has run on batteries for TIMEOUT
-# many seconds or longer, apcupsd will initiate a system shutdown.
+# many seconds or longer, apcupsd-brazil will initiate a system shutdown.
 # A value of 0 disables this timer.
 #
 #  Note, if you have a Smart UPS, you will most likely want to disable
@@ -137,10 +125,10 @@ ANNOYDELAY 60
 # NOLOGON <string> [ disable | timeout | percent | minutes | always ]
 NOLOGON disable
 
-# If KILLDELAY is non-zero, apcupsd will continue running after a
+# If KILLDELAY is non-zero, apcupsd-brazil will continue running after a
 # shutdown has been requested, and after the specified time in
 # seconds attempt to kill the power. This is for use on systems
-# where apcupsd cannot regain control after a shutdown.
+# where apcupsd-brazil cannot regain control after a shutdown.
 # KILLDELAY <seconds>  0 disables
 KILLDELAY 0
 
@@ -174,7 +162,7 @@ NISPORT 3551
 
 # If you want the last few EVENTS to be available over the network
 # by the network information server, you must define an EVENTSFILE.
-EVENTSFILE @LOGDIR@\apcupsd.events
+EVENTSFILE @LOGDIR@\apcupsd-brazil.events
 
 # EVENTSFILEMAX <kilobytes>
 #  By default, the size of the EVENTSFILE will be not be allowed to exceed
@@ -202,14 +190,14 @@ UPSCLASS standalone
 UPSMODE disable
 
 #
-# ===== Configuration statements to control apcupsd system logging ========
+# ===== Configuration statements to control apcupsd-brazil system logging ========
 #
 
 # Time interval in seconds between writing the STATUS file; 0 disables
 STATTIME 0
 
 # Location of STATUS file (written to only if STATTIME is non-zero)
-STATFILE @LOGDIR@\apcupsd.status
+STATFILE @LOGDIR@\apcupsd-brazil.status
 
 # LOGSTATS [ on | off ] on enables, off disables
 # Note! This generates a lot of output, so if         
@@ -224,77 +212,6 @@ DATATIME 0
 
 # FACILITY defines the logging facility (class) for logging to syslog. 
 #          If not specified, it defaults to "daemon". This is useful 
-#          if you want to separate the data logged by apcupsd from other
+#          if you want to separate the data logged by apcupsd-brazil from other
 #          programs.
 #FACILITY DAEMON
-
-#
-# ========== Configuration statements used in updating the UPS EPROM =========
-#
-
-#
-# These statements are used only by apctest when choosing "Set EEPROM with conf
-# file values" from the EEPROM menu. THESE STATEMENTS HAVE NO EFFECT ON APCUPSD.
-#
-
-# UPS name, max 8 characters 
-#UPSNAME UPS_IDEN
-
-# Battery date - 8 characters
-#BATTDATE mm/dd/yy
-
-# Sensitivity to line voltage quality (H cause faster transfer to batteries)  
-# SENSITIVITY H M L        (default = H)
-#SENSITIVITY H
-
-# UPS delay after power return (seconds)
-# WAKEUP 000 060 180 300   (default = 0)
-#WAKEUP 60
-
-# UPS Grace period after request to power off (seconds)
-# SLEEP 020 180 300 600    (default = 20)
-#SLEEP 180
-
-# Low line voltage causing transfer to batteries
-# The permitted values depend on your model as defined by last letter 
-#  of FIRMWARE or APCMODEL. Some representative values are:
-#    D 106 103 100 097
-#    M 177 172 168 182
-#    A 092 090 088 086
-#    I 208 204 200 196     (default = 0 => not valid)
-#LOTRANSFER  208
-
-# High line voltage causing transfer to batteries
-# The permitted values depend on your model as defined by last letter 
-#  of FIRMWARE or APCMODEL. Some representative values are:
-#    D 127 130 133 136
-#    M 229 234 239 224
-#    A 108 110 112 114
-#    I 253 257 261 265     (default = 0 => not valid)
-#HITRANSFER 253
-
-# Battery charge needed to restore power
-# RETURNCHARGE 00 15 50 90 (default = 15)
-#RETURNCHARGE 15
-
-# Alarm delay 
-# 0 = zero delay after pwr fail, T = power fail + 30 sec, L = low battery, N = never
-# BEEPSTATE 0 T L N        (default = 0)
-#BEEPSTATE T
-
-# Low battery warning delay in minutes
-# LOWBATT 02 05 07 10      (default = 02)
-#LOWBATT 2
-
-# UPS Output voltage when running on batteries
-# The permitted values depend on your model as defined by last letter 
-#  of FIRMWARE or APCMODEL. Some representative values are:
-#    D 115
-#    M 208
-#    A 100
-#    I 230 240 220 225     (default = 0 => not valid)
-#OUTPUTVOLTS 230
-
-# Self test interval in hours 336=2 weeks, 168=1 week, ON=at power on
-# SELFTEST 336 168 ON OFF  (default = 336)
-#SELFTEST 336
