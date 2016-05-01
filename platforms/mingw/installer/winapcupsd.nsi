@@ -124,7 +124,8 @@ Function EditApcupsdConfEnter
   ; Set contents of text field
   !insertmacro MUI_INSTALLOPTIONS_READ $R0 "EditApcupsdConf.ini" "Field 1" "HWND"
   SendMessage $R0 ${WM_SETTEXT} 0 \
-      "All types of connections require editing the client configuration file, \
+      "STR:The default configuration is suitable for UPSes connected with a USB cable. \
+       All other types of connections require editing the client configuration file, \
        apcupsd.conf.$\r$\r\
        Please edit $INSTDIR\etc\apcupsd\apcupsd.conf to fit your installation. \
        When you click the Next button, Wordpad will open to allow you to do this.$\r$\r\
@@ -298,10 +299,15 @@ Section "Apcupsd Service" SecService
   File ${WINDIR}\background.exe
 
   SetOutPath "$INSTDIR\driver"
+  File ${TOPDIR}\platforms\mingw\winusb\install.txt
+  File ${TOPDIR}\platforms\mingw\winusb\apcupsd.inf
+  File ${TOPDIR}\platforms\mingw\winusb\apcupsd.cat
   SetOutPath "$INSTDIR\driver\i386"
   File ${DEPKGS}\winddk\redist\wdf\x86\*.dll
+  File ${DEPKGS}\winddk\redist\winusb\x86\*.dll
   SetOutPath "$INSTDIR\driver\amd64"
   File ${DEPKGS}\winddk\redist\wdf\amd64\*.dll
+  File ${DEPKGS}\winddk\redist\winusb\amd64\*.dll
 
   SetOutPath "$INSTDIR\etc\apcupsd"
   File ${TOPDIR}\platforms\mingw\apccontrol.bat
@@ -362,6 +368,9 @@ Section "Multimon CGI programs" SecMultimon
   ${Unless} ${FileExists} "$INSTDIR\etc\apcupsd\hosts.conf"
     Rename hosts.conf.new hosts.conf
   ${EndUnless}
+SectionEnd
+
+Section "USB Driver" SecUsbDrv
 SectionEnd
 
 Section "Documentation" SecDoc
@@ -444,6 +453,7 @@ FunctionEnd
 
 LangString DESC_SecService ${LANG_ENGLISH} "Install Apcupsd on this system."
 LangString DESC_SecApctray ${LANG_ENGLISH} "Install Apctray. Shows status icon in the system tray."
+LangString DESC_SecUsbDrv ${LANG_ENGLISH} "Install USB driver. Required if you have a USB UPS. Not available on Windows 95 or NT."
 LangString DESC_SecDoc ${LANG_ENGLISH} "Install Documentation on this system."
 LangString DESC_SecMultimon ${LANG_ENGLISH} "Install MULTIMON cgi scripts for web-based monitoring."
 
@@ -451,6 +461,7 @@ LangString DESC_SecMultimon ${LANG_ENGLISH} "Install MULTIMON cgi scripts for we
   !insertmacro MUI_DESCRIPTION_TEXT ${SecService} $(DESC_SecService)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecApctray} $(DESC_SecApctray)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecMultimon} $(DESC_SecMultimon)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecUsbDrv} $(DESC_SecUsbDrv)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecDoc} $(DESC_SecDoc)
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
@@ -492,6 +503,7 @@ Section "Uninstall"
   ; remove files and uninstaller (preserving config for now)
   Delete /REBOOTOK "$INSTDIR\bin\mingwm10.dll"
   Delete /REBOOTOK "$INSTDIR\bin\pthreadGCE.dll"
+  Delete /REBOOTOK "$INSTDIR\bin\libusb0.dll"
   Delete /REBOOTOK "$INSTDIR\bin\apcupsd.exe"
   Delete /REBOOTOK "$INSTDIR\bin\smtp.exe"
   Delete /REBOOTOK "$INSTDIR\bin\apcaccess.exe"
@@ -501,6 +513,10 @@ Section "Uninstall"
   Delete /REBOOTOK "$INSTDIR\bin\email.exe"
   Delete /REBOOTOK "$INSTDIR\bin\background.exe"
   Delete /REBOOTOK "$INSTDIR\bin\apctray.exe"
+  Delete /REBOOTOK "$INSTDIR\driver\libusb0.dll"
+  Delete /REBOOTOK "$INSTDIR\driver\libusb0_x64.dll"
+  Delete /REBOOTOK "$INSTDIR\driver\libusb0.sys"
+  Delete /REBOOTOK "$INSTDIR\driver\libusb0_x64.sys"
   Delete /REBOOTOK "$INSTDIR\driver\apcupsd.inf"
   Delete /REBOOTOK "$INSTDIR\driver\apcupsd.cat"
   Delete /REBOOTOK "$INSTDIR\driver\apcupsd_x64.cat"
