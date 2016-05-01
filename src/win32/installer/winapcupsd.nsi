@@ -126,7 +126,8 @@ Function EditApcupsdConfEnter
   ; Set contents of text field
   !insertmacro MUI_INSTALLOPTIONS_READ $R0 "EditApcupsdConf.ini" "Field 1" "HWND"
   SendMessage $R0 ${WM_SETTEXT} 0 \
-      "All types of connections require editing the client configuration file, \
+      "STR:The default configuration is suitable for UPSes connected with a USB cable. \
+       All other types of connections require editing the client configuration file, \
        apcupsd.conf.$\r$\r\
        Please edit $INSTDIR\etc\apcupsd\apcupsd.conf to fit your installation. \
        When you click the Next button, Wordpad will open to allow you to do this.$\r$\r\
@@ -353,6 +354,7 @@ Section "Apcupsd Service" SecService
   SetOutPath "$INSTDIR\bin"
   File ${WINDIR}\mingwm10.dll
   File ${WINDIR}\pthreadGCE.dll
+  File ${DEPKGS}\libusb-win32\libusb0.dll
   File ${WINDIR}\apcupsd.exe
   File ${WINDIR}\smtp.exe
   File ${WINDIR}\apcaccess.exe
@@ -366,6 +368,10 @@ Section "Apcupsd Service" SecService
   File ${TOPDIR}\platforms\mingw\apcupsd.inf
   File ${TOPDIR}\platforms\mingw\apcupsd.cat
   File ${TOPDIR}\platforms\mingw\apcupsd_x64.cat
+  File ${DEPKGS}\libusb-win32\libusb0.sys
+  File ${DEPKGS}\libusb-win32\libusb0_x64.sys
+  File ${DEPKGS}\libusb-win32\libusb0.dll
+  File ${DEPKGS}\libusb-win32\libusb0_x64.dll
   File ${TOPDIR}\platforms\mingw\install.txt
 
   SetOutPath "$INSTDIR\examples"
@@ -403,6 +409,20 @@ Section "Tray Applet" SecApctray
   CreateShortCut "$SMPROGRAMS\Apcupsd\Apctray.lnk" "$INSTDIR\bin\apctray.exe"
 SectionEnd
 
+Section "USB Driver" SecUsbDrv
+  Call IsNt
+  Pop $R0
+  ${If} $R0 != false
+    SetOutPath "$WINDIR\system32"
+    File ${DEPKGS}\libusb-win32\libusb0.dll
+    ExecWait 'rundll32 libusb0.dll,usb_install_driver_np_rundll $INSTDIR\driver\apcupsd.inf'
+  ${Else}
+    MessageBox MB_OK "The USB driver cannot be automatically installed on Win98 or WinMe. \
+                      Please see $INSTDIR\driver\install.txt for instructions on installing \
+                      the driver by hand."
+  ${EndIf}
+SectionEnd
+
 Section "Documentation" SecDoc
   SetOutPath "$INSTDIR\doc"
   CreateDirectory "$INSTDIR\doc"
@@ -433,6 +453,19 @@ Function .onInit
   ${EndIf}
   StrCpy $INSTDIR $0\apcupsd
 
+  ; If we're on WinNT or Win95, disable the USB driver section
+  Call GetWindowsVersion
+  Pop $0
+  StrCpy $1 $0 2
+  ${If} $1 == "NT"
+  ${OrIf} $1 == "95"
+     SectionGetFlags ${SecUsbDrv} $0
+     IntOp $1 ${SF_SELECTED} ~
+     IntOp $0 $0 & $1
+     IntOp $0 $0 | ${SF_RO}
+     SectionSetFlags ${SecUsbDrv} $0
+  ${EndIf}
+
   ; Extract custom pages. Automatically deleted when installer exits.
   !insertmacro MUI_INSTALLOPTIONS_EXTRACT "EditApcupsdConf.ini"
   !insertmacro MUI_INSTALLOPTIONS_EXTRACT "InstallService.ini"
@@ -450,11 +483,13 @@ FunctionEnd
 
 LangString DESC_SecService ${LANG_ENGLISH} "Install Apcupsd on this system."
 LangString DESC_SecApctray ${LANG_ENGLISH} "Install Apctray. Shows status icon in the system tray."
+LangString DESC_SecUsbDrv ${LANG_ENGLISH} "Install USB driver. Required if you have a USB UPS. Not available on Windows 95 or NT."
 LangString DESC_SecDoc ${LANG_ENGLISH} "Install Documentation on this system."
 
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
   !insertmacro MUI_DESCRIPTION_TEXT ${SecService} $(DESC_SecService)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecApctray} $(DESC_SecApctray)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecUsbDrv} $(DESC_SecUsbDrv)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecDoc} $(DESC_SecDoc)
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
@@ -502,6 +537,7 @@ Section "Uninstall"
   ; remove files and uninstaller (preserving config for now)
   Delete /REBOOTOK "$INSTDIR\bin\mingwm10.dll"
   Delete /REBOOTOK "$INSTDIR\bin\pthreadGCE.dll"
+  Delete /REBOOTOK "$INSTDIR\bin\libusb0.dll"
   Delete /REBOOTOK "$INSTDIR\bin\apcupsd.exe"
   Delete /REBOOTOK "$INSTDIR\bin\smtp.exe"
   Delete /REBOOTOK "$INSTDIR\bin\apcaccess.exe"
@@ -511,6 +547,10 @@ Section "Uninstall"
   Delete /REBOOTOK "$INSTDIR\bin\email.exe"
   Delete /REBOOTOK "$INSTDIR\bin\background.exe"
   Delete /REBOOTOK "$INSTDIR\bin\apctray.exe"
+  Delete /REBOOTOK "$INSTDIR\driver\libusb0.dll"
+  Delete /REBOOTOK "$INSTDIR\driver\libusb0_x64.dll"
+  Delete /REBOOTOK "$INSTDIR\driver\libusb0.sys"
+  Delete /REBOOTOK "$INSTDIR\driver\libusb0_x64.sys"
   Delete /REBOOTOK "$INSTDIR\driver\apcupsd.inf"
   Delete /REBOOTOK "$INSTDIR\driver\apcupsd.cat"
   Delete /REBOOTOK "$INSTDIR\driver\apcupsd_x64.cat"
