@@ -31,7 +31,7 @@
 #     940-1524C, 940-0024G, 940-0095A, 940-0095B,
 #     940-0095C, 940-0625A, M-04-02-2000
 #
-UPSCABLE usb
+UPSCABLE simple
 
 # To get apcupsd to work, in addition to defining the cable
 # above, you must also define a UPSTYPE, which corresponds to

@@ -410,17 +410,6 @@ Section "Tray Applet" SecApctray
 SectionEnd
 
 Section "USB Driver" SecUsbDrv
-  Call IsNt
-  Pop $R0
-  ${If} $R0 != false
-    SetOutPath "$WINDIR\system32"
-    File ${DEPKGS}\libusb-win32\libusb0.dll
-    ExecWait 'rundll32 libusb0.dll,usb_install_driver_np_rundll $INSTDIR\driver\apcupsd.inf'
-  ${Else}
-    MessageBox MB_OK "The USB driver cannot be automatically installed on Win98 or WinMe. \
-                      Please see $INSTDIR\driver\install.txt for instructions on installing \
-                      the driver by hand."
-  ${EndIf}
 SectionEnd
 
 Section "Documentation" SecDoc
@@ -453,18 +442,11 @@ Function .onInit
   ${EndIf}
   StrCpy $INSTDIR $0\apcupsd
 
-  ; If we're on WinNT or Win95, disable the USB driver section
-  Call GetWindowsVersion
-  Pop $0
-  StrCpy $1 $0 2
-  ${If} $1 == "NT"
-  ${OrIf} $1 == "95"
-     SectionGetFlags ${SecUsbDrv} $0
-     IntOp $1 ${SF_SELECTED} ~
-     IntOp $0 $0 & $1
-     IntOp $0 $0 | ${SF_RO}
-     SectionSetFlags ${SecUsbDrv} $0
-  ${EndIf}
+  SectionGetFlags ${SecUsbDrv} $0
+  IntOp $1 ${SF_SELECTED} ~
+  IntOp $0 $0 & $1
+  IntOp $0 $0 | ${SF_RO}
+  SectionSetFlags ${SecUsbDrv} $0
 
   ; Extract custom pages. Automatically deleted when installer exits.
   !insertmacro MUI_INSTALLOPTIONS_EXTRACT "EditApcupsdConf.ini"
