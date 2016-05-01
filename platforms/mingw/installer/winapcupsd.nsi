@@ -364,9 +364,6 @@ Section "Multimon CGI programs" SecMultimon
   ${EndUnless}
 SectionEnd
 
-Section "USB Driver" SecUsbDrv
-SectionEnd
-
 Section "Documentation" SecDoc
   SetOutPath "$INSTDIR\doc"
   CreateDirectory "$INSTDIR\doc"
