@@ -8,10 +8,6 @@ SRCS = compat.cpp inet_aton.c winapi.c \
    ioctl.c tcflush.c tcsetattr.c tcgetattr.c syslog.c kill.c pathconf.c \
    waitpid.c sleep.c fcntl.c
 
-
-
-
-
 all-targets: libwin32compat.a
 
 libwin32compat.a: $(OBJS)
