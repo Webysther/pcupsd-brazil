@@ -3,7 +3,6 @@
 ; Adapted by Kern Sibbald for apcupsd from Bacula code
 ; Further modified by Adam Kropelin
 ;
-
 ;
 ; Basics
 ;
