@@ -26,6 +26,8 @@
 #include "apc.h"
 #include <termios.h>
 
+
+
 UPSINFO *core_ups;
 UPSINFO *ups;
 
@@ -1052,107 +1054,107 @@ static void monitor_calibration_progress(int monitor)
 			}
 		}
 #else
-	fd_set rfds;
-struct timeval tv;
+		fd_set rfds;
+		struct timeval tv;
 
-FD_ZERO(&rfds);
-FD_SET(ups->fd, &rfds);
-FD_SET(STDIN_FILENO, &rfds);
-tv.tv_sec = 10;
-tv.tv_usec = 0;
-errno = 0;
+		FD_ZERO(&rfds);
+		FD_SET(ups->fd, &rfds);
+		FD_SET(STDIN_FILENO, &rfds);
+		tv.tv_sec = 10;
+		tv.tv_usec = 0;
+		errno = 0;
 
-retval = select((ups->fd) + 1, &rfds, NULL, NULL, &tv);
-if (retval == -1 && (errno == EINTR || errno == EAGAIN))
-{
-	continue;
-}
-else if (retval != 0)
-{
-	if (FD_ISSET(STDIN_FILENO, &rfds))
-	{
-		/* *ANY* user input aborts the calibration */
-		read(STDIN_FILENO, &cmd, 1);
-		aborted = true;
-	}
-	else if(FD_ISSET(ups->fd, &rfds))
-	{
-		// UPS char
-		retval = read(ups->fd, &cmd, 1);
-	}
-}
+		retval = select((ups->fd) + 1, &rfds, NULL, NULL, &tv);
+		if (retval == -1 && (errno == EINTR || errno == EAGAIN))
+		{
+			continue;
+		}
+		else if (retval != 0)
+		{
+			if (FD_ISSET(STDIN_FILENO, &rfds))
+			{
+				/* *ANY* user input aborts the calibration */
+				read(STDIN_FILENO, &cmd, 1);
+				aborted = true;
+			}
+			else if(FD_ISSET(ups->fd, &rfds))
+			{
+				// UPS char
+				retval = read(ups->fd, &cmd, 1);
+			}
+		}
 #endif
 
-if (retval == -1)
-{
-	pmsg("\nselect/read failure.\n");
-	terminate_calibration(0);
-	return;
-}
-
-if (aborted)
-{
-	pmsg("\nUser input. Terminating calibration ...\n");
-	terminate_calibration(0);
-	return;
-}
-
-if (retval != 0)
-{
-	if (cmd == '$') {
-		pmsg("\nBattery Runtime Calibration terminated by UPS.\n");
-		pmsg("Checking estimated runtime ...\n");
-		ans = smart_poll('j', ups);
-		if (*ans >= '0' && *ans <= '9') {
-			int rt = atoi(ans);
-
-			pmsg("Remaining runtime is %d minutes\n", rt);
-		} else {
-			pmsg("Unexpected response from UPS: %s\n", ans);
-		}
-		return;
-		/* ignore normal characters */
-	} else if (cmd == '!' || cmd == '+' || cmd == ' ' ||
-			cmd == '\n' || cmd == '\r') {
-		continue;
-	} else {
-		pmsg("\nUPS sent: %c\n", cmd);
-	}
-}
-else
-{
-	if (++count >= max_count) {
-		ans = smart_poll('f', ups); /* Get battery charge */
-		percent = (int)strtod(ans, NULL);
-		pmsg("\nBattery charge %d\n", percent);
-
-		if (percent > 0) {
-			if (monitor && percent <= 10) {
-				pmsg("Battery charge less than 10% terminating calibration ...\n");
-				terminate_calibration(0);
-				return;
-			}
-			if (percent < 30)
-				max_count = 2;   /* report faster */
+		if (retval == -1)
+		{
+			pmsg("\nselect/read failure.\n");
+			terminate_calibration(0);
+			return;
 		}
 
-		ans = smart_poll('j', ups); /* Get runtime */
-		if (*ans >= '0' && *ans <= '9') {
-			int rt = atoi(ans);
+		if (aborted)
+		{
+			pmsg("\nUser input. Terminating calibration ...\n");
+			terminate_calibration(0);
+			return;
+		}
 
-			pmsg("Remaining runtime is %d minutes\n", rt);
-			if (monitor && rt < 2) {
-				pmsg("Runtime less than 2 minutes terminating calibration ...\n");
-				terminate_calibration(0);
+		if (retval != 0)
+		{
+			if (cmd == '$') {
+				pmsg("\nBattery Runtime Calibration terminated by UPS.\n");
+				pmsg("Checking estimated runtime ...\n");
+				ans = smart_poll('j', ups);
+				if (*ans >= '0' && *ans <= '9') {
+					int rt = atoi(ans);
+
+					pmsg("Remaining runtime is %d minutes\n", rt);
+				} else {
+					pmsg("Unexpected response from UPS: %s\n", ans);
+				}
 				return;
+				/* ignore normal characters */
+			} else if (cmd == '!' || cmd == '+' || cmd == ' ' ||
+					cmd == '\n' || cmd == '\r') {
+				continue;
+			} else {
+				pmsg("\nUPS sent: %c\n", cmd);
 			}
 		}
-		count = 0;
-	} else {
-		printf(".");
-		fflush(stdout);
-	}
-}
+		else
+		{
+			if (++count >= max_count) {
+				ans = smart_poll('f', ups); /* Get battery charge */
+				percent = (int)strtod(ans, NULL);
+				pmsg("\nBattery charge %d\n", percent);
+
+				if (percent > 0) {
+					if (monitor && percent <= 10) {
+						pmsg("Battery charge less than 10% terminating calibration ...\n");
+						terminate_calibration(0);
+						return;
+					}
+					if (percent < 30)
+						max_count = 2;   /* report faster */
+				}
+
+				ans = smart_poll('j', ups); /* Get runtime */
+				if (*ans >= '0' && *ans <= '9') {
+					int rt = atoi(ans);
+
+					pmsg("Remaining runtime is %d minutes\n", rt);
+					if (monitor && rt < 2) {
+						pmsg("Runtime less than 2 minutes terminating calibration ...\n");
+						terminate_calibration(0);
+						return;
+					}
+				}
+				count = 0;
+			} else {
+				printf(".");
+				fflush(stdout);
+			}
+		}
 	}
 }
 
@@ -2500,11 +2502,11 @@ static void do_modbus_testing(void)
 				modbus_get_manf_date();
 				break;
 				//case 6:
-					//   modbus_set_alarm();
-					//   break;
-					//case 7:
-						//   modbus_set_sens();
-						//   break;
+				//   modbus_set_alarm();
+				//   break;
+				//case 7:
+				//   modbus_set_sens();
+				//   break;
 				//case 8:
 				//   modbus_set_xferv(0);
 				//   break;
@@ -2518,7 +2520,7 @@ static void do_modbus_testing(void)
 				modbus_test_alarm();
 				break;
 				//case 12:
-					//   modbus_set_self_test_interval();
+				//   modbus_set_self_test_interval();
 				//   break;
 			default:
 				if (tolower(*cmd) == 'q')
@@ -2944,10 +2946,10 @@ static void brazil_print();
 static void brazil_last();
 static void brazil_turnoff();
 static void brazil_turnon();
-static void brazil_getProgrammation();
-static void brazil_setProgrammation();
-static void brazil_cancelProgrammation();
-static void brazil_testTimeLeft();
+static void brazil_getSchedule();
+static void brazil_setSchedule();
+static void brazil_cancelSchedule();
+static void brazil_testBatteryHealth();
 
 #endif
 
@@ -2961,14 +2963,15 @@ static void brazil_print(){
 	pmsg("LOAD ACT POWER:         %02.1f \%\n",((BrazilUpsDriver*)(ups)->driver)->model->getLoadActivePowerPercent());
 	pmsg("LOAD TOTAL POWER:       %02.1f \%\n",((BrazilUpsDriver*)(ups)->driver)->model->getLoadPercent());
 	pmsg("OUT VOLTAGE:            %03.1f V\n",((BrazilUpsDriver*)(ups)->driver)->model->getOutputVoltage());
-	pmsg("OUT NOM VOLTAGE:        %03d V\n",((BrazilUpsDriver*)(ups)->driver)->model->getOutputVoltageNom());
+	pmsg("OUT VOLTAGE NOM:        %03d V\n",((BrazilUpsDriver*)(ups)->driver)->model->getOutputVoltageNom());
 	pmsg("OUT CURRENT:            %02.1f A\n",((BrazilUpsDriver*)(ups)->driver)->model->getOutputCurrent());
 	pmsg("OUT ACT POWER:          %04.1f W\n",((BrazilUpsDriver*)(ups)->driver)->model->getOutputActivePower());
-	pmsg("OUT ACT NOM POWER:      %04.1f W\n",((BrazilUpsDriver*)(ups)->driver)->model->getOutputActivePowerNom());
+	pmsg("OUT ACT POWER NOM:      %04.1f W\n",((BrazilUpsDriver*)(ups)->driver)->model->getOutputActivePowerNom());
 	pmsg("OUT TOTAL POWER:        %04.1f VA\n",((BrazilUpsDriver*)(ups)->driver)->model->getOutputPower());
-	pmsg("OUT TOTAL NOM POWER:    %04.1f VA\n",((BrazilUpsDriver*)(ups)->driver)->model->getOutputPowerNom());
-	pmsg("BAT VOLTAGE:            %02.1f V\n",((BrazilUpsDriver*)(ups)->driver)->model->getBatteryVoltage());
-	pmsg("BAT NOM VOLTAGE:        %02.1f V\n",((BrazilUpsDriver*)(ups)->driver)->model->getBatteryVoltageNom());
+	pmsg("OUT TOTAL POWER NOM:    %04.1f VA\n",((BrazilUpsDriver*)(ups)->driver)->model->getOutputPowerNom());
+	pmsg("BATTERY 12V NUMBER:     %02d \n",((BrazilUpsDriver*)(ups)->driver)->model->getBatteryCount());
+	pmsg("BATTERY VOLTAGE:        %02.1f V\n",((BrazilUpsDriver*)(ups)->driver)->model->getBatteryVoltage());
+	pmsg("BATTERY VOLTAGE NOM:    %02.1f V\n",((BrazilUpsDriver*)(ups)->driver)->model->getBatteryVoltageNom());
 	pmsg("TEMPERATURE:            %02.1f oC\n",((BrazilUpsDriver*)(ups)->driver)->model->getTemperature());
 	pmsg("TIMELEFT ESTIMATE:      %02.1f minutes\n",((BrazilUpsDriver*)(ups)->driver)->model->getBatteryTimeLeft());
 	pmsg("FLAG LINE 220V:         %s\n",((BrazilUpsDriver*)(ups)->driver)->model->isLine220V()?"true":"false");
@@ -2991,7 +2994,7 @@ static void brazil_turnoff(){
 static void brazil_turnon(){
 	((BrazilUpsDriver*)(ups)->driver)->turnLineOn(true);
 }
-static void brazil_getProgrammation(){
+static void brazil_getSchedule(){
 	((BrazilUpsDriver*)(ups)->driver)->refresh();
 
 	char str[1000];
@@ -3063,10 +3066,10 @@ static void brazil_getProgrammation(){
 	pmsg(str);
 
 }
-static void brazil_setProgrammation(){
+static void brazil_setSchedule(){
 	char *cmd;
 	pmsg("\n"
-			"Atention!!! You are going to turn off the UPS. Are you sure that you want to turn off and turn on after?\n"
+			"Attention!!! You are going to turn off the UPS. Are you sure that you want to turn off and turn on after?\n"
 			"Y) Yes\n"
 			"N) No\n\n");
 
@@ -3075,70 +3078,146 @@ static void brazil_setProgrammation(){
 		(((BrazilUpsDriver*)(ups)->driver))->programmation(true,5,true,6);
 	}
 }
-static void brazil_cancelProgrammation(){
+static void brazil_cancelSchedule(){
 	(((BrazilUpsDriver*)(ups)->driver))->programmation(false,0,false,0);
 }
-static void brazil_testTimeLeft(){
-	int minutes = 5;
+static void brazil_testBatteryHealth(){
+	double testlimit = 80;
 
 	char *cmd;
 	pmsg("\n"
-			"Atention!!! This test will turn input off and after %02d minutes will turn input on. Are you sure that you want to turn off and turn on by %02d minutes?\n"
+			"Attention!!! This test will disconnect the input and when the battery voltage level reaches %2.1f\% will connect the input of the UPS. Are you sure you want to continue?\n"
 			"Y) Yes\n"
-			"N) No\n\n",minutes,minutes);
+			"N) No\n\n",testlimit);
 
 	cmd = get_cmd("Select the option: ");
 	if (tolower(*cmd) != 'y'){
 		return;
 	}
+	if(((BrazilUpsDriver*)(ups)->driver)->model->isCharging()){
+		pmsg("\n"
+				"Attention!!! The battery is charging. This test was designed for when the battery is fully charged. Do you want to continue anyway?\n"
+				"Y) Yes\n"
+				"N) No\n\n");
 
-	time_t start,end;
-	double timeleft0, timeleft1;
-
-	pmsg("BATTERY TEST START\n");
-
-	pmsg("SENDING LINE TURN OFF CMD\n");
-	((BrazilUpsDriver*)(ups)->driver)->turnLineOn(false);
-	((BrazilUpsDriver*)(ups)->driver)->refresh();
-	timeleft0 = ((BrazilUpsDriver*)(ups)->driver)->model->getBatteryTimeLeft();
-	double bat0 = timeleft1 = ((BrazilUpsDriver*)(ups)->driver)->model->getBatteryVoltage();
-	time(&start);
-
-	pmsg("Waiting for %02d:00",minutes);
-
-	for(int i=minutes; i>0 ; i--){
-		for(int j=59 ; j>0 ; j--){
-			sleep(1);
-			pmsg("\rWaiting for %02d:%02d",i-1,j);
+		cmd = get_cmd("Select the option: ");
+		if (tolower(*cmd) != 'y'){
+			return;
 		}
 	}
-	pmsg("\r");
+	if(! ((BrazilUpsDriver*)(ups)->driver)->model->isLineOn()){
+		pmsg("\nAttention!!! The UPS is not connected to mains. Correct and try again.\n\n");
+		return;
+	}
 
-	((BrazilUpsDriver*)(ups)->driver)->refresh();
-	timeleft1 = ((BrazilUpsDriver*)(ups)->driver)->model->getBatteryTimeLeft();
-	double bat1 = ((BrazilUpsDriver*)(ups)->driver)->model->getBatteryVoltage();
-	time(&end);
-	pmsg("SENDING LINE TURN ON CMD\n\n");
-	((BrazilUpsDriver*)(ups)->driver)->turnLineOn(true);
 
-	struct tm tm_start,tm_end;
+	time_t start,end,now;
+	struct tm tm_start,tm_end,tm_now;
+
+	time(&start);
 	gmtime_r(&start, &tm_start);
+
+	char csv_filename[120];
+	sprintf(csv_filename,"apctest.brazil.%04d-%02d-%02d-%02d-%02d-%02d.csv",(tm_start.tm_year+1900),tm_start.tm_mon+1,tm_start.tm_mday,tm_start.tm_hour,tm_start.tm_min,tm_start.tm_sec);
+	FILE *CsvFile=fopen (csv_filename,"w");
+	setvbuf (CsvFile , NULL , _IOFBF , 65535 );
+
+	double timeleft0, timeleft1, bat0, bat1, power0, power1, batload0, batload1, bat_expected0, bat_expected1, timeleft_peukert, timeleft_rate;
+
+	bat_expected0 = ((BrazilUpsDriver*)(ups)->driver)->model->getBatteryVoltageExpectedInitial();
+	timeleft_peukert = ((BrazilUpsDriver*)(ups)->driver)->model->getBatteryTimeLeft();
+	batload0 = ((BrazilUpsDriver*)(ups)->driver)->model->getBatteryLoad();
+
+	fprintf(CsvFile,"\"Fator de descarga da bateria no início do teste (C):\",%1.2f,\"O fator de descarga deve-se permanecer o mais constante possível.\"\n",batload0);
+	fprintf(CsvFile,"\"Tesão esperada no início do teste (V):\",%2.2f\n",bat_expected0);
+	fprintf(CsvFile,"\"Tempo restante calculado pela formula de Peukert (minutos):\",%2.2f\n",timeleft_peukert);
+
+	pmsg("1) Iniciando teste!\n");
+	pmsg("2) Enviando comando para desligar a entrada.\n");
+	pmsg("2.1) Aguarde 5 segundos...\n");
+	((BrazilUpsDriver*)(ups)->driver)->turnLineOn(false);
+	sleep(5); // sleep para estabilizar a tensão da bateria de início.
+	((BrazilUpsDriver*)(ups)->driver)->refresh();
+
+	timeleft0 = ((BrazilUpsDriver*)(ups)->driver)->model->getBatteryTimeLeft();
+	timeleft_rate = timeleft0 / timeleft_peukert;
+	bat0 = timeleft1 = ((BrazilUpsDriver*)(ups)->driver)->model->getBatteryVoltage();
+	power0 = ((BrazilUpsDriver*)(ups)->driver)->model->getOutputActivePower();
+
+	char datetime[50];
+	fprintf(CsvFile,"\n");
+	fprintf(CsvFile,"\"Data\",\"Tensão da bateria (V)\",\"Expectativa do tempo restante (minutos)\",\"Fator de descarga(C)\"\n");
+	do{
+		((BrazilUpsDriver*)(ups)->driver)->refresh();
+		time(&now);
+		gmtime_r(&now, &tm_now);
+		sprintf(datetime,"%04d-%02d-%02d %02d:%02d:%02d",(tm_now.tm_year+1900),tm_now.tm_mon+1,tm_now.tm_mday,tm_now.tm_hour,tm_now.tm_min,tm_now.tm_sec);
+		fprintf(CsvFile,"\"%s\",\"%2.2f\",\"%2.1f\",\"%1.2f\"\n",
+				datetime,((BrazilUpsDriver*)(ups)->driver)->model->getBatteryVoltage(),
+				((BrazilUpsDriver*)(ups)->driver)->model->getBatteryTimeLeft(),
+				((BrazilUpsDriver*)(ups)->driver)->model->getBatteryLoad());
+		pmsg("  2.2) Nível de tensão da bateria: %2.1f\%, Timeleft: %2.1f.\n",((BrazilUpsDriver*)(ups)->driver)->model->getBatteryLevel(),((BrazilUpsDriver*)(ups)->driver)->model->getBatteryTimeLeft());
+	}while(((BrazilUpsDriver*)(ups)->driver)->model->getBatteryLevel() > testlimit);
+	fflush(CsvFile);
+	fclose(CsvFile);
+
+	timeleft1 = ((BrazilUpsDriver*)(ups)->driver)->model->getBatteryTimeLeft();
+	bat1 = ((BrazilUpsDriver*)(ups)->driver)->model->getBatteryVoltage();
+	power1 = ((BrazilUpsDriver*)(ups)->driver)->model->getOutputActivePower();
+	batload1 = ((BrazilUpsDriver*)(ups)->driver)->model->getBatteryLoad();
+	bat_expected1 = ((BrazilUpsDriver*)(ups)->driver)->model->getBatteryVoltageExpectedInitial();
+
+	time(&end);
 	gmtime_r(&end, &tm_end);
 
-	double expectedvoltage = ((BrazilUpsDriver*)(ups)->driver)->model->getBatteryVoltageExpectedAfter(minutes);
+	pmsg("3) Enviando comando para ligar a entrada.\n");
+	((BrazilUpsDriver*)(ups)->driver)->turnLineOn(true);
 
-	pmsg("ACTIVE POWER:                    %03.2f W\n",((BrazilUpsDriver*)(ups)->driver)->model->getOutputActivePower());
-	pmsg("NOMINAL ACTIVE POWER:            %03.2f W\n",((BrazilUpsDriver*)(ups)->driver)->model->getOutputActivePowerNom());
-	pmsg("START ON BATTERY:                %04d-%02d-%02d %02d:%02d:%02d UTC\n",1900+tm_start.tm_year,tm_start.tm_mon,tm_start.tm_mday,tm_start.tm_hour,tm_start.tm_min,tm_start.tm_sec);
-	pmsg("END ON BATTERY:                  %04d-%02d-%02d %02d:%02d:%02d UTC\n",1900+tm_end.tm_year,tm_end.tm_mon,tm_end.tm_mday,tm_end.tm_hour,tm_end.tm_min,tm_end.tm_sec);
-	pmsg("ESTIMATED TIMELEFT AFTER START:  %03.2f MINUTES\n",timeleft0);
-	pmsg("ESTIMATED TIMELEFT AFTER END:    %03.2f MINUTES\n",timeleft1);
-	pmsg("BATTERY VOLTAGE AFTER START:     %03.2f V\n",bat0);
-	pmsg("BATTERY VOLTAGE AFTER END:       %03.2f V\n",bat1);
-	pmsg("EXPECTED BATTERY VOLTAGE:        %03.2f V after %02d MINUTES\n",expectedvoltage, minutes);
-	pmsg("RESULT (BATTERY HEALTH):         %s\n",(bat1 > expectedvoltage ? "PASSED! The voltage measured is greather than the voltage expected!" : "FAIL! The voltage measured is lower than the voltage expected!"));
-	pmsg("\nATENTION! THIS TEST IS OLNY A ESTIMATIVE.\n");
-	pmsg("BATTERY TEST END\n");
+	double seconds = end - start;
+	bat_expected1 = ((BrazilUpsDriver*)(ups)->driver)->model->getBatteryVoltageExpected(seconds / 60);
+
+	pmsg("Dados sobre o teste:\n");
+	pmsg("  Potência na saída no início:       %03.2f W\n",power0);
+	pmsg("  Potência na saída no fim:          %03.2f W\n",power1);
+	pmsg("  Fator de descarga da bateria ini:  %01.2f W\n",batload0);
+	pmsg("  Fator de descarga da bateria fim:  %01.2f W\n",batload1);
+	pmsg("  Data de início:                    %04d-%02d-%02d %02d:%02d:%02d UTC\n",1900+tm_start.tm_year,tm_start.tm_mon,tm_start.tm_mday,tm_start.tm_hour,tm_start.tm_min,tm_start.tm_sec);
+	pmsg("  Data de fim:                       %04d-%02d-%02d %02d:%02d:%02d UTC\n\n",1900+tm_end.tm_year,tm_end.tm_mon,tm_end.tm_mday,tm_end.tm_hour,tm_end.tm_min,tm_end.tm_sec);
+	pmsg("Expectativa antes do início (em função apenas da carga):\n");
+	pmsg("  Tensão da bateria:                 %03.2f V\n",bat_expected0);
+	pmsg("  Tempo restante Teórico Peukert:    %02.2f minutos\n",timeleft_peukert);
+	pmsg("No início do teste:\n");
+	pmsg("  Tensão da bateria:                 %03.2f V\n",bat0);
+	pmsg("  Tempo restante da bateria:         %02.2f minutos\n",timeleft0);
+	pmsg("No fim do teste:\n");
+	pmsg("  Tensão da bateria:                 %03.2f V\n",bat1);
+	pmsg("  Tempo restante da bateria:         %03.2f minutos\n",timeleft1);
+	pmsg("  Tensão na bateria esperada:        %02.2fV após %2.2f minutos\n",bat_expected1,seconds / 60);
+	pmsg("Análise dos resultados:\n");
+	if(timeleft_rate > 1.5 || timeleft_rate < 0.75){
+		pmsg("  Timeleft teórico discrepante:      %1.2f (timeleft_inicial/timeleft_teórico)\n",timeleft_rate);
+	}else{
+		pmsg("  Timeleft teórico adequado:         %1.2f (timeleft_inicial/timeleft_teórico)\n",timeleft_rate);
+	}
+	if((timeleft0 - timeleft1) < (seconds / 60)){
+		pmsg("  Timeleft estimado no início:       %02.1f minutos\n",timeleft0);
+		pmsg("  Duração do teste:                  %02.1f minutos\n",seconds/60);
+		pmsg("  Timeleft estimado no fim:          %02.1f minutos\n",timeleft1);
+		pmsg("  Timeleft super estimado:           %02.1f minutos a mais do transcorrido\n",(seconds / 60) - timeleft0 - timeleft1);
+		pmsg("  Saúde da bateria:                  SUCESSO! A duração do teste foi maior que a diferença entre os timeleft de início e fim.\n");
+		pmsg("                                     A Bateria parece estar boa ou as rotinas de cálculo precissão ser revisadas.\n");
+	}else{
+		pmsg("  Timeleft estimado no início:       %02.1f minutos\n",timeleft0);
+		pmsg("  Duração do teste:                  %02.1f minutos\n",seconds/60);
+		pmsg("  Timeleft estimado no fim:          %02.1f minutos\n",timeleft1);
+		pmsg("  Timeleft super estimado:           %02.1f minutos a MENOS do transcorrido\n",timeleft0 - timeleft1 - (seconds / 60));
+		pmsg("  Saúde da bateria:                  FALHOU! A duração do teste foi menor que a diferença entre os timeleft de início e fim.\n");
+		pmsg("                                     Pode ser necessário trocar as baterias ou as rotinas de cálculo precissão ser revisadas.\n");
+	}
+	pmsg("Dados extras gravados no arquivo:    %s\n",csv_filename);
+	pmsg("Fim do teste!\n");
+
+
 }
 static void do_brazil_testing(void)
 {
@@ -3154,12 +3233,12 @@ static void do_brazil_testing(void)
 		pmsg("\n"
 				"1) Query the UPS for all known values\n"
 				"2) Query for last events\n"
-				"3) Input turn off\n"
-				"4) Input Turn on\n"
-				"5) Test battery estimated TimeLeft\n"
-				"6) Query the UPS time and programmation to shutdown and start\n"
-				"7) Program turn off after 5 minutes and and turn on after 6 minutes\n"
-				"8) Cancel turn off and turn on programmation\n"
+				"3) Query the internal UPS clock and scheduler\n"
+				"4) Schedule the UPS to shutdown in 1 minutes and restart 1 minute later.\n"
+				"5) Cancel Schedule. Do not shutdown and restart\n"
+				"6) Test set input turn off\n"
+				"7) Test set input Turn on\n"
+				"8) Test battery health\n"
 				"Q) Quit\n\n");
 
 		cmd = get_cmd("Select function number: ");
@@ -3174,33 +3253,33 @@ static void do_brazil_testing(void)
 				brazil_last();
 				break;
 			case 3:
-				brazil_turnoff();
+				brazil_getSchedule();
 				break;
 			case 4:
-				brazil_turnon();
+				brazil_setSchedule();
 				break;
 			case 5:
-				brazil_testTimeLeft();
+				brazil_cancelSchedule();
 				break;
 			case 6:
-				brazil_getProgrammation();
+				brazil_turnoff();
 				break;
 			case 7:
-				brazil_setProgrammation();
+				brazil_turnon();
 				break;
 			case 8:
-				brazil_cancelProgrammation();
+				brazil_testBatteryHealth();
 				break;
 			default:
 				if (tolower(*cmd) == 'q')
 					quit = TRUE;
 				else
-					pmsg("Illegal response. Please enter 1-7,Q\n");
+					pmsg("Illegal response. Please enter 1-8,Q\n");
 				break;
 				break;
 			}
 		} else {
-			pmsg("Illegal response. Please enter 1-4,Q\n");
+			pmsg("Illegal response. Please enter 1-8,Q\n");
 		}
 	}
 	ptime();

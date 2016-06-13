@@ -28,6 +28,8 @@
 #ifndef SRC_DRIVERS_BRAZIL_BRAZILMODEL_H_
 #define SRC_DRIVERS_BRAZIL_BRAZILMODEL_H_
 
+#include "brazilbattery.h"
+
 enum DAYS_OF_WEEK{
 	Sunday = 0,
 	Monday,
@@ -84,7 +86,11 @@ public:
 	double getBatteryVoltageNom();
 	double getBatteryLevel();
 	double getBatteryTimeLeft();
-	double getBatteryVoltageExpectedAfter(double minutes);
+	double getBatteryVoltageExpectedInitial();
+	double getBatteryVoltageExpectedFinal();
+	double getBatteryVoltageExpected(double minutes);
+
+	double getBatteryLoad();
 	virtual int getBatteryCount() = 0;
 
 	virtual double getOutputPowerNom() = 0;
@@ -130,8 +136,6 @@ public:
 	static const unsigned int BUFFERLEN = 200;
 
 protected:
-	int getBatteryLoadIndex();
-
 	unsigned char _buffer[BrazilModelAbstract::BUFFERLEN];
 	unsigned char _events[BrazilModelAbstract::BUFFERLEN];
 	unsigned int _eventssize;
@@ -139,12 +143,11 @@ protected:
 	bool lock;
 	int regulating_relay;
 
-	double _curve[5][12];
-	unsigned char _minutes[5][12];
 	double _load[5];
-	double _low[5];
-	double _battery_v0[5];
+	double _voltage[15];
+	double _timeleft[5][15];
 
+	BrazilBattery *bat;
 
 private:
 };

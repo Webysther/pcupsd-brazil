@@ -3,14 +3,14 @@
 ; Adapted by Kern Sibbald for apcupsd from Bacula code
 ; Further modified by Adam Kropelin
 ;
-
+; Further modified Wagner Popov dos Santos
 ;
 ; Basics
 ;
-Name "Apcupsd-brazil"
-OutFile "winapcupsd-brazil-${VERSION}.exe"
+Name "ApcCtrl-brazil"
+OutFile "winapcctrl-${VERSION}.exe"
 SetCompressor lzma
-InstallDir "c:\apcupsd-brazil"
+InstallDir "c:\apcctrl"
 
 ;			    
 ; Include files
@@ -156,9 +156,9 @@ FunctionEnd
 
 Function InstallServiceExit
   ; Create Start Menu Directory
-  CreateDirectory "$SMPROGRAMS\Apcupsd"
+  CreateDirectory "$SMPROGRAMS\ApcCtrl"
   ; Create start menu link for configuring apcupsd
-  CreateShortCut "$SMPROGRAMS\Apcupsd\Edit Configuration File.lnk" "notepad" "$INSTDIR\etc\apcupsd\apcupsd.conf" "$SYSDIR\shell32.dll" ${CONFIG_ICON_INDEX}
+  CreateShortCut "$SMPROGRAMS\ApcCtrl\Edit Configuration File.lnk" "notepad" "$INSTDIR\etc\apcupsd\apcupsd.conf" "$SYSDIR\shell32.dll" ${CONFIG_ICON_INDEX}
 
   ; If installed as a service already, remove it
   ReadRegDWORD $R0 HKLM "Software\Apcupsd" "InstalledService"
@@ -174,23 +174,23 @@ Function InstallServiceExit
     ExecWait '"$INSTDIR\bin\apcupsd.exe" /install'
     ${If} ${IsNT}
       ; Installed as a service and we're on NT
-      CreateShortCut "$SMPROGRAMS\Apcupsd\Start Apcupsd.lnk" "$SYSDIR\net.exe" "start apcupsd" "$SYSDIR\shell32.dll" ${START_ICON_INDEX}
-      CreateShortCut "$SMPROGRAMS\Apcupsd\Stop Apcupsd.lnk"  "$SYSDIR\net.exe" "stop apcupsd"  "$SYSDIR\shell32.dll" ${STOP_ICON_INDEX}
+      CreateShortCut "$SMPROGRAMS\ApcCtrl\Start Apcupsd.lnk" "$SYSDIR\net.exe" "start apcupsd" "$SYSDIR\shell32.dll" ${START_ICON_INDEX}
+      CreateShortCut "$SMPROGRAMS\ApcCtrl\Stop Apcupsd.lnk"  "$SYSDIR\net.exe" "stop apcupsd"  "$SYSDIR\shell32.dll" ${STOP_ICON_INDEX}
     ${Else}
       ; Installed as a service, but not on NT
-      CreateShortCut "$SMPROGRAMS\Apcupsd\Start Apcupsd.lnk" "$INSTDIR\bin\apcupsd.exe" "/service" "$SYSDIR\shell32.dll" ${START_ICON_INDEX}
-      CreateShortCut "$SMPROGRAMS\Apcupsd\Stop Apcupsd.lnk"  "$INSTDIR\bin\apcupsd.exe" "/kill"    "$SYSDIR\shell32.dll" ${STOP_ICON_INDEX}
+      CreateShortCut "$SMPROGRAMS\ApcCtrl\Start Apcupsd.lnk" "$INSTDIR\bin\apcupsd.exe" "/service" "$SYSDIR\shell32.dll" ${START_ICON_INDEX}
+      CreateShortCut "$SMPROGRAMS\ApcCtrl\Stop Apcupsd.lnk"  "$INSTDIR\bin\apcupsd.exe" "/kill"    "$SYSDIR\shell32.dll" ${STOP_ICON_INDEX}
     ${EndIf}
   ${Else}
     ; Not installed as a service
-    CreateShortCut "$SMPROGRAMS\Apcupsd\Start Apcupsd.lnk" "$INSTDIR\bin\apcupsd.exe" ""       "$SYSDIR\shell32.dll" ${START_ICON_INDEX}
-    CreateShortCut "$SMPROGRAMS\Apcupsd\Stop Apcupsd.lnk"  "$INSTDIR\bin\apcupsd.exe" "/kill"  "$SYSDIR\shell32.dll" ${STOP_ICON_INDEX}
+    CreateShortCut "$SMPROGRAMS\ApcCtrl\Start Apcupsd.lnk" "$INSTDIR\bin\apcupsd.exe" ""       "$SYSDIR\shell32.dll" ${START_ICON_INDEX}
+    CreateShortCut "$SMPROGRAMS\ApcCtrl\Stop Apcupsd.lnk"  "$INSTDIR\bin\apcupsd.exe" "/kill"  "$SYSDIR\shell32.dll" ${STOP_ICON_INDEX}
   ${EndIf}
 
   ; Start Apcupsd now, if so requested
   !insertmacro MUI_INSTALLOPTIONS_READ $R2 "InstallService.ini" "Field 4" "State"
   ${If} $R2 == 1
-    ExecShell "" "$SMPROGRAMS\Apcupsd\Start Apcupsd.lnk" "" SW_HIDE
+    ExecShell "" "$SMPROGRAMS\ApcCtrl\Start Apcupsd.lnk" "" SW_HIDE
   ${Endif}  
 FunctionEnd
 
@@ -297,10 +297,10 @@ Section "Apcupsd Service" SecService
   File ${WINDIR}\email.exe
   File ${WINDIR}\background.exe
 
-  SetOutPath "$INSTDIR\driver"
-  SetOutPath "$INSTDIR\driver\i386"
+  ;SetOutPath "$INSTDIR\driver"
+  ;SetOutPath "$INSTDIR\driver\i386"
+  ;SetOutPath "$INSTDIR\driver\amd64"
   File ${DEPKGS}\winddk\redist\wdf\x86\*.dll
-  SetOutPath "$INSTDIR\driver\amd64"
   File ${DEPKGS}\winddk\redist\wdf\amd64\*.dll
 
   SetOutPath "$INSTDIR\etc\apcupsd"
@@ -337,8 +337,8 @@ Section "Tray Applet" SecApctray
   File ${WINDIR}\apctray.exe
 
   ; Create start menu link for apctray
-  CreateDirectory "$SMPROGRAMS\Apcupsd"
-  CreateShortCut "$SMPROGRAMS\Apcupsd\Apctray.lnk" "$INSTDIR\bin\apctray.exe"
+  CreateDirectory "$SMPROGRAMS\ApcCtrl"
+  CreateShortCut "$SMPROGRAMS\ApcCtrl\Apctray.lnk" "$INSTDIR\bin\apctray.exe"
 SectionEnd
 
 Section "Multimon CGI programs" SecMultimon
@@ -372,13 +372,13 @@ Section "Documentation" SecDoc
   File *.man.txt
 
   ; Create Start Menu entry
-  CreateDirectory "$SMPROGRAMS\Apcupsd\Documentation"
-  CreateShortCut "$SMPROGRAMS\Apcupsd\Documentation\Apcupsd User Manual.lnk"     "$INSTDIR\doc\manual.html"          "" "$SYSDIR\shell32.dll" ${MANUAL_ICON_INDEX}
-  CreateShortCut "$SMPROGRAMS\Apcupsd\Documentation\apcupsd Reference.lnk"       "$INSTDIR\doc\apcupsd.man.txt"      "" "$SYSDIR\shell32.dll" ${HELP_ICON_INDEX}
-  CreateShortCut "$SMPROGRAMS\Apcupsd\Documentation\apcaccess Reference.lnk"     "$INSTDIR\doc\apcaccess.man.txt"    "" "$SYSDIR\shell32.dll" ${HELP_ICON_INDEX}
-  CreateShortCut "$SMPROGRAMS\Apcupsd\Documentation\apctest Reference.lnk"       "$INSTDIR\doc\apctest.man.txt"      "" "$SYSDIR\shell32.dll" ${HELP_ICON_INDEX}
-  CreateShortCut "$SMPROGRAMS\Apcupsd\Documentation\apccontrol Reference.lnk"    "$INSTDIR\doc\apccontrol.man.txt"   "" "$SYSDIR\shell32.dll" ${HELP_ICON_INDEX}
-  CreateShortCut "$SMPROGRAMS\Apcupsd\Documentation\Configuration Reference.lnk" "$INSTDIR\doc\apcupsd.conf.man.txt" "" "$SYSDIR\shell32.dll" ${HELP_ICON_INDEX}
+  CreateDirectory "$SMPROGRAMS\ApcCtrl\Documentation"
+  CreateShortCut "$SMPROGRAMS\ApcCtrl\Documentation\Apcupsd User Manual.lnk"     "$INSTDIR\doc\manual.html"          "" "$SYSDIR\shell32.dll" ${MANUAL_ICON_INDEX}
+  CreateShortCut "$SMPROGRAMS\ApcCtrl\Documentation\apcupsd Reference.lnk"       "$INSTDIR\doc\apcupsd.man.txt"      "" "$SYSDIR\shell32.dll" ${HELP_ICON_INDEX}
+  CreateShortCut "$SMPROGRAMS\ApcCtrl\Documentation\apcaccess Reference.lnk"     "$INSTDIR\doc\apcaccess.man.txt"    "" "$SYSDIR\shell32.dll" ${HELP_ICON_INDEX}
+  CreateShortCut "$SMPROGRAMS\ApcCtrl\Documentation\apctest Reference.lnk"       "$INSTDIR\doc\apctest.man.txt"      "" "$SYSDIR\shell32.dll" ${HELP_ICON_INDEX}
+  CreateShortCut "$SMPROGRAMS\ApcCtrl\Documentation\apccontrol Reference.lnk"    "$INSTDIR\doc\apccontrol.man.txt"   "" "$SYSDIR\shell32.dll" ${HELP_ICON_INDEX}
+  CreateShortCut "$SMPROGRAMS\ApcCtrl\Documentation\Configuration Reference.lnk" "$INSTDIR\doc\apcupsd.conf.man.txt" "" "$SYSDIR\shell32.dll" ${HELP_ICON_INDEX}
 SectionEnd
 
 !define UNINSTREG "Software\Microsoft\Windows\CurrentVersion\Uninstall\Apcupsd"
@@ -387,12 +387,12 @@ Section "-Finish"
   ; Write the uninstall keys for Windows & create Start Menu entry
   SetShellVarContext all
 
-  WriteRegStr   HKLM "${UNINSTREG}" "DisplayName"     "Apcupsd"
+  WriteRegStr   HKLM "${UNINSTREG}" "DisplayName"     "ApcCtrl"
   WriteRegStr   HKLM "${UNINSTREG}" "UninstallString" "$INSTDIR\uninstall.exe"
   WriteRegStr   HKLM "${UNINSTREG}" "DisplayVersion"  "${VERSION}"
   WriteRegStr   HKLM "${UNINSTREG}" "Version"         "${VERSION}"
-  WriteRegStr   HKLM "${UNINSTREG}" "Publisher"       "apcupsd.org"
-  WriteRegStr   HKLM "${UNINSTREG}" "URLInfoAbout"    "http://apcupsd.org"
+  WriteRegStr   HKLM "${UNINSTREG}" "Publisher"       "http://apcupsd-brazil.sourceforge.net/"
+  WriteRegStr   HKLM "${UNINSTREG}" "URLInfoAbout"    "http://apcupsd-brazil.sourceforge.net/"
   WriteRegDWord HKLM "${UNINSTREG}" "NoRepair"        1
   WriteRegDWord HKLM "${UNINSTREG}" "NoModify"        1
 
@@ -401,7 +401,7 @@ Section "-Finish"
   WriteRegDWORD HKLM "${UNINSTREG}" "EstimatedSize" "$0"
 
   WriteUninstaller "$INSTDIR\Uninstall.exe"
-  CreateShortCut "$SMPROGRAMS\Apcupsd\Uninstall Apcupsd.lnk" "$INSTDIR\Uninstall.exe"
+  CreateShortCut "$SMPROGRAMS\ApcCtrl\Uninstall Apcupsd.lnk" "$INSTDIR\Uninstall.exe"
 SectionEnd
 
 ;
@@ -487,7 +487,7 @@ Section "Uninstall"
 
   ; remove start menu items
   SetShellVarContext all
-  RMDir /r /REBOOTOK "$SMPROGRAMS\Apcupsd"
+  RMDir /r /REBOOTOK "$SMPROGRAMS\ApcCtrl"
 
   ; remove files and uninstaller (preserving config for now)
   Delete /REBOOTOK "$INSTDIR\bin\mingwm10.dll"
@@ -501,12 +501,12 @@ Section "Uninstall"
   Delete /REBOOTOK "$INSTDIR\bin\email.exe"
   Delete /REBOOTOK "$INSTDIR\bin\background.exe"
   Delete /REBOOTOK "$INSTDIR\bin\apctray.exe"
-  Delete /REBOOTOK "$INSTDIR\driver\apcupsd.inf"
-  Delete /REBOOTOK "$INSTDIR\driver\apcupsd.cat"
-  Delete /REBOOTOK "$INSTDIR\driver\apcupsd_x64.cat"
-  Delete /REBOOTOK "$INSTDIR\driver\install.txt"
-  Delete /REBOOTOK "$INSTDIR\driver\i386\*.dll"
-  Delete /REBOOTOK "$INSTDIR\driver\amd64\*.dll"
+  ;Delete /REBOOTOK "$INSTDIR\driver\apcupsd.inf"
+  ;Delete /REBOOTOK "$INSTDIR\driver\apcupsd.cat"
+  ;Delete /REBOOTOK "$INSTDIR\driver\apcupsd_x64.cat"
+  ;Delete /REBOOTOK "$INSTDIR\driver\install.txt"
+  ;Delete /REBOOTOK "$INSTDIR\driver\i386\*.dll"
+  ;Delete /REBOOTOK "$INSTDIR\driver\amd64\*.dll"
   Delete /REBOOTOK "$INSTDIR\README*"
   Delete /REBOOTOK "$INSTDIR\COPYING*"
   Delete /REBOOTOK "$INSTDIR\ChangeLog*"

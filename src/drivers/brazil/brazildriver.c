@@ -51,7 +51,6 @@ bool BrazilUpsDriver::refresh()
 {
 	Dmsg(50, "Refresh.\n");
 	tcflush(_ups->fd, TCIFLUSH);
-	sleep(1);
 	return ReadData(false) == SUCCESS ? true : false;
 }
 
@@ -612,7 +611,25 @@ bool BrazilUpsDriver::read_volatile_data()
 	_ups->OutputVoltage = this->model->getOutputVoltage();
 
 	/* BATT_FULL Battery level percentage */
-	_ups->BattChg = this->model->getBatteryLevel() * 100;
+	double batlevel;
+	if(this->model->isLineOn()){
+		if(this->model->isCharging()){
+			/*
+			 * Para sinalizar que a bateria está sendo carregada e não sabemos o real estado dela o nível de tensão fica alternando
+			 */
+			if((_ups->poll_time & 0x02) == 0x02){
+				batlevel = 100;
+			}else{
+				batlevel = 50;
+			}
+		}else{
+			batlevel = 100;
+		}
+	}else{
+		batlevel = this->model->getBatteryLevel();
+		if(batlevel > 100) batlevel = 100;
+	}
+	_ups->BattChg = batlevel;
 
 	/* UPS_LOAD */
 	_ups->OutputCurrent = this->model->getOutputCurrent();

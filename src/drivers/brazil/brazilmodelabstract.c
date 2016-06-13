@@ -114,131 +114,122 @@
  */
 
 #include "apc.h"
-
 #include "brazilmodel.h"
+#include "brazilbattery.h"
 
 BrazilModelAbstract::BrazilModelAbstract(unsigned char model){
 	this->_eventssize = 0;
 	this->vmodel = model;
 	this->lock = false;
 	this->regulating_relay = 0;
+	this->bat = new BrazilBattery();
 
+	memset (this->_timeleft,0, sizeof this->_timeleft);
 
-	memset (this->_minutes,0, sizeof this->_minutes);
-	/*
-	 * Curve from file bateria-chumbo-acido-curva-descarregamento.jpg
-	 */
+	this->_load[0] = 0.4; // 0.4C (fator de descarga de 0.4C/hora)
+	this->_load[1] = 0.6; // ...
+	this->_load[2] = 1.0; // ...
+	this->_load[3] = 2.0; // ...
+	this->_load[4] = 3.0; // ...
 
-	// fatores de descarga. Para uma bateria de 12V 7A, o fator = 1 representa 84W por 1 hora.
-	this->_load[2] = 0.4; // 0.4C (fator de descarga de 0.4 A/hora
-	this->_load[3] = 0.6; // ...
-	this->_load[4] = 1.0; // ...
-	this->_load[5] = 2.0; // ...
-	this->_load[6] = 3.0; // ...
+	this->_voltage[0] =  9.00;
+	this->_voltage[1] =  9.25;
+	this->_voltage[2] =  9.50;
+	this->_voltage[3] =  9.75;
+	this->_voltage[4] =  10.00;
+	this->_voltage[5] =  10.25;
+	this->_voltage[6] =  10.50;
+	this->_voltage[7] =  10.75;
+	this->_voltage[8] =  11.00;
+	this->_voltage[9] =  11.25;
+	this->_voltage[10] = 11.50;
+	this->_voltage[11] = 11.75;
+	this->_voltage[12] = 12.00;
+	this->_voltage[13] = 12.25;
+	this->_voltage[14] = 12.50;
 
-	this->_low[0] = 11.75;
-	this->_low[1] = 10.8;
-	this->_low[2] = 10.0;
-	this->_low[3] = 10.0;
-	this->_low[4] = 9.0;
+	this->_timeleft[0][0] = 0;
+	this->_timeleft[0][1] = 0;
+	this->_timeleft[0][2] = 0;
+	this->_timeleft[0][3] = 0;
+	this->_timeleft[0][4] = 0;
+	this->_timeleft[0][5] = 0;
+	this->_timeleft[0][6] = 0;
+	this->_timeleft[0][7] = 0;
+	this->_timeleft[0][8] = 0;
+	this->_timeleft[0][9] = 0;
+	this->_timeleft[0][10] = 0;
+	this->_timeleft[0][11] = 1.19;
+	this->_timeleft[0][12] = 22.69;
+	this->_timeleft[0][13] = 44.19;
+	this->_timeleft[0][14] = 65.69;
 
-	this->_battery_v0[0] = 12.60;
-	this->_battery_v0[1] = 12.35;
-	this->_battery_v0[2] = 12.20;
-	this->_battery_v0[3] = 11.75;
-	this->_battery_v0[4] = 11.20;
+	this->_timeleft[1][0] = 0;
+	this->_timeleft[1][1] = 0;
+	this->_timeleft[1][2] = 0;
+	this->_timeleft[1][3] = 0;
+	this->_timeleft[1][4] = 0;
+	this->_timeleft[1][5] = 0;
+	this->_timeleft[1][6] = 0;
+	this->_timeleft[1][7] = 0;
+	this->_timeleft[1][8] = 6.29;
+	this->_timeleft[1][9] = 13.21;
+	this->_timeleft[1][10] = 20.13;
+	this->_timeleft[1][11] = 27.04;
+	this->_timeleft[1][12] = 33.96;
+	this->_timeleft[1][13] = 40.88;
+	this->_timeleft[1][14] = 47.8;
 
-	this->_curve[0][0] = 12.52;
-	this->_curve[0][1] = 12.48;
-	this->_curve[0][2] = 12.42;
-	this->_curve[0][3] = 12.35;
-	this->_curve[0][4] = 12.30;
-	this->_curve[0][5] = 12.20;
-	this->_curve[0][6] = 12.10;
-	this->_curve[0][7] = 11.75;
+	this->_timeleft[2][0] = 0;
+	this->_timeleft[2][1] = 0;
+	this->_timeleft[2][2] = 0;
+	this->_timeleft[2][3] = 0;
+	this->_timeleft[2][4] = 1.44;
+	this->_timeleft[2][5] = 3.77;
+	this->_timeleft[2][6] = 6.1;
+	this->_timeleft[2][7] = 8.43;
+	this->_timeleft[2][8] = 10.76;
+	this->_timeleft[2][9] = 13.09;
+	this->_timeleft[2][10] = 15.42;
+	this->_timeleft[2][11] = 17.75;
+	this->_timeleft[2][12] = 20.08;
+	this->_timeleft[2][13] = 22.41;
+	this->_timeleft[2][14] = 24.74;
 
-	this->_curve[1][0] = 12.35;
-	this->_curve[1][1] = 12.25;
-	this->_curve[1][2] = 12.15;
-	this->_curve[1][3] = 12.10;
-	this->_curve[1][4] = 11.92;
-	this->_curve[1][5] = 11.85;
-	this->_curve[1][6] = 11.65;
-	this->_curve[1][7] = 11.50;
-	this->_curve[1][8] = 11.25;
-	this->_curve[1][9] = 10.8;
+	this->_timeleft[3][0] = 0;
+	this->_timeleft[3][1] = 0;
+	this->_timeleft[3][2] = 0;
+	this->_timeleft[3][3] = 0;
+	this->_timeleft[3][4] = 0;
+	this->_timeleft[3][5] = 0.83;
+	this->_timeleft[3][6] = 2;
+	this->_timeleft[3][7] = 3.18;
+	this->_timeleft[3][8] = 4.35;
+	this->_timeleft[3][9] = 5.52;
+	this->_timeleft[3][10] = 6.69;
+	this->_timeleft[3][11] = 7.86;
+	this->_timeleft[3][12] = 9.04;
+	this->_timeleft[3][13] = 10.21;
+	this->_timeleft[3][14] = 11.38;
 
-	this->_curve[2][0] = 12.10;
-	this->_curve[2][1] = 11.90;
-	this->_curve[2][2] = 11.70;
-	this->_curve[2][3] = 11.40;
-	this->_curve[2][4] = 10.00;
-
-	this->_curve[3][0] = 11.70;
-	this->_curve[3][1] = 11.70;
-	this->_curve[3][2] = 11.65;
-	this->_curve[3][3] = 11.60;
-	this->_curve[3][4] = 11.55;
-	this->_curve[3][5] = 11.50;
-	this->_curve[3][6] = 11.45;
-	this->_curve[3][7] = 11.40;
-	this->_curve[3][8] = 11.30;
-	this->_curve[3][9] = 11.20;
-	this->_curve[3][10] = 10.0;
-
-	this->_curve[4][0] = 11.20;
-	this->_curve[4][1] = 11.10;
-	this->_curve[4][2] = 10.95;
-	this->_curve[4][3] = 10.80;
-	this->_curve[4][4] = 10.50;
-	this->_curve[4][5] = 9.0;
-
-	this->_minutes[0][0] = 80;
-	this->_minutes[0][1] = 70;
-	this->_minutes[0][2] = 60;
-	this->_minutes[0][3] = 50;
-	this->_minutes[0][4] = 40;
-	this->_minutes[0][5] = 30;
-	this->_minutes[0][6] = 20;
-	this->_minutes[0][7] = 10;
-
-	this->_minutes[1][0] = 50;
-	this->_minutes[1][1] = 45;
-	this->_minutes[1][2] = 40;
-	this->_minutes[1][3] = 35;
-	this->_minutes[1][4] = 30;
-	this->_minutes[1][5] = 25;
-	this->_minutes[1][6] = 20;
-	this->_minutes[1][7] = 15;
-	this->_minutes[1][8] = 10;
-	this->_minutes[1][9] = 5;
-
-	this->_minutes[2][0] = 25;
-	this->_minutes[2][1] = 20;
-	this->_minutes[2][2] = 15;
-	this->_minutes[2][3] = 10;
-	this->_minutes[2][4] = 5;
-
-	this->_minutes[3][0] = 11;
-	this->_minutes[3][1] = 10;
-	this->_minutes[3][2] = 9;
-	this->_minutes[3][3] = 8;
-	this->_minutes[3][4] = 7;
-	this->_minutes[3][5] = 6;
-	this->_minutes[3][6] = 5;
-	this->_minutes[3][7] = 4;
-	this->_minutes[3][8] = 3;
-	this->_minutes[3][9] = 2;
-	this->_minutes[3][10] = 1;
-
-	this->_minutes[4][0] = 6;
-	this->_minutes[4][1] = 5;
-	this->_minutes[4][2] = 4;
-	this->_minutes[4][3] = 3;
-	this->_minutes[4][4] = 2;
-	this->_minutes[4][5] = 1;
+	this->_timeleft[4][0] = 0.28;
+	this->_timeleft[4][1] = 0.78;
+	this->_timeleft[4][2] = 1.28;
+	this->_timeleft[4][3] = 1.78;
+	this->_timeleft[4][4] = 2.29;
+	this->_timeleft[4][5] = 2.79;
+	this->_timeleft[4][6] = 3.29;
+	this->_timeleft[4][7] = 3.79;
+	this->_timeleft[4][8] = 4.3;
+	this->_timeleft[4][9] = 4.8;
+	this->_timeleft[4][10] = 5.3;
+	this->_timeleft[4][11] = 5.8;
+	this->_timeleft[4][12] = 6.31;
+	this->_timeleft[4][13] = 6.81;
+	this->_timeleft[4][14] = 7.31;
 }
 BrazilModelAbstract::~BrazilModelAbstract(){
+	delete this->bat;
 }
 BrazilModelAbstract *BrazilModelAbstract::newInstance(unsigned char model){
 	Dmsg(50, "Instancing specific model, number %03u.\n",model);
@@ -266,6 +257,7 @@ BrazilModelAbstract *BrazilModelAbstract::newInstance(unsigned char model){
 		value = 0;
 		break;
 	}
+	value->bat->setBatteryCount(value->getBatteryCount());
 	return value;
 }
 int BrazilModelAbstract::testBuffer(unsigned char *buffer, unsigned int datasize){
@@ -301,102 +293,52 @@ int BrazilModelAbstract::testBuffer(unsigned char *buffer, unsigned int datasize
 }
 
 double BrazilModelAbstract::getBatteryVoltageNom(){
-	return this->getBatteryCount() * 12;
+	return this->bat->getBatteryVoltageNom();
 }
 double BrazilModelAbstract::getBatteryLevel(){
 	if(this->isLineOn()){
-		if(this->isCharging()){
-			return 0.7;
-		}else{
-			return 1.0;
-		}
+		return 100;
+	}else{
+		return this->bat->calcLevel(this->getBatteryLoad(), this->getBatteryVoltage());
 	}
-	double level = this->getBatteryTimeLeft() / this->_minutes[this->getBatteryLoadIndex()][0];
-	return (level > 1 ? 1 : level);
 }
-int BrazilModelAbstract::getBatteryLoadIndex(){
-	double batload = this->getOutputActivePower() / (12 * 7 * this->getBatteryCount());
-	int iload = 0;
-	for(int i=0 ; i<4 ; i++){
-		if(batload > this->_load[i]){
-			iload = i;
-		}
-	}
-	Dmsg(50, "GetBatteryLoad: %03.2f; Index: %1d.\n", batload, iload);
-	return iload;
-}
-
-double BrazilModelAbstract::getBatteryVoltageExpectedAfter(double minutes){
-	Dmsg(50, "getBatteryVoltage(minutes %03.2d)!\n",minutes);
-
-	int iload = this->getBatteryLoadIndex();
-
-	int minleft = this->_minutes[iload][0] - minutes;
-	if(minleft <= 0){
-		return this->_low[iload] * this->getBatteryCount();
-	}
-
-	for(int i=0 ; i<10 ; i++){
-		if(i > 10){
-			return this->_curve[iload][i] * this->getBatteryCount();
-		}else{
-			if(minleft >= this->_minutes[iload][i+1]){
-				double volt = this->_curve[iload][i+1];
-				/*
-				 * Calculate linear proportion of volt with 2 values of voltage:
-				 */
-				if((this->_minutes[iload][i] - this->_minutes[iload][i+1]) > 0){
-					volt += ((this->_curve[iload][i] - this->_curve[iload][i+1]) * (minleft - this->_minutes[iload][i+1]) / (this->_minutes[iload][i] - this->_minutes[iload][i+1]));
-					return volt * this->getBatteryCount();
-				}else{
-					return volt * this->getBatteryCount();
-				}
-			}
-		}
-	}
-	return this->_low[iload];
-}
-
 
 double BrazilModelAbstract::getBatteryTimeLeft(){
-	Dmsg(50, "getBatteryTimeLeft!\n");
-
-	int iload = this->getBatteryLoadIndex();
-
-	double bat12v = this->getBatteryVoltage() / this->getBatteryCount();   // voltage of one 12V battery
-	double voltage0 = this->_curve[iload][0];
-	double voltage1 = this->_curve[iload][1];
-	double timeleft0 = this->_minutes[iload][0];
-	double timeleft1 = this->_minutes[iload][1];
-	if(bat12v > this->_low[iload]){
-		for(int i=0 ; i<10 ; i++){
-			if(bat12v < this->_curve[iload][i]){
-				voltage0 = this->_curve[iload][i];
-				voltage1 = this->_curve[iload][i+1];
-				timeleft0 = this->_minutes[iload][i];
-				timeleft1 = this->_minutes[iload][i+1];
-			}
-		}
-		Dmsg(50, "bat12v: %3.2f; "
-				"voltage0: %3.2f; "
-				"voltage1: %3.2f; "
-				"timeleft0: %3.2f; "
-				"timeleft1: %3.2f; "
-				"iload: %1d.\n", bat12v, voltage0, voltage1, timeleft0, timeleft1, iload);
-
-		double timeleft = timeleft1;
-		if((voltage0>voltage1) && (bat12v < voltage0) && (bat12v > voltage1)){
-			timeleft = timeleft1 + (timeleft0 - timeleft1) * ((bat12v - voltage1) / (voltage0 - voltage1));
-		}
-		Dmsg(50, "timeleft: %3.2f.\n", timeleft);
-		return timeleft;
-
+	if(this->isLineOn()){
+		/*
+		 * Caso o nobreak esteja alimentado, o único parâmetro que podemos utilizar é a corrente. Já que a tensão na bateria
+		 * é a tensão de flutuação (carregamento constante. Nessa condição vamos utilizar a "Peukert's law". Cabe uma observação
+		 * de que a Peukert's law só é uma boa aproximação com descarregamento constante.
+		 *
+		 */
+		return bat->calcTimeLeftPeukert(this->getBatteryLoad());
 	}else{
-		return 0;
+		return bat->calcTimeLeft(this->getBatteryLoad(),this->getBatteryVoltage());
 	}
 }
+double BrazilModelAbstract::getBatteryVoltageExpectedInitial(){
+	return this->bat->calcVoltageMax(this->getBatteryLoad());
+}
+double BrazilModelAbstract::getBatteryVoltageExpectedFinal(){
+	return this->bat->calcVoltageMin(this->getBatteryLoad());
+}
+double BrazilModelAbstract::getBatteryLoad(){
+	return this->bat->calcBatteryLoadC1(this->getOutputActivePower());
+}
 
+double BrazilModelAbstract::getBatteryVoltageExpected(double minutes){
+	double load = this->getBatteryLoad();
 
+	double voltage_max = bat->calcVoltageMax(load);
+	double voltage_min = bat->calcVoltageMin(load);
+	double timeleft_full = bat->calcTimeLeft(load, voltage_max);
+	double timeleft_target = timeleft_full - minutes;
+	double voltage=voltage_max;
+	while((bat->calcTimeLeft(load, voltage) > timeleft_target) && (voltage > voltage_min)){
+		voltage -= 0.1;
+	}
+	return voltage;
+}
 
 void BrazilModelAbstract::setBufferLock(){
 	this->lock = true;
