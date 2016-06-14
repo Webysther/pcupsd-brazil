@@ -123,111 +123,8 @@ BrazilModelAbstract::BrazilModelAbstract(unsigned char model){
 	this->lock = false;
 	this->regulating_relay = 0;
 	this->bat = new BrazilBattery();
-
-	memset (this->_timeleft,0, sizeof this->_timeleft);
-
-	this->_load[0] = 0.4; // 0.4C (fator de descarga de 0.4C/hora)
-	this->_load[1] = 0.6; // ...
-	this->_load[2] = 1.0; // ...
-	this->_load[3] = 2.0; // ...
-	this->_load[4] = 3.0; // ...
-
-	this->_voltage[0] =  9.00;
-	this->_voltage[1] =  9.25;
-	this->_voltage[2] =  9.50;
-	this->_voltage[3] =  9.75;
-	this->_voltage[4] =  10.00;
-	this->_voltage[5] =  10.25;
-	this->_voltage[6] =  10.50;
-	this->_voltage[7] =  10.75;
-	this->_voltage[8] =  11.00;
-	this->_voltage[9] =  11.25;
-	this->_voltage[10] = 11.50;
-	this->_voltage[11] = 11.75;
-	this->_voltage[12] = 12.00;
-	this->_voltage[13] = 12.25;
-	this->_voltage[14] = 12.50;
-
-	this->_timeleft[0][0] = 0;
-	this->_timeleft[0][1] = 0;
-	this->_timeleft[0][2] = 0;
-	this->_timeleft[0][3] = 0;
-	this->_timeleft[0][4] = 0;
-	this->_timeleft[0][5] = 0;
-	this->_timeleft[0][6] = 0;
-	this->_timeleft[0][7] = 0;
-	this->_timeleft[0][8] = 0;
-	this->_timeleft[0][9] = 0;
-	this->_timeleft[0][10] = 0;
-	this->_timeleft[0][11] = 1.19;
-	this->_timeleft[0][12] = 22.69;
-	this->_timeleft[0][13] = 44.19;
-	this->_timeleft[0][14] = 65.69;
-
-	this->_timeleft[1][0] = 0;
-	this->_timeleft[1][1] = 0;
-	this->_timeleft[1][2] = 0;
-	this->_timeleft[1][3] = 0;
-	this->_timeleft[1][4] = 0;
-	this->_timeleft[1][5] = 0;
-	this->_timeleft[1][6] = 0;
-	this->_timeleft[1][7] = 0;
-	this->_timeleft[1][8] = 6.29;
-	this->_timeleft[1][9] = 13.21;
-	this->_timeleft[1][10] = 20.13;
-	this->_timeleft[1][11] = 27.04;
-	this->_timeleft[1][12] = 33.96;
-	this->_timeleft[1][13] = 40.88;
-	this->_timeleft[1][14] = 47.8;
-
-	this->_timeleft[2][0] = 0;
-	this->_timeleft[2][1] = 0;
-	this->_timeleft[2][2] = 0;
-	this->_timeleft[2][3] = 0;
-	this->_timeleft[2][4] = 1.44;
-	this->_timeleft[2][5] = 3.77;
-	this->_timeleft[2][6] = 6.1;
-	this->_timeleft[2][7] = 8.43;
-	this->_timeleft[2][8] = 10.76;
-	this->_timeleft[2][9] = 13.09;
-	this->_timeleft[2][10] = 15.42;
-	this->_timeleft[2][11] = 17.75;
-	this->_timeleft[2][12] = 20.08;
-	this->_timeleft[2][13] = 22.41;
-	this->_timeleft[2][14] = 24.74;
-
-	this->_timeleft[3][0] = 0;
-	this->_timeleft[3][1] = 0;
-	this->_timeleft[3][2] = 0;
-	this->_timeleft[3][3] = 0;
-	this->_timeleft[3][4] = 0;
-	this->_timeleft[3][5] = 0.83;
-	this->_timeleft[3][6] = 2;
-	this->_timeleft[3][7] = 3.18;
-	this->_timeleft[3][8] = 4.35;
-	this->_timeleft[3][9] = 5.52;
-	this->_timeleft[3][10] = 6.69;
-	this->_timeleft[3][11] = 7.86;
-	this->_timeleft[3][12] = 9.04;
-	this->_timeleft[3][13] = 10.21;
-	this->_timeleft[3][14] = 11.38;
-
-	this->_timeleft[4][0] = 0.28;
-	this->_timeleft[4][1] = 0.78;
-	this->_timeleft[4][2] = 1.28;
-	this->_timeleft[4][3] = 1.78;
-	this->_timeleft[4][4] = 2.29;
-	this->_timeleft[4][5] = 2.79;
-	this->_timeleft[4][6] = 3.29;
-	this->_timeleft[4][7] = 3.79;
-	this->_timeleft[4][8] = 4.3;
-	this->_timeleft[4][9] = 4.8;
-	this->_timeleft[4][10] = 5.3;
-	this->_timeleft[4][11] = 5.8;
-	this->_timeleft[4][12] = 6.31;
-	this->_timeleft[4][13] = 6.81;
-	this->_timeleft[4][14] = 7.31;
 }
+
 BrazilModelAbstract::~BrazilModelAbstract(){
 	delete this->bat;
 }
@@ -286,15 +183,13 @@ int BrazilModelAbstract::testBuffer(unsigned char *buffer, unsigned int datasize
 	default:
 		return -1;
 	}
-
-
-
 	return 0;
 }
 
 double BrazilModelAbstract::getBatteryVoltageNom(){
 	return this->bat->getBatteryVoltageNom();
 }
+
 double BrazilModelAbstract::getBatteryLevel(){
 	if(this->isLineOn()){
 		return 100;
@@ -302,7 +197,6 @@ double BrazilModelAbstract::getBatteryLevel(){
 		return this->bat->calcLevel(this->getBatteryLoad(), this->getBatteryVoltage());
 	}
 }
-
 double BrazilModelAbstract::getBatteryTimeLeft(){
 	if(this->isLineOn()){
 		/*
@@ -311,9 +205,9 @@ double BrazilModelAbstract::getBatteryTimeLeft(){
 		 * de que a Peukert's law só é uma boa aproximação com descarregamento constante.
 		 *
 		 */
-		return bat->calcTimeLeftPeukert(this->getBatteryLoad());
+		return bat->calcTimeLeftPeukert(this->getBatteryLoad())*this->getInverterEfficiency();
 	}else{
-		return bat->calcTimeLeft(this->getBatteryLoad(),this->getBatteryVoltage());
+		return bat->calcTimeLeft(this->getBatteryLoad(),this->getBatteryVoltage())*this->getInverterEfficiency();
 	}
 }
 double BrazilModelAbstract::getBatteryVoltageExpectedInitial(){
@@ -325,19 +219,17 @@ double BrazilModelAbstract::getBatteryVoltageExpectedFinal(){
 double BrazilModelAbstract::getBatteryLoad(){
 	return this->bat->calcBatteryLoadC1(this->getOutputActivePower());
 }
-
-double BrazilModelAbstract::getBatteryVoltageExpected(double minutes){
+bool BrazilModelAbstract::isBatteryVoltageLow(){
 	double load = this->getBatteryLoad();
 
 	double voltage_max = bat->calcVoltageMax(load);
 	double voltage_min = bat->calcVoltageMin(load);
-	double timeleft_full = bat->calcTimeLeft(load, voltage_max);
-	double timeleft_target = timeleft_full - minutes;
-	double voltage=voltage_max;
-	while((bat->calcTimeLeft(load, voltage) > timeleft_target) && (voltage > voltage_min)){
-		voltage -= 0.1;
+	double voltage = this->getBatteryVoltage();
+	double rate = (voltage - voltage_min)/(voltage_max - voltage_min);
+	if(rate < 0.25){
+		return true;
 	}
-	return voltage;
+	return false;
 }
 
 void BrazilModelAbstract::setBufferLock(){

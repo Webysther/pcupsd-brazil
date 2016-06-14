@@ -88,9 +88,11 @@ public:
 	double getBatteryTimeLeft();
 	double getBatteryVoltageExpectedInitial();
 	double getBatteryVoltageExpectedFinal();
-	double getBatteryVoltageExpected(double minutes);
 
 	double getBatteryLoad();
+	bool isBatteryVoltageLow();
+
+	virtual double getInverterEfficiency() = 0;
 	virtual int getBatteryCount() = 0;
 
 	virtual double getOutputPowerNom() = 0;
@@ -115,9 +117,6 @@ public:
 	virtual bool isOutputOn() = 0;
 	virtual bool isBatteryCritical() = 0;
 
-	bool isBatteryVoltageLow(){
-		return this->getBatteryVoltage() <= (this->getBatteryCount() * 10);
-	}
 	double getOutputPower(){
 		return this->getOutputCurrent() * this->getOutputVoltage();
 	}
@@ -135,6 +134,8 @@ public:
 
 	static const unsigned int BUFFERLEN = 200;
 
+	BrazilBattery *bat;
+
 protected:
 	unsigned char _buffer[BrazilModelAbstract::BUFFERLEN];
 	unsigned char _events[BrazilModelAbstract::BUFFERLEN];
@@ -147,7 +148,6 @@ protected:
 	double _voltage[15];
 	double _timeleft[5][15];
 
-	BrazilBattery *bat;
 
 private:
 };
@@ -267,6 +267,7 @@ public:
 	int getLineVoltageMin();
 	int getLineVoltageMax();
 	int getBatteryCount();
+	double getInverterEfficiency();
 
 	bool hasShutdownAuto();
 	char *getModelName();
@@ -291,6 +292,7 @@ public:
 	int getLineVoltageMin();
 	int getLineVoltageMax();
 	int getBatteryCount();
+	double getInverterEfficiency();
 
 	bool hasShutdownAuto();
 	char *getModelName();
@@ -314,6 +316,7 @@ public:
 	int getLineVoltageMin();
 	int getLineVoltageMax();
 	int getBatteryCount();
+	double getInverterEfficiency();
 
 	bool hasShutdownAuto();
 	char *getModelName();
@@ -337,6 +340,7 @@ public:
 	int getLineVoltageMin();
 	int getLineVoltageMax();
 	int getBatteryCount();
+	double getInverterEfficiency();
 
 	bool hasShutdownAuto();
 	char *getModelName();
@@ -362,6 +366,7 @@ public:
 	int getLineVoltageMin();
 	int getLineVoltageMax();
 	int getBatteryCount();
+	double getInverterEfficiency();
 
 	bool hasShutdownAuto();
 	char *getModelName();
@@ -385,6 +390,7 @@ public:
 	int getLineVoltageMin();
 	int getLineVoltageMax();
 	int getBatteryCount();
+	double getInverterEfficiency();
 
 	bool hasShutdownAuto();
 	char *getModelName();

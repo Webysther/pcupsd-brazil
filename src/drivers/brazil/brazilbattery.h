@@ -27,10 +27,13 @@ public:
 	static const double VOLTAGE_12V_REF = 12.0;
 	static const double VOLTAGE_12V_C1_MIN = 10.4;
 	static const double VOLTAGE_12V_C1_MAX = 12.2;
-	static const double AMPER_HOUR_C1 = 4.8;
+	static const double AMPER_HOUR_C1 = 5.2;
 	static const double LOAD_MIN = 0.6;
 	static const double LOAD_MAX = 5.0;
-	static const double CST_PEUKERT = 1.2;
+	static const double PEUKERT_POW = 1.54;
+	static const double PEUKERT_MUL = 1.68;
+	static const double TIMELEFT_POW = 1.58;
+	static const double TIMELEFT_MUL = 1.85;
 
 protected:
 	double calcTimeLeftC1(double voltage);

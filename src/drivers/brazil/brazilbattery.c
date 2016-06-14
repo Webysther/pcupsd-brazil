@@ -9,6 +9,18 @@
 #include "apc.h"
 #include "brazilbattery.h"
 
+/*
+ * Para calcular o timeleft da bateria foi feita uma interpolação cubica para descobrir
+ * quais são os coeficientes que geraria uma curva similar aos datasheets disponíveis
+ * na web. Esses coeficientes são os COEF_C1[]. A função calcTimeLeftC1() calcula o timeleft
+ * para uma taxa de descarga de 1C. Para aproximar o timeleft com outras cargas é feita
+ * a corelação entre as tensões com uma carga diferente em calcTimeLeft().
+ *
+ * Em resumo:
+ * 1) As tensões inícial e final da bateria é uma função da carga na calcTimeLeft()
+ * 2) O timeleft resultante não é diretamente proporcional a carga. Por esse motivo
+ *    o timeleft da curva C1 é dividido pela carga (load) elevada por um fator de 1.2.
+ */
 
 const double BrazilBattery::COEF_C1[4] = {-5976.6571433071,1695.1547620352,-160.3571428695,5.0595238099};
 const double BrazilBattery::COEF_VI[4] = {12.760511,-0.669034,0.121307,-0.012784};
@@ -28,7 +40,7 @@ double BrazilBattery::getBatteryVoltageNom(){
 	return BrazilBattery::VOLTAGE_12V_REF * this->battery_12v_count;
 }
 double BrazilBattery::calcBatteryLoadC1(double act_power){
-	return (act_power / this->getBatteryVoltageNom()) / BrazilBattery::AMPER_HOUR_C1;
+	return act_power / (this->getBatteryVoltageNom() * BrazilBattery::AMPER_HOUR_C1);
 }
 
 double BrazilBattery::calcTimeLeft(double load, double voltage){
@@ -43,12 +55,12 @@ double BrazilBattery::calcTimeLeft(double load, double voltage){
 	double prop = (voltage - vload_min) / (vload_max - vload_min);
 	double voltage_c1 = vc1_min + (vc1_max - vc1_min) * prop;
 
-	double timeleft = this->calcTimeLeftC1(voltage_c1);
+	double timeleft = BrazilBattery::TIMELEFT_MUL * this->calcTimeLeftC1(voltage_c1) / pow(load,BrazilBattery::TIMELEFT_POW);
 	return timeleft;
 }
 double BrazilBattery::calcTimeLeftPeukert(double load){
 	if(load < BrazilBattery::LOAD_MIN) load = BrazilBattery::LOAD_MIN;
-	double timeleft = (BrazilBattery::AMPER_HOUR_C1/pow(load*BrazilBattery::AMPER_HOUR_C1,BrazilBattery::CST_PEUKERT)) * 60;
+	double timeleft = BrazilBattery::PEUKERT_MUL * (BrazilBattery::AMPER_HOUR_C1/pow(load*BrazilBattery::AMPER_HOUR_C1,BrazilBattery::PEUKERT_POW)) * 60;
 	return timeleft;
 }
 double BrazilBattery::calcLevel(double load, double voltage){

@@ -86,6 +86,9 @@ bool BrazilModelBackUPS1500::hasShutdownAuto(){
 int BrazilModelBackUPS1500::getBatteryCount(){
 	return 2;
 }
+double BrazilModelBackUPS1500::getInverterEfficiency(){
+	return 1.0;
+}
 
 char *BrazilModelBackUPS1500::getModelName(){
 	static char name[MAXSTRING];

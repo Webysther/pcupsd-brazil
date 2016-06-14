@@ -25,6 +25,7 @@
  */
 #include "apc.h"
 #include <termios.h>
+#include <math.h>
 
 
 
@@ -2950,6 +2951,7 @@ static void brazil_getSchedule();
 static void brazil_setSchedule();
 static void brazil_cancelSchedule();
 static void brazil_testBatteryHealth();
+static void brazil_testTimeLeftRoutines();
 
 #endif
 
@@ -3082,7 +3084,9 @@ static void brazil_cancelSchedule(){
 	(((BrazilUpsDriver*)(ups)->driver))->programmation(false,0,false,0);
 }
 static void brazil_testBatteryHealth(){
-	double testlimit = 80;
+	BrazilModelAbstract *br = ((BrazilUpsDriver*)(ups)->driver)->model;
+
+	double testlimit = 50;
 
 	char *cmd;
 	pmsg("\n"
@@ -3094,7 +3098,7 @@ static void brazil_testBatteryHealth(){
 	if (tolower(*cmd) != 'y'){
 		return;
 	}
-	if(((BrazilUpsDriver*)(ups)->driver)->model->isCharging()){
+	if(br->isCharging()){
 		pmsg("\n"
 				"Attention!!! The battery is charging. This test was designed for when the battery is fully charged. Do you want to continue anyway?\n"
 				"Y) Yes\n"
@@ -3105,11 +3109,10 @@ static void brazil_testBatteryHealth(){
 			return;
 		}
 	}
-	if(! ((BrazilUpsDriver*)(ups)->driver)->model->isLineOn()){
+	if(! br->isLineOn()){
 		pmsg("\nAttention!!! The UPS is not connected to mains. Correct and try again.\n\n");
 		return;
 	}
-
 
 	time_t start,end,now;
 	struct tm tm_start,tm_end,tm_now;
@@ -3118,18 +3121,18 @@ static void brazil_testBatteryHealth(){
 	gmtime_r(&start, &tm_start);
 
 	char csv_filename[120];
-	sprintf(csv_filename,"apctest.brazil.%04d-%02d-%02d-%02d-%02d-%02d.csv",(tm_start.tm_year+1900),tm_start.tm_mon+1,tm_start.tm_mday,tm_start.tm_hour,tm_start.tm_min,tm_start.tm_sec);
+	sprintf(csv_filename,"apctest.BatteryHealth.%04d-%02d-%02d-%02d-%02d-%02d.csv",(tm_start.tm_year+1900),tm_start.tm_mon+1,tm_start.tm_mday,tm_start.tm_hour,tm_start.tm_min,tm_start.tm_sec);
 	FILE *CsvFile=fopen (csv_filename,"w");
 	setvbuf (CsvFile , NULL , _IOFBF , 65535 );
 
-	double timeleft0, timeleft1, bat0, bat1, power0, power1, batload0, batload1, bat_expected0, bat_expected1, timeleft_peukert, timeleft_rate;
+	double timeleft0, timeleft1, bat0, bat1, power0, power1, batload0, batload1, bat_expected, timeleft_peukert, timeleft_rate;
 
-	bat_expected0 = ((BrazilUpsDriver*)(ups)->driver)->model->getBatteryVoltageExpectedInitial();
-	timeleft_peukert = ((BrazilUpsDriver*)(ups)->driver)->model->getBatteryTimeLeft();
-	batload0 = ((BrazilUpsDriver*)(ups)->driver)->model->getBatteryLoad();
+	bat_expected = br->getBatteryVoltageExpectedInitial();
+	timeleft_peukert = br->getBatteryTimeLeft();
+	batload0 = br->getBatteryLoad();
 
 	fprintf(CsvFile,"\"Fator de descarga da bateria no início do teste (C):\",%1.2f,\"O fator de descarga deve-se permanecer o mais constante possível.\"\n",batload0);
-	fprintf(CsvFile,"\"Tesão esperada no início do teste (V):\",%2.2f\n",bat_expected0);
+	fprintf(CsvFile,"\"Tesão esperada no início do teste (V):\",%2.2f\n",bat_expected);
 	fprintf(CsvFile,"\"Tempo restante calculado pela formula de Peukert (minutos):\",%2.2f\n",timeleft_peukert);
 
 	pmsg("1) Iniciando teste!\n");
@@ -3139,44 +3142,47 @@ static void brazil_testBatteryHealth(){
 	sleep(5); // sleep para estabilizar a tensão da bateria de início.
 	((BrazilUpsDriver*)(ups)->driver)->refresh();
 
-	timeleft0 = ((BrazilUpsDriver*)(ups)->driver)->model->getBatteryTimeLeft();
-	timeleft_rate = timeleft0 / timeleft_peukert;
-	bat0 = timeleft1 = ((BrazilUpsDriver*)(ups)->driver)->model->getBatteryVoltage();
-	power0 = ((BrazilUpsDriver*)(ups)->driver)->model->getOutputActivePower();
+	timeleft0 = br->getBatteryTimeLeft();
+	bat0 = timeleft1 = br->getBatteryVoltage();
+	power0 = br->getOutputActivePower();
 
+	int transcorrido = 0;
 	char datetime[50];
 	fprintf(CsvFile,"\n");
-	fprintf(CsvFile,"\"Data\",\"Tensão da bateria (V)\",\"Expectativa do tempo restante (minutos)\",\"Fator de descarga(C)\"\n");
+	fprintf(CsvFile,"\"Data\",\"segundos\",\"Tensão da bateria (V)\",\"Expectativa do tempo restante (minutos)\",\"Fator de descarga(C)\"\n");
 	do{
 		((BrazilUpsDriver*)(ups)->driver)->refresh();
 		time(&now);
 		gmtime_r(&now, &tm_now);
+		transcorrido = floor(now - start);
 		sprintf(datetime,"%04d-%02d-%02d %02d:%02d:%02d",(tm_now.tm_year+1900),tm_now.tm_mon+1,tm_now.tm_mday,tm_now.tm_hour,tm_now.tm_min,tm_now.tm_sec);
-		fprintf(CsvFile,"\"%s\",\"%2.2f\",\"%2.1f\",\"%1.2f\"\n",
-				datetime,((BrazilUpsDriver*)(ups)->driver)->model->getBatteryVoltage(),
-				((BrazilUpsDriver*)(ups)->driver)->model->getBatteryTimeLeft(),
-				((BrazilUpsDriver*)(ups)->driver)->model->getBatteryLoad());
-		pmsg("  2.2) Nível de tensão da bateria: %2.1f\%, Timeleft: %2.1f.\n",((BrazilUpsDriver*)(ups)->driver)->model->getBatteryLevel(),((BrazilUpsDriver*)(ups)->driver)->model->getBatteryTimeLeft());
-	}while(((BrazilUpsDriver*)(ups)->driver)->model->getBatteryLevel() > testlimit);
+		fprintf(CsvFile,"\"%s\",\"%d\",\"%2.2f\",\"%2.1f\",\"%1.2f\"\n",
+				datetime,
+				transcorrido,
+				br->getBatteryVoltage(),
+				br->getBatteryTimeLeft(),
+				br->getBatteryLoad());
+		pmsg("  2.2) Nível de tensão da bateria = %2.1f\%, Battery voltage = %2.2fV, Timeleft = %2.1f minutes.\n",br->getBatteryLevel(),br->getBatteryVoltage(),br->getBatteryTimeLeft());
+	}while(br->getBatteryLevel() > testlimit);
 	fflush(CsvFile);
 	fclose(CsvFile);
-
-	timeleft1 = ((BrazilUpsDriver*)(ups)->driver)->model->getBatteryTimeLeft();
-	bat1 = ((BrazilUpsDriver*)(ups)->driver)->model->getBatteryVoltage();
-	power1 = ((BrazilUpsDriver*)(ups)->driver)->model->getOutputActivePower();
-	batload1 = ((BrazilUpsDriver*)(ups)->driver)->model->getBatteryLoad();
-	bat_expected1 = ((BrazilUpsDriver*)(ups)->driver)->model->getBatteryVoltageExpectedInitial();
 
 	time(&end);
 	gmtime_r(&end, &tm_end);
 
+	timeleft1 = br->getBatteryTimeLeft();
+	bat1 = br->getBatteryVoltage();
+	power1 = br->getOutputActivePower();
+	batload1 = br->getBatteryLoad();
+
+	double seconds = end - start;
+	timeleft_rate = (timeleft0 - timeleft1) / (seconds / 60);
+
 	pmsg("3) Enviando comando para ligar a entrada.\n");
 	((BrazilUpsDriver*)(ups)->driver)->turnLineOn(true);
 
-	double seconds = end - start;
-	bat_expected1 = ((BrazilUpsDriver*)(ups)->driver)->model->getBatteryVoltageExpected(seconds / 60);
-
-	pmsg("Dados sobre o teste:\n");
+	pmsg("4) Resultados:\n");
+	pmsg("Dados básicos do teste:\n");
 	pmsg("  Potência na saída no início:       %03.2f W\n",power0);
 	pmsg("  Potência na saída no fim:          %03.2f W\n",power1);
 	pmsg("  Fator de descarga da bateria ini:  %01.2f W\n",batload0);
@@ -3184,7 +3190,7 @@ static void brazil_testBatteryHealth(){
 	pmsg("  Data de início:                    %04d-%02d-%02d %02d:%02d:%02d UTC\n",1900+tm_start.tm_year,tm_start.tm_mon,tm_start.tm_mday,tm_start.tm_hour,tm_start.tm_min,tm_start.tm_sec);
 	pmsg("  Data de fim:                       %04d-%02d-%02d %02d:%02d:%02d UTC\n\n",1900+tm_end.tm_year,tm_end.tm_mon,tm_end.tm_mday,tm_end.tm_hour,tm_end.tm_min,tm_end.tm_sec);
 	pmsg("Expectativa antes do início (em função apenas da carga):\n");
-	pmsg("  Tensão da bateria:                 %03.2f V\n",bat_expected0);
+	pmsg("  Tensão da bateria:                 %03.2f V\n",bat_expected);
 	pmsg("  Tempo restante Teórico Peukert:    %02.2f minutos\n",timeleft_peukert);
 	pmsg("No início do teste:\n");
 	pmsg("  Tensão da bateria:                 %03.2f V\n",bat0);
@@ -3192,33 +3198,119 @@ static void brazil_testBatteryHealth(){
 	pmsg("No fim do teste:\n");
 	pmsg("  Tensão da bateria:                 %03.2f V\n",bat1);
 	pmsg("  Tempo restante da bateria:         %03.2f minutos\n",timeleft1);
-	pmsg("  Tensão na bateria esperada:        %02.2fV após %2.2f minutos\n",bat_expected1,seconds / 60);
 	pmsg("Análise dos resultados:\n");
-	if(timeleft_rate > 1.5 || timeleft_rate < 0.75){
-		pmsg("  Timeleft teórico discrepante:      %1.2f (timeleft_inicial/timeleft_teórico)\n",timeleft_rate);
+	pmsg("  Duração do teste:                  %02.1f minutos\n",seconds/60);
+	pmsg("  Timeleft0 (estimado no início):    %02.1f minutos\n",timeleft0);
+	pmsg("  Timeleft1 (estimado no fim):       %02.1f minutos\n",timeleft1);
+	pmsg("  Diff (Timeleft0 - Timeleft1):      %02.1f minutos\n",timeleft0-timeleft1);
+	if((timeleft_rate > 0.75) && (timeleft_rate < 1.25)){
+		pmsg("  Razão (Diff / Duração):            %01.2f (próximo de 1)\n",timeleft_rate);
+		pmsg("  Resultado:                         SUCESSO! A razão entre o tempo transcorrido e o timeleft previsto próximo de 1.\n");
+		pmsg("                                     As baterias parece estar boa ou pode ser necessário revisar as rotinas de cálculo.\n");
 	}else{
-		pmsg("  Timeleft teórico adequado:         %1.2f (timeleft_inicial/timeleft_teórico)\n",timeleft_rate);
+		pmsg("  Razão (Diff / Duração):            %01.2f (erro maior que 25%)\n",timeleft_rate);
+		pmsg("  Saúde da bateria:                  FALHOU! A razão entre o tempo transcorrido e o timeleft previsto fora da margem de 20%.\n");
+		pmsg("                                     Pode ser necessário trocar as baterias ou revisar as rotinas de cálculo.\n");
+		pmsg("                                     Ajuste os valores obtidos no arquivo de configuração.\n");
 	}
-	if((timeleft0 - timeleft1) < (seconds / 60)){
-		pmsg("  Timeleft estimado no início:       %02.1f minutos\n",timeleft0);
-		pmsg("  Duração do teste:                  %02.1f minutos\n",seconds/60);
-		pmsg("  Timeleft estimado no fim:          %02.1f minutos\n",timeleft1);
-		pmsg("  Timeleft super estimado:           %02.1f minutos a mais do transcorrido\n",(seconds / 60) - timeleft0 - timeleft1);
-		pmsg("  Saúde da bateria:                  SUCESSO! A duração do teste foi maior que a diferença entre os timeleft de início e fim.\n");
-		pmsg("                                     A Bateria parece estar boa ou as rotinas de cálculo precissão ser revisadas.\n");
-	}else{
-		pmsg("  Timeleft estimado no início:       %02.1f minutos\n",timeleft0);
-		pmsg("  Duração do teste:                  %02.1f minutos\n",seconds/60);
-		pmsg("  Timeleft estimado no fim:          %02.1f minutos\n",timeleft1);
-		pmsg("  Timeleft super estimado:           %02.1f minutos a MENOS do transcorrido\n",timeleft0 - timeleft1 - (seconds / 60));
-		pmsg("  Saúde da bateria:                  FALHOU! A duração do teste foi menor que a diferença entre os timeleft de início e fim.\n");
-		pmsg("                                     Pode ser necessário trocar as baterias ou as rotinas de cálculo precissão ser revisadas.\n");
-	}
-	pmsg("Dados extras gravados no arquivo:    %s\n",csv_filename);
-	pmsg("Fim do teste!\n");
-
-
+	pmsg("\n");
+	pmsg("5) Dados extras gravados no arquivo:    %s\n",csv_filename);
+	pmsg("6) Fim do teste!\n");
 }
+static void brazil_testTimeLeftRoutines(){
+	pmsg("1) Iniciando teste das rotinas de calculo de autonomia!\n");
+
+	time_t start;
+	struct tm tm_start;
+
+	time(&start);
+	gmtime_r(&start, &tm_start);
+
+	char csv_filename[120];
+	sprintf(csv_filename,"apctest.TimeLeftRoutines.%04d-%02d-%02d-%02d-%02d-%02d.csv",(tm_start.tm_year+1900),tm_start.tm_mon+1,tm_start.tm_mday,tm_start.tm_hour,tm_start.tm_min,tm_start.tm_sec);
+	FILE *CsvFile=fopen (csv_filename,"w");
+	setvbuf (CsvFile , NULL , _IOFBF , 65535 );
+
+	BrazilModelAbstract *br = ((BrazilUpsDriver*)(ups)->driver)->model;
+
+	fprintf(CsvFile,"\"### INFORMAÇÕES BÁSICAS ###\"\n");
+	fprintf(CsvFile,"\"Modelo:\",\"%s\"\n",br->getModelName());
+	fprintf(CsvFile,"\"Tensão de entrada nominal:\",\"%3.0d\"\n",br->getLineVoltageNom());
+	fprintf(CsvFile,"\"Tensão de saída nominal:\",\"%3.0d\"\n",br->getOutputVoltageNom());
+	fprintf(CsvFile,"\"Potência de saída real (ativa) nominal:\",\"%4.0f\"\n",br->getOutputActivePowerNom());
+	fprintf(CsvFile,"\"Potência de saída total (ativa+reativa) nominal:\",\"%4.0f\"\n",br->getOutputPowerNom());
+	fprintf(CsvFile,"\"Número de baterias 12V:\",\"%1.0d\"\n",br->getBatteryCount());
+	fprintf(CsvFile,"\n");
+	fprintf(CsvFile,"\"### DADOS INICIAIS TEÓRICOS\"\n");
+	fprintf(CsvFile,"\"Os dados à seguir são funções unicamente da corrente requerida da bateria (A).\"\n");
+	fprintf(CsvFile,"\n");
+	fprintf(CsvFile,"\"A taxa de descarregamento da bateria (C) é a relação entre a corrente (A) e a corrente\"\n");
+	fprintf(CsvFile,"\"de C1 (Amper por 1 hora), que é uma constante.\"\n");
+	fprintf(CsvFile,"\n");
+	fprintf(CsvFile,"\"Quando o nobreak está funcionando com as baterias, a tensão inicial prevista na bateria\"\n");
+	fprintf(CsvFile,"\"é uma função da taxa de descarregamento. Essa tensão inicial teórica é fundamental para as\"\n");
+	fprintf(CsvFile,"\"funções de timeleft. Ela também fornece informação para estimar se a bateria está em uma\"\n");
+	fprintf(CsvFile,"\"boa condição\"\n");
+	fprintf(CsvFile,"\n");
+	fprintf(CsvFile,"\"A tensão mínima das baterias é uma função da taxa de descarregamento. Quando o nobreak\"\n");
+	fprintf(CsvFile,"\"está funcionando com as baterias, as baterias não podem atingir uma tensão muito baixa.\"\n");
+	fprintf(CsvFile,"\"Caso isso ocorra elas serão danificadas. A tensão mínima também é utilizada para as funções\"\n");
+	fprintf(CsvFile,"\"de calculo da autonomia.\"\n");
+	fprintf(CsvFile,"\n");
+	fprintf(CsvFile,"\"Quando o nobreak está ligado a rede elétrica a autonomia é calculada com base na formula\"\n");
+	fprintf(CsvFile,"\"de Peikert. Essa autonomia teórica é uma função da carga da bateria. Compare o dados\"\n");
+	fprintf(CsvFile,"\"gerados com o manual do fabricante\"\n");
+	fprintf(CsvFile,"\n");
+	fprintf(CsvFile,"\"Potência ativa de saída (W)\",\"Taxa de descarga da bateria (C)\",\"Tensão inicial (V)\",\"Autonomia (minutos)\"\n");
+	double power = 75;
+	do{
+		power += 25;
+		double batload = power / (br->bat->AMPER_HOUR_C1 * br->bat->getBatteryVoltageNom());
+		double timeleft = br->bat->calcTimeLeftPeukert(batload);
+		double volt_inicial = br->bat->calcVoltageMax(batload);
+		fprintf(CsvFile,"\"%4.1f\",\"%1.1f\",\"%2.2f\",\"%2.1f\"\n",power,batload,volt_inicial,timeleft);
+	}while(power < br->getOutputActivePowerNom());
+
+	fprintf(CsvFile,"\n");
+	fprintf(CsvFile,"\n");
+	fprintf(CsvFile,"\"### AUTONOMIA EM FUNÇÃO DA TENSÃO DA BATERIA\"\n");
+	fprintf(CsvFile,"Quando o nobreak está funcionando com as baterias a autonomia é estimada com base na\"\n");
+	fprintf(CsvFile,"tensão das baterias (V) e na taxa de descarregamento da bateria (C).\n");
+	fprintf(CsvFile,"\n");
+	fprintf(CsvFile,"\"Potência ativa de saída (W)\",\"Taxa de descarga da bateria (C)\",\"Tensão (V)\",\"Autonomia (minutos)\"\n");
+	power = 75;
+	do{
+		power += 25;
+		double batload = power / (br->bat->AMPER_HOUR_C1 * br->bat->getBatteryVoltageNom());
+		double volt_max = br->bat->calcVoltageMax(batload);
+		double volt_min = br->bat->calcVoltageMin(batload);
+		for(double volt=volt_max ; volt>volt_min ; volt-=((volt_max-volt_min)/10)){
+			double timeleft = br->bat->calcTimeLeft(batload,volt);
+			fprintf(CsvFile,"\"%4.1f\",\"%1.1f\",\"%2.2f\",\"%2.1f\"\n",power,batload,volt,timeleft);
+
+		}
+	}while(power < br->getOutputActivePowerNom());
+	fprintf(CsvFile,"\n");
+	fprintf(CsvFile,"\n");
+	fprintf(CsvFile,"\"### AUTONOMIA EM FUNÇÃO DA TENSÃO DA BATERIA COM C1\"\n");
+	fprintf(CsvFile,"Quando o nobreak está funcionando com as baterias a autonomia é estimada com base na\"\n");
+	fprintf(CsvFile,"tensão das baterias (V) e na taxa de descarregamento da bateria (C).\n");
+	fprintf(CsvFile,"\n");
+	fprintf(CsvFile,"\"Potência ativa de saída (W)\",\"Taxa de descarga da bateria (C)\",\"Tensão (V)\",\"Autonomia (minutos)\"\n");
+	double batload = 1;
+	power = br->bat->getBatteryVoltageNom() * br->bat->AMPER_HOUR_C1;
+	for(double volt=br->bat->calcVoltageMax(1) ; volt > br->bat->calcVoltageMin(1) ; volt-=0.1){
+		double timeleft = br->bat->calcTimeLeft(batload,volt);
+		fprintf(CsvFile,"\"%4.1f\",\"%1.1f\",\"%2.2f\",\"%2.1f\"\n",power,batload,volt,timeleft);
+	}
+
+	fflush(CsvFile);
+	fclose(CsvFile);
+
+	pmsg("2) Dados gravados no arquivo:    %s\n",csv_filename);
+	pmsg("3) Fim do teste!\n");
+}
+
 static void do_brazil_testing(void)
 {
 #ifdef HAVE_BRAZIL_DRIVER
@@ -3239,6 +3331,7 @@ static void do_brazil_testing(void)
 				"6) Test set input turn off\n"
 				"7) Test set input Turn on\n"
 				"8) Test battery health\n"
+				"9) Generate data of timeleft functions\n"
 				"Q) Quit\n\n");
 
 		cmd = get_cmd("Select function number: ");
@@ -3269,6 +3362,9 @@ static void do_brazil_testing(void)
 				break;
 			case 8:
 				brazil_testBatteryHealth();
+				break;
+			case 9:
+				brazil_testTimeLeftRoutines();
 				break;
 			default:
 				if (tolower(*cmd) == 'q')
