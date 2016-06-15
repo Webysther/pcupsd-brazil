@@ -3086,7 +3086,7 @@ static void brazil_cancelSchedule(){
 static void brazil_testBatteryHealth(){
 	BrazilModelAbstract *br = ((BrazilUpsDriver*)(ups)->driver)->model;
 
-	double testlimit = 50;
+	double testlimit = 40;
 
 	char *cmd;
 	pmsg("\n"
@@ -3109,6 +3109,16 @@ static void brazil_testBatteryHealth(){
 			return;
 		}
 	}
+	pmsg("\n"
+			"Attention!!! You should NOT vary the loading of the UPS during testing. Do you want to continue?\n"
+			"Y) Yes\n"
+			"N) No\n\n");
+
+	cmd = get_cmd("Select the option: ");
+	if (tolower(*cmd) != 'y'){
+		return;
+	}
+
 	if(! br->isLineOn()){
 		pmsg("\nAttention!!! The UPS is not connected to mains. Correct and try again.\n\n");
 		return;
@@ -3125,7 +3135,8 @@ static void brazil_testBatteryHealth(){
 	FILE *CsvFile=fopen (csv_filename,"w");
 	setvbuf (CsvFile , NULL , _IOFBF , 65535 );
 
-	double timeleft0, timeleft1, bat0, bat1, power0, power1, batload0, batload1, bat_expected, timeleft_peukert, timeleft_rate;
+	double timeleft0, timeleft1, bat0, bat1, power0, power1, batload0, batload1, batload, bat_expected, timeleft_peukert, timeleft_rate, seconds;
+	bool batload_error;
 
 	bat_expected = br->getBatteryVoltageExpectedInitial();
 	timeleft_peukert = br->getBatteryTimeLeft();
@@ -3146,6 +3157,7 @@ static void brazil_testBatteryHealth(){
 	bat0 = timeleft1 = br->getBatteryVoltage();
 	power0 = br->getOutputActivePower();
 
+	batload_error = false;
 	int transcorrido = 0;
 	char datetime[50];
 	fprintf(CsvFile,"\n");
@@ -3154,6 +3166,10 @@ static void brazil_testBatteryHealth(){
 		((BrazilUpsDriver*)(ups)->driver)->refresh();
 		time(&now);
 		gmtime_r(&now, &tm_now);
+		batload = br->getBatteryLoad();
+		if((batload > batload0 * 1.25) || (batload < batload0 * 0.75)){
+			batload_error = true;
+		}
 		transcorrido = floor(now - start);
 		sprintf(datetime,"%04d-%02d-%02d %02d:%02d:%02d",(tm_now.tm_year+1900),tm_now.tm_mon+1,tm_now.tm_mday,tm_now.tm_hour,tm_now.tm_min,tm_now.tm_sec);
 		fprintf(CsvFile,"\"%s\",\"%d\",\"%2.2f\",\"%2.1f\",\"%1.2f\"\n",
@@ -3169,24 +3185,20 @@ static void brazil_testBatteryHealth(){
 
 	time(&end);
 	gmtime_r(&end, &tm_end);
+	seconds = end - start;
 
 	timeleft1 = br->getBatteryTimeLeft();
 	bat1 = br->getBatteryVoltage();
 	power1 = br->getOutputActivePower();
 	batload1 = br->getBatteryLoad();
 
-	double seconds = end - start;
 	timeleft_rate = (timeleft0 - timeleft1) / (seconds / 60);
 
 	pmsg("3) Enviando comando para ligar a entrada.\n");
 	((BrazilUpsDriver*)(ups)->driver)->turnLineOn(true);
 
 	pmsg("4) Resultados:\n");
-	pmsg("Dados básicos do teste:\n");
-	pmsg("  Potência na saída no início:       %03.2f W\n",power0);
-	pmsg("  Potência na saída no fim:          %03.2f W\n",power1);
-	pmsg("  Fator de descarga da bateria ini:  %01.2f W\n",batload0);
-	pmsg("  Fator de descarga da bateria fim:  %01.2f W\n",batload1);
+	pmsg("Datas de início e fim do teste:\n");
 	pmsg("  Data de início:                    %04d-%02d-%02d %02d:%02d:%02d UTC\n",1900+tm_start.tm_year,tm_start.tm_mon,tm_start.tm_mday,tm_start.tm_hour,tm_start.tm_min,tm_start.tm_sec);
 	pmsg("  Data de fim:                       %04d-%02d-%02d %02d:%02d:%02d UTC\n\n",1900+tm_end.tm_year,tm_end.tm_mon,tm_end.tm_mday,tm_end.tm_hour,tm_end.tm_min,tm_end.tm_sec);
 	pmsg("Expectativa antes do início (em função apenas da carga):\n");
@@ -3195,23 +3207,32 @@ static void brazil_testBatteryHealth(){
 	pmsg("No início do teste:\n");
 	pmsg("  Tensão da bateria:                 %03.2f V\n",bat0);
 	pmsg("  Tempo restante da bateria:         %02.2f minutos\n",timeleft0);
+	pmsg("  Potência na saída no início:       %03.2f W\n",power0);
+	pmsg("  Fator de descarga da bateria ini:  %01.2f W\n",batload0);
 	pmsg("No fim do teste:\n");
 	pmsg("  Tensão da bateria:                 %03.2f V\n",bat1);
 	pmsg("  Tempo restante da bateria:         %03.2f minutos\n",timeleft1);
+	pmsg("  Potência na saída no fim:          %03.2f W\n",power1);
+	pmsg("  Fator de descarga da bateria fim:  %01.2f W\n",batload1);
+	pmsg("  Houve variação da carga > 25%:     %s\n",(batload_error ? "SIM!" : "NÃO"));
 	pmsg("Análise dos resultados:\n");
-	pmsg("  Duração do teste:                  %02.1f minutos\n",seconds/60);
 	pmsg("  Timeleft0 (estimado no início):    %02.1f minutos\n",timeleft0);
 	pmsg("  Timeleft1 (estimado no fim):       %02.1f minutos\n",timeleft1);
 	pmsg("  Diff (Timeleft0 - Timeleft1):      %02.1f minutos\n",timeleft0-timeleft1);
-	if((timeleft_rate > 0.75) && (timeleft_rate < 1.25)){
-		pmsg("  Razão (Diff / Duração):            %01.2f (próximo de 1)\n",timeleft_rate);
-		pmsg("  Resultado:                         SUCESSO! A razão entre o tempo transcorrido e o timeleft previsto próximo de 1.\n");
-		pmsg("                                     As baterias parece estar boa ou pode ser necessário revisar as rotinas de cálculo.\n");
+	pmsg("  Duração do teste:                  %02.1f minutos\n",seconds/60);
+	pmsg("  Razão (Diff / Duração):            %03.1f\% \n",timeleft_rate);
+	if(batload_error){
+		pmsg("  Resultado:                         FALHOU!!! Houve variação da carga maior que 25%. Essa variação compromete o teste!\n");
+		pmsg("                                     Garanta que a carga não tenha uma variação maior que 25% durante esse teste.\n");
 	}else{
-		pmsg("  Razão (Diff / Duração):            %01.2f (erro maior que 25%)\n",timeleft_rate);
-		pmsg("  Saúde da bateria:                  FALHOU! A razão entre o tempo transcorrido e o timeleft previsto fora da margem de 20%.\n");
-		pmsg("                                     Pode ser necessário trocar as baterias ou revisar as rotinas de cálculo.\n");
-		pmsg("                                     Ajuste os valores obtidos no arquivo de configuração.\n");
+		if(timeleft_rate >= 0.75 && timeleft_rate <= 1.25){
+			pmsg("  Resultado:                         SUCESSO! O erro entre os Timeleft calculados e a duração medida foi menor que 25\%\n");
+			pmsg("                                     As baterias parece estar boa ou pode ser necessário revisar as rotinas de cálculo.\n");
+		}else{
+			pmsg("  Resultado:                         FALHOU! O erro entre os timeleft calculados e a duração medida foi maior que 25\%.\n");
+			pmsg("                                     Pode ser necessário trocar as baterias ou revisar as rotinas de cálculo.\n");
+			pmsg("                                     Ajuste os valores obtidos no arquivo de configuração.\n");
+		}
 	}
 	pmsg("\n");
 	pmsg("5) Dados extras gravados no arquivo:    %s\n",csv_filename);

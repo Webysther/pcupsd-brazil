@@ -64,9 +64,10 @@ double BrazilBattery::calcTimeLeftPeukert(double load){
 	return timeleft;
 }
 double BrazilBattery::calcLevel(double load, double voltage){
-	double voltage_i = this->calcVoltageMax(load);
-	double voltage_f = this->calcVoltageMin(load);
-	return ((voltage - voltage_f) / (voltage_i - voltage_f)) * 100;
+	double timeleft = this->calcTimeLeft(load, voltage);
+	double voltage_max = this->calcVoltageMax(load);
+	double timeleft_max = this->calcTimeLeft(load, voltage_max);
+	return 100 * (timeleft / timeleft_max);
 }
 
 double BrazilBattery::calcTimeLeftC1(double voltage){
