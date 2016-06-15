@@ -297,9 +297,38 @@ Section "Apcupsd Service" SecService
   File ${WINDIR}\email.exe
   File ${WINDIR}\background.exe
 
-  ;SetOutPath "$INSTDIR\driver"
-  ;SetOutPath "$INSTDIR\driver\i386"
-  ;SetOutPath "$INSTDIR\driver\amd64"
+  SetOutPath "$INSTDIR\driver"
+  File ${TOPDIR}\platforms\mingw\winusb\apccdc.inf
+  File ${TOPDIR}\platforms\mingw\winusb\apccdc.cat
+  File ${TOPDIR}\platforms\mingw\winusb\ftdiport.cat  
+  File ${TOPDIR}\platforms\mingw\winusb\ftd2xx.h
+  File ${TOPDIR}\platforms\mingw\winusb\ftdibus.inf
+  File ${TOPDIR}\platforms\mingw\winusb\ftdibus.cat
+  File ${TOPDIR}\platforms\mingw\winusb\ftdiport.inf
+  SetOutPath "$INSTDIR\driver\amd64"
+  File ${TOPDIR}\platforms\mingw\winusb\amd64\ftdibus.sys
+  File ${TOPDIR}\platforms\mingw\winusb\amd64\ftbusui.dll
+  File ${TOPDIR}\platforms\mingw\winusb\amd64\ftser2k.sys
+  File ${TOPDIR}\platforms\mingw\winusb\amd64\ftcserco.dll
+  File ${TOPDIR}\platforms\mingw\winusb\amd64\ftd2xx.lib
+  File ${TOPDIR}\platforms\mingw\winusb\amd64\ftserui2.dll
+  File ${TOPDIR}\platforms\mingw\winusb\amd64\ftlang.dll
+  File ${TOPDIR}\platforms\mingw\winusb\amd64\ftd2xx64.dll
+  SetOutPath "$INSTDIR\driver\Static"
+  SetOutPath "$INSTDIR\driver\Static\amd64"
+  File ${TOPDIR}\platforms\mingw\winusb\Static\amd64\ftd2xx.lib
+  SetOutPath "$INSTDIR\driver\Static\i386"
+  File ${TOPDIR}\platforms\mingw\winusb\Static\i386\ftd2xx.lib
+  SetOutPath "$INSTDIR\driver\i386"
+  File ${TOPDIR}\platforms\mingw\winusb\i386\ftdibus.sys
+  File ${TOPDIR}\platforms\mingw\winusb\i386\ftbusui.dll
+  File ${TOPDIR}\platforms\mingw\winusb\i386\ftd2xx.dll
+  File ${TOPDIR}\platforms\mingw\winusb\i386\ftser2k.sys
+  File ${TOPDIR}\platforms\mingw\winusb\i386\ftcserco.dll
+  File ${TOPDIR}\platforms\mingw\winusb\i386\ftd2xx.lib
+  File ${TOPDIR}\platforms\mingw\winusb\i386\ftserui2.dll
+  File ${TOPDIR}\platforms\mingw\winusb\i386\ftlang.dll  
+  
   File ${DEPKGS}\winddk\redist\wdf\x86\*.dll
   File ${DEPKGS}\winddk\redist\wdf\amd64\*.dll
 
@@ -365,14 +394,19 @@ Section "Multimon CGI programs" SecMultimon
 SectionEnd
 
 Section "USB Driver" SecUsbDrv
-  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\apcupsd.inf "USB\VID_051d&PID_0002"
-  ${If} $0 != 1
-    MessageBox MB_OK|MB_ICONEXCLAMATION  \
-      "The USB driver could not be automatically installed. You can ignore \
-       this if you do not plan to use Apcupsd with a USB UPS. Otherwise, please \
-       see $INSTDIR\driver\install.txt for instructions on installing the \
-       USB driver by hand."
-  ${EndIf}
+  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdiport.inf "USB\VID_0403&PID_6001"
+  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdiport.inf "USB\VID_0403&PID_6010"
+  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdiport.inf "USB\VID_0403&PID_6011"
+  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdiport.inf "USB\VID_0403&PID_6014"
+  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdiport.inf "USB\VID_0403&PID_6015"
+  
+  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdibus.inf "USB\VID_0403&PID_6001"
+  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdibus.inf "USB\VID_0403&PID_6010"
+  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdibus.inf "USB\VID_0403&PID_6011"
+  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdibus.inf "USB\VID_0403&PID_6014"
+  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdibus.inf "USB\VID_0403&PID_6015"
+  
+  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\apccdc.inf "USB\VID_051D&PID_C812"
 SectionEnd
 
 Section "Documentation" SecDoc
@@ -455,6 +489,7 @@ FunctionEnd
 
 LangString DESC_SecService ${LANG_ENGLISH} "Install Apcupsd on this system."
 LangString DESC_SecApctray ${LANG_ENGLISH} "Install Apctray. Shows status icon in the system tray."
+LangString DESC_SecUsbDrv ${LANG_ENGLISH} "Install USB driver. Required if you have a USB UPS."
 LangString DESC_SecDoc ${LANG_ENGLISH} "Install Documentation on this system."
 LangString DESC_SecMultimon ${LANG_ENGLISH} "Install MULTIMON cgi scripts for web-based monitoring."
 
@@ -462,6 +497,7 @@ LangString DESC_SecMultimon ${LANG_ENGLISH} "Install MULTIMON cgi scripts for we
   !insertmacro MUI_DESCRIPTION_TEXT ${SecService} $(DESC_SecService)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecApctray} $(DESC_SecApctray)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecMultimon} $(DESC_SecMultimon)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecUsbDrv} $(DESC_SecUsbDrv)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecDoc} $(DESC_SecDoc)
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
@@ -512,12 +548,33 @@ Section "Uninstall"
   Delete /REBOOTOK "$INSTDIR\bin\email.exe"
   Delete /REBOOTOK "$INSTDIR\bin\background.exe"
   Delete /REBOOTOK "$INSTDIR\bin\apctray.exe"
-  ;Delete /REBOOTOK "$INSTDIR\driver\apcupsd.inf"
-  ;Delete /REBOOTOK "$INSTDIR\driver\apcupsd.cat"
-  ;Delete /REBOOTOK "$INSTDIR\driver\apcupsd_x64.cat"
-  ;Delete /REBOOTOK "$INSTDIR\driver\install.txt"
-  ;Delete /REBOOTOK "$INSTDIR\driver\i386\*.dll"
-  ;Delete /REBOOTOK "$INSTDIR\driver\amd64\*.dll"
+  
+  Delete /REBOOTOK "$INSTDIR\driver\apccdc.inf
+  Delete /REBOOTOK "$INSTDIR\driver\amd64\ftdibus.sys
+  Delete /REBOOTOK "$INSTDIR\driver\amd64\ftbusui.dll
+  Delete /REBOOTOK "$INSTDIR\driver\amd64\ftser2k.sys
+  Delete /REBOOTOK "$INSTDIR\driver\amd64\ftcserco.dll
+  Delete /REBOOTOK "$INSTDIR\driver\amd64\ftd2xx.lib
+  Delete /REBOOTOK "$INSTDIR\driver\amd64\ftserui2.dll
+  Delete /REBOOTOK "$INSTDIR\driver\amd64\ftlang.dll
+  Delete /REBOOTOK "$INSTDIR\driver\amd64\ftd2xx64.dll
+  Delete /REBOOTOK "$INSTDIR\driver\Static\amd64\ftd2xx.lib
+  Delete /REBOOTOK "$INSTDIR\driver\Static\i386\ftd2xx.lib
+  Delete /REBOOTOK "$INSTDIR\driver\ftd2xx.h
+  Delete /REBOOTOK "$INSTDIR\driver\ftdibus.inf
+  Delete /REBOOTOK "$INSTDIR\driver\ftdibus.cat
+  Delete /REBOOTOK "$INSTDIR\driver\ftdiport.inf
+  Delete /REBOOTOK "$INSTDIR\driver\i386\ftdibus.sys
+  Delete /REBOOTOK "$INSTDIR\driver\i386\ftbusui.dll
+  Delete /REBOOTOK "$INSTDIR\driver\i386\ftd2xx.dll
+  Delete /REBOOTOK "$INSTDIR\driver\i386\ftser2k.sys
+  Delete /REBOOTOK "$INSTDIR\driver\i386\ftcserco.dll
+  Delete /REBOOTOK "$INSTDIR\driver\i386\ftd2xx.lib
+  Delete /REBOOTOK "$INSTDIR\driver\i386\ftserui2.dll
+  Delete /REBOOTOK "$INSTDIR\driver\i386\ftlang.dll
+  Delete /REBOOTOK "$INSTDIR\driver\apccdc.cat
+  Delete /REBOOTOK "$INSTDIR\driver\ftdiport.cat  
+  
   Delete /REBOOTOK "$INSTDIR\README*"
   Delete /REBOOTOK "$INSTDIR\COPYING*"
   Delete /REBOOTOK "$INSTDIR\ChangeLog*"
