@@ -364,6 +364,17 @@ Section "Multimon CGI programs" SecMultimon
   ${EndUnless}
 SectionEnd
 
+Section "USB Driver" SecUsbDrv
+  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\apcupsd.inf "USB\VID_051d&PID_0002"
+  ${If} $0 != 1
+    MessageBox MB_OK|MB_ICONEXCLAMATION  \
+      "The USB driver could not be automatically installed. You can ignore \
+       this if you do not plan to use Apcupsd with a USB UPS. Otherwise, please \
+       see $INSTDIR\driver\install.txt for instructions on installing the \
+       USB driver by hand."
+  ${EndIf}
+SectionEnd
+
 Section "Documentation" SecDoc
   SetOutPath "$INSTDIR\doc"
   CreateDirectory "$INSTDIR\doc"
@@ -373,8 +384,8 @@ Section "Documentation" SecDoc
 
   ; Create Start Menu entry
   CreateDirectory "$SMPROGRAMS\ApcCtrl\Documentation"
-  CreateShortCut "$SMPROGRAMS\ApcCtrl\Documentation\Apcupsd User Manual.lnk"     "$INSTDIR\doc\manual.html"          "" "$SYSDIR\shell32.dll" ${MANUAL_ICON_INDEX}
-  CreateShortCut "$SMPROGRAMS\ApcCtrl\Documentation\apcupsd Reference.lnk"       "$INSTDIR\doc\apcupsd.man.txt"      "" "$SYSDIR\shell32.dll" ${HELP_ICON_INDEX}
+  CreateShortCut "$SMPROGRAMS\ApcCtrl\Documentation\ApcCtrl User Manual.lnk"     "$INSTDIR\doc\manual.html"          "" "$SYSDIR\shell32.dll" ${MANUAL_ICON_INDEX}
+  CreateShortCut "$SMPROGRAMS\ApcCtrl\Documentation\apcCtrl Reference.lnk"       "$INSTDIR\doc\apcupsd.man.txt"      "" "$SYSDIR\shell32.dll" ${HELP_ICON_INDEX}
   CreateShortCut "$SMPROGRAMS\ApcCtrl\Documentation\apcaccess Reference.lnk"     "$INSTDIR\doc\apcaccess.man.txt"    "" "$SYSDIR\shell32.dll" ${HELP_ICON_INDEX}
   CreateShortCut "$SMPROGRAMS\ApcCtrl\Documentation\apctest Reference.lnk"       "$INSTDIR\doc\apctest.man.txt"      "" "$SYSDIR\shell32.dll" ${HELP_ICON_INDEX}
   CreateShortCut "$SMPROGRAMS\ApcCtrl\Documentation\apccontrol Reference.lnk"    "$INSTDIR\doc\apccontrol.man.txt"   "" "$SYSDIR\shell32.dll" ${HELP_ICON_INDEX}

@@ -3220,7 +3220,7 @@ static void brazil_testBatteryHealth(){
 	pmsg("  Timeleft1 (estimado no fim):       %02.1f minutos\n",timeleft1);
 	pmsg("  Diff (Timeleft0 - Timeleft1):      %02.1f minutos\n",timeleft0-timeleft1);
 	pmsg("  Duração do teste:                  %02.1f minutos\n",seconds/60);
-	pmsg("  Razão (Diff / Duração):            %03.1f\% \n",timeleft_rate);
+	pmsg("  Razão (Diff / Duração):            %03.2f\% \n",timeleft_rate);
 	if(batload_error){
 		pmsg("  Resultado:                         FALHOU!!! Houve variação da carga maior que 25%. Essa variação compromete o teste!\n");
 		pmsg("                                     Garanta que a carga não tenha uma variação maior que 25% durante esse teste.\n");
