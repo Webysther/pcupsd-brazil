@@ -394,18 +394,19 @@ Section "Multimon CGI programs" SecMultimon
 SectionEnd
 
 Section "USB Driver" SecUsbDrv
-  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdiport.inf "USB\VID_0403&PID_6001"
-  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdiport.inf "USB\VID_0403&PID_6010"
-  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdiport.inf "USB\VID_0403&PID_6011"
-  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdiport.inf "USB\VID_0403&PID_6014"
-  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdiport.inf "USB\VID_0403&PID_6015"
+  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdiport.inf "FTDIBUS\COMPORT&VID_0403&PID_6001"
+  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdiport.inf "FTDIBUS\COMPORT&VID_0403&PID_6010"
+  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdiport.inf "FTDIBUS\COMPORT&VID_0403&PID_6011"
+  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdiport.inf "FTDIBUS\COMPORT&VID_0403&PID_6014"
+  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdiport.inf "FTDIBUS\COMPORT&VID_0403&PID_6015"
   
-  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdibus.inf "USB\VID_0403&PID_6001"
-  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdibus.inf "USB\VID_0403&PID_6010"
-  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdibus.inf "USB\VID_0403&PID_6011"
-  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdibus.inf "USB\VID_0403&PID_6014"
-  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdibus.inf "USB\VID_0403&PID_6015"
-  
+  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdibus.inf "USB\VID_0403&PID_6010&MI_00"
+  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdibus.inf "USB\VID_0403&PID_6010&MI_01"
+  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdibus.inf "USB\VID_0403&PID_6011&MI_00"
+  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdibus.inf "USB\VID_0403&PID_6011&MI_01"
+  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdibus.inf "USB\VID_0403&PID_6011&MI_02"
+  ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdibus.inf "USB\VID_0403&PID_6011&MI_03"
+
   ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\apccdc.inf "USB\VID_051D&PID_C812"
 SectionEnd
 
