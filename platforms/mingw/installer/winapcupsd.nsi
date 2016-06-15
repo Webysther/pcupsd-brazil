@@ -549,31 +549,31 @@ Section "Uninstall"
   Delete /REBOOTOK "$INSTDIR\bin\background.exe"
   Delete /REBOOTOK "$INSTDIR\bin\apctray.exe"
   
-  Delete /REBOOTOK "$INSTDIR\driver\apccdc.inf
-  Delete /REBOOTOK "$INSTDIR\driver\amd64\ftdibus.sys
-  Delete /REBOOTOK "$INSTDIR\driver\amd64\ftbusui.dll
-  Delete /REBOOTOK "$INSTDIR\driver\amd64\ftser2k.sys
-  Delete /REBOOTOK "$INSTDIR\driver\amd64\ftcserco.dll
-  Delete /REBOOTOK "$INSTDIR\driver\amd64\ftd2xx.lib
-  Delete /REBOOTOK "$INSTDIR\driver\amd64\ftserui2.dll
-  Delete /REBOOTOK "$INSTDIR\driver\amd64\ftlang.dll
-  Delete /REBOOTOK "$INSTDIR\driver\amd64\ftd2xx64.dll
-  Delete /REBOOTOK "$INSTDIR\driver\Static\amd64\ftd2xx.lib
-  Delete /REBOOTOK "$INSTDIR\driver\Static\i386\ftd2xx.lib
-  Delete /REBOOTOK "$INSTDIR\driver\ftd2xx.h
-  Delete /REBOOTOK "$INSTDIR\driver\ftdibus.inf
-  Delete /REBOOTOK "$INSTDIR\driver\ftdibus.cat
-  Delete /REBOOTOK "$INSTDIR\driver\ftdiport.inf
-  Delete /REBOOTOK "$INSTDIR\driver\i386\ftdibus.sys
-  Delete /REBOOTOK "$INSTDIR\driver\i386\ftbusui.dll
-  Delete /REBOOTOK "$INSTDIR\driver\i386\ftd2xx.dll
-  Delete /REBOOTOK "$INSTDIR\driver\i386\ftser2k.sys
-  Delete /REBOOTOK "$INSTDIR\driver\i386\ftcserco.dll
-  Delete /REBOOTOK "$INSTDIR\driver\i386\ftd2xx.lib
-  Delete /REBOOTOK "$INSTDIR\driver\i386\ftserui2.dll
-  Delete /REBOOTOK "$INSTDIR\driver\i386\ftlang.dll
-  Delete /REBOOTOK "$INSTDIR\driver\apccdc.cat
-  Delete /REBOOTOK "$INSTDIR\driver\ftdiport.cat  
+  Delete /REBOOTOK "$INSTDIR\driver\apccdc.inf"
+  Delete /REBOOTOK "$INSTDIR\driver\amd64\ftdibus.sys"
+  Delete /REBOOTOK "$INSTDIR\driver\amd64\ftbusui.dll"
+  Delete /REBOOTOK "$INSTDIR\driver\amd64\ftser2k.sys"
+  Delete /REBOOTOK "$INSTDIR\driver\amd64\ftcserco.dll"
+  Delete /REBOOTOK "$INSTDIR\driver\amd64\ftd2xx.lib"
+  Delete /REBOOTOK "$INSTDIR\driver\amd64\ftserui2.dll"
+  Delete /REBOOTOK "$INSTDIR\driver\amd64\ftlang.dll"
+  Delete /REBOOTOK "$INSTDIR\driver\amd64\ftd2xx64.dll"
+  Delete /REBOOTOK "$INSTDIR\driver\Static\amd64\ftd2xx.lib"
+  Delete /REBOOTOK "$INSTDIR\driver\Static\i386\ftd2xx.lib"
+  Delete /REBOOTOK "$INSTDIR\driver\ftd2xx.h"
+  Delete /REBOOTOK "$INSTDIR\driver\ftdibus.inf"
+  Delete /REBOOTOK "$INSTDIR\driver\ftdibus.cat"
+  Delete /REBOOTOK "$INSTDIR\driver\ftdiport.inf"
+  Delete /REBOOTOK "$INSTDIR\driver\i386\ftdibus.sys"
+  Delete /REBOOTOK "$INSTDIR\driver\i386\ftbusui.dll"
+  Delete /REBOOTOK "$INSTDIR\driver\i386\ftd2xx.dll"
+  Delete /REBOOTOK "$INSTDIR\driver\i386\ftser2k.sys"
+  Delete /REBOOTOK "$INSTDIR\driver\i386\ftcserco.dll"
+  Delete /REBOOTOK "$INSTDIR\driver\i386\ftd2xx.lib"
+  Delete /REBOOTOK "$INSTDIR\driver\i386\ftserui2.dll"
+  Delete /REBOOTOK "$INSTDIR\driver\i386\ftlang.dll"
+  Delete /REBOOTOK "$INSTDIR\driver\apccdc.cat"
+  Delete /REBOOTOK "$INSTDIR\driver\ftdiport.cat"
   
   Delete /REBOOTOK "$INSTDIR\README*"
   Delete /REBOOTOK "$INSTDIR\COPYING*"
