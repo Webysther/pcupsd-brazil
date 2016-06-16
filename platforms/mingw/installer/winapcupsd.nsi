@@ -398,62 +398,62 @@ Section "USB Driver" SecUsbDrv
 
   ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdiport.inf "FTDIBUS\COMPORT&VID_0403&PID_6001"
   ${If} $0 != 1
-      StrCpy DrvError 'ftdiport.inf: FTDIBUS-COMPORT&VID_0403&PID_6001$\r'
+      StrCpy $DrvError 'ftdiport.inf: FTDIBUS-COMPORT&VID_0403&PID_6001$\r'
   ${EndIf}
       
   ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdiport.inf "FTDIBUS\COMPORT&VID_0403&PID_6010"
   ${If} $0 != 1
-      StrCpy DrvError 'ftdiport.inf: FTDIBUS-COMPORT&VID_0403&PID_6010$\r'
+      StrCpy $DrvError 'ftdiport.inf: FTDIBUS-COMPORT&VID_0403&PID_6010$\r'
   ${EndIf}
   
   ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdiport.inf "FTDIBUS\COMPORT&VID_0403&PID_6011"
   ${If} $0 != 1
-      StrCpy DrvError 'ftdiport.inf: FTDIBUS-COMPORT&VID_0403&PID_6011$\r'
+      StrCpy $DrvError 'ftdiport.inf: FTDIBUS-COMPORT&VID_0403&PID_6011$\r'
   ${EndIf}
   
   ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdiport.inf "FTDIBUS\COMPORT&VID_0403&PID_6014"
   ${If} $0 != 1
-      StrCpy DrvError 'ftdiport.inf: FTDIBUS-COMPORT&VID_0403&PID_6014$\r'
+      StrCpy $DrvError 'ftdiport.inf: FTDIBUS-COMPORT&VID_0403&PID_6014$\r'
   ${EndIf}
   
   ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdiport.inf "FTDIBUS\COMPORT&VID_0403&PID_6015"
   ${If} $0 != 1
-      StrCpy DrvError 'ftdiport.inf: FTDIBUS-COMPORT&VID_0403&PID_6015$\r'
+      StrCpy $DrvError 'ftdiport.inf: FTDIBUS-COMPORT&VID_0403&PID_6015$\r'
   ${EndIf}
   
   ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdibus.inf "USB\VID_0403&PID_6010&MI_00"
   ${If} $0 != 1
-      StrCpy DrvError 'ftdibus.inf: USB-VID_0403&PID_6010&MI_00$\r'
+      StrCpy $DrvError 'ftdibus.inf: USB-VID_0403&PID_6010&MI_00$\r'
   ${EndIf}
   
   ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdibus.inf "USB\VID_0403&PID_6010&MI_01"
   ${If} $0 != 1
-      StrCpy DrvError 'ftdibus.inf: USB-VID_0403&PID_6010&MI_01$\r'
+      StrCpy $DrvError 'ftdibus.inf: USB-VID_0403&PID_6010&MI_01$\r'
   ${EndIf}
   
   ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdibus.inf "USB\VID_0403&PID_6011&MI_00"
   ${If} $0 != 1
-      StrCpy DrvError 'ftdibus.inf: USB-VID_0403&PID_6011&MI_00$\r'
+      StrCpy $DrvError 'ftdibus.inf: USB-VID_0403&PID_6011&MI_00$\r'
   ${EndIf}
   
   ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdibus.inf "USB\VID_0403&PID_6011&MI_01"
   ${If} $0 != 1
-      StrCpy DrvError 'ftdibus.inf: USB-VID_0403&PID_6011&MI_01$\r'
+      StrCpy $DrvError 'ftdibus.inf: USB-VID_0403&PID_6011&MI_01$\r'
   ${EndIf}
   
   ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdibus.inf "USB\VID_0403&PID_6011&MI_02"
   ${If} $0 != 1
-      StrCpy DrvError 'ftdibus.inf: USB-VID_0403&PID_6011&MI_02$\r'
+      StrCpy $DrvError 'ftdibus.inf: USB-VID_0403&PID_6011&MI_02$\r'
   ${EndIf}
   
   ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdibus.inf "USB\VID_0403&PID_6011&MI_03"
   ${If} $0 != 1
-      StrCpy DrvError 'ftdibus.inf: USB-VID_0403&PID_6011&MI_03$\r'
+      StrCpy $DrvError 'ftdibus.inf: USB-VID_0403&PID_6011&MI_03$\r'
   ${EndIf}
 
   ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\apccdc.inf "USB\VID_051D&PID_C812"
   ${If} $0 != 1
-      StrCpy DrvError 'apccdc.inf: USB-VID_051D&PID_C812$\r'
+      StrCpy $DrvError 'apccdc.inf: USB-VID_051D&PID_C812$\r'
   ${EndIf}
   
   ${If} $DrvError != ''
@@ -461,6 +461,9 @@ Section "USB Driver" SecUsbDrv
       "Ocorreu algum erro ao instalar os drivers USB APC Brasil. Você pode \
        ignorar esse erro ou tentar instalar manualmente. O erro ocorreu ao instalar: \n\r\
        $DrvError"
+  ${Else}
+    MessageBox MB_OK|MB_ICONEXCLAMATION  \
+      "Driver USB APC Brasil instalado/atualizado com sucesso."       
   ${EndIf}
   
   
