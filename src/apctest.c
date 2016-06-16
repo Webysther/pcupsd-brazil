@@ -2978,7 +2978,6 @@ static void brazil_print(){
 	pmsg("TIMELEFT ESTIMATE:      %02.1f minutes\n",((BrazilUpsDriver*)(ups)->driver)->model->getBatteryTimeLeft());
 	pmsg("FLAG LINE 220V:         %s\n",((BrazilUpsDriver*)(ups)->driver)->model->isLine220V()?"true":"false");
 	pmsg("FLAG BATTERY CHARGING:  %s\n",((BrazilUpsDriver*)(ups)->driver)->model->isCharging()?"true":"false");
-	pmsg("FLAG BATTERY LOW:       %s\n",((BrazilUpsDriver*)(ups)->driver)->model->isBatteryCritical()?"true":"false");
 	pmsg("FLAG BATTERY CRITICAL:  %s\n",((BrazilUpsDriver*)(ups)->driver)->model->isBatteryCritical()?"true":"false");
 	pmsg("FLAG LINE ON:           %s\n",((BrazilUpsDriver*)(ups)->driver)->model->isLineOn()?"true":"false");
 	pmsg("FLAG OUT ON:            %s\n",((BrazilUpsDriver*)(ups)->driver)->model->isOutputOn()?"true":"false");
@@ -3136,7 +3135,7 @@ static void brazil_testBatteryHealth(){
 	setvbuf (CsvFile , NULL , _IOFBF , 65535 );
 
 	double timeleft0, timeleft1, bat0, bat1, power0, power1, batload0, batload1, batload, bat_expected, timeleft_peukert, timeleft_rate, seconds;
-	bool batload_error;
+	bool batload_error, batcritical;
 
 	bat_expected = br->getBatteryVoltageExpectedInitial();
 	timeleft_peukert = br->getBatteryTimeLeft();
@@ -3156,6 +3155,7 @@ static void brazil_testBatteryHealth(){
 	timeleft0 = br->getBatteryTimeLeft();
 	bat0 = timeleft1 = br->getBatteryVoltage();
 	power0 = br->getOutputActivePower();
+	batcritical = false;
 
 	batload_error = false;
 	int transcorrido = 0;
@@ -3171,6 +3171,9 @@ static void brazil_testBatteryHealth(){
 			batload_error = true;
 		}
 		transcorrido = floor(now - start);
+		if(br->isBatteryCritical()){
+			batcritical = true;
+		}
 		sprintf(datetime,"%04d-%02d-%02d %02d:%02d:%02d",(tm_now.tm_year+1900),tm_now.tm_mon+1,tm_now.tm_mday,tm_now.tm_hour,tm_now.tm_min,tm_now.tm_sec);
 		fprintf(CsvFile,"\"%s\",\"%d\",\"%2.2f\",\"%2.1f\",\"%1.2f\"\n",
 				datetime,
@@ -3187,6 +3190,9 @@ static void brazil_testBatteryHealth(){
 	gmtime_r(&end, &tm_end);
 	seconds = end - start;
 
+	if(br->isBatteryCritical()){
+		batcritical = true;
+	}
 	timeleft1 = br->getBatteryTimeLeft();
 	bat1 = br->getBatteryVoltage();
 	power1 = br->getOutputActivePower();
@@ -3212,24 +3218,33 @@ static void brazil_testBatteryHealth(){
 	pmsg("No fim do teste:\n");
 	pmsg("  Tensão da bateria:                 %03.2f V\n",bat1);
 	pmsg("  Tempo restante da bateria:         %03.2f minutos\n",timeleft1);
+	pmsg("  Baterias atingiram nível crítico:  %s\n",(batcritical ? "SIM!" : "NÃO"));
 	pmsg("  Potência na saída no fim:          %03.2f W\n",power1);
 	pmsg("  Fator de descarga da bateria fim:  %01.2f W\n",batload1);
 	pmsg("  Houve variação da carga > 25%:     %s\n",(batload_error ? "SIM!" : "NÃO"));
 	pmsg("Análise dos resultados:\n");
 	pmsg("  Timeleft0 (estimado no início):    %02.1f minutos\n",timeleft0);
 	pmsg("  Timeleft1 (estimado no fim):       %02.1f minutos\n",timeleft1);
-	pmsg("  Diff (Timeleft0 - Timeleft1):      %02.1f minutos\n",timeleft0-timeleft1);
-	pmsg("  Duração do teste:                  %02.1f minutos\n",seconds/60);
-	pmsg("  Razão (Diff / Duração):            %03.2f\% \n",timeleft_rate);
+	pmsg("  Duração teórica do teste:          %02.1f minutos = Diff (Timeleft0 - Timeleft1).\n",timeleft0-timeleft1);
+	pmsg("  Duração medida do teste:           %02.1f minutos\n",seconds/60);
+	pmsg("  Relação (teórica / medida):        %03.2f\%\n",timeleft_rate*100);
+	if(batcritical){
+		pmsg("  Nível crítico:                     ATENÇÃO!!! O nobreak informou que as baterias atingiram um nível crítico!\n");
+		pmsg("                                     Ajuste os parâmetros de desligamento para que as baterias não chegem nesse\n");
+		pmsg("                                     estado até que o servidor esteja completamente desligado.\n");
+	}else{
+		pmsg("  Nível crítico:                     OK! O nobreak não informou que as baterias chegaram em um nível crítico até\n");
+		pmsg("                                     esse ponto.\n");
+	}
 	if(batload_error){
-		pmsg("  Resultado:                         FALHOU!!! Houve variação da carga maior que 25%. Essa variação compromete o teste!\n");
+		pmsg("  Calculos de autonomia:             FALHOU!!! Houve variação da carga maior que 25%. Essa variação compromete o teste!\n");
 		pmsg("                                     Garanta que a carga não tenha uma variação maior que 25% durante esse teste.\n");
 	}else{
 		if(timeleft_rate >= 0.75 && timeleft_rate <= 1.25){
-			pmsg("  Resultado:                         SUCESSO! O erro entre os Timeleft calculados e a duração medida foi menor que 25\%\n");
+			pmsg("  Calculos de autonomia:             SUCESSO! O erro entre os Timeleft calculados e a duração medida foi menor que 25\%\n");
 			pmsg("                                     As baterias parece estar boa ou pode ser necessário revisar as rotinas de cálculo.\n");
 		}else{
-			pmsg("  Resultado:                         FALHOU! O erro entre os timeleft calculados e a duração medida foi maior que 25\%.\n");
+			pmsg("  Calculos de autonomia:             FALHOU! O erro entre os timeleft calculados e a duração medida foi maior que 25\%.\n");
 			pmsg("                                     Pode ser necessário trocar as baterias ou revisar as rotinas de cálculo.\n");
 			pmsg("                                     Ajuste os valores obtidos no arquivo de configuração.\n");
 		}
