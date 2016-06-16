@@ -219,18 +219,6 @@ double BrazilModelAbstract::getBatteryVoltageExpectedFinal(){
 double BrazilModelAbstract::getBatteryLoad(){
 	return this->bat->calcBatteryLoadC1(this->getOutputActivePower());
 }
-bool BrazilModelAbstract::isBatteryVoltageLow(){
-	double load = this->getBatteryLoad();
-
-	double voltage_max = bat->calcVoltageMax(load);
-	double voltage_min = bat->calcVoltageMin(load);
-	double voltage = this->getBatteryVoltage();
-	double rate = (voltage - voltage_min)/(voltage_max - voltage_min);
-	if(rate < 0.25){
-		return true;
-	}
-	return false;
-}
 
 void BrazilModelAbstract::setBufferLock(){
 	this->lock = true;

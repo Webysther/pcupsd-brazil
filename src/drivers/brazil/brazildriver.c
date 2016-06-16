@@ -597,7 +597,7 @@ bool BrazilUpsDriver::read_volatile_data()
 		_ups->OutputFreq = 60;
 	}
 
-	_ups->set_battlow(this->model->isBatteryVoltageLow());
+	_ups->set_battlow(this->model->isBatteryCritical());
 
 	_ups->TimeLeft = this->model->getBatteryTimeLeft();
 

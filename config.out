@@ -1,9 +1,9 @@
 
 
-Configuration on Fri Apr 22 15:47:28 BRT 2016:
+Configuration on Thu Jun 16 17:02:46 BRT 2016:
 
   Host:                       x86_64-unknown-linux-gnu -- debian 8.4
-  Apcupsd version:            3.14.13 (02 February 2015)
+  Apcupsd version:            0.6.8 (13 June 2016)
   Source code location:       .
   Install binaries:           /sbin
   Install config files:       /etc/apcupsd

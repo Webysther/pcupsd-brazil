@@ -1,5 +1,44 @@
 
-             Release Notes for Apcupsd 3.14.x
+             Release Notes for ApcCtrl 0.6.x
+
+ApcCtrl é um branch do projeto apcupsd 3.14.x e ele foi criado para dar
+suporte aos nobreaks da APC no Brasil. Quer são modelos herdados da Microsol.
+Essa aplicação não é oficial da APC Brasil. Foi desenvolvida por terceiros
+e ela opera nos modelos da "GNU GENERAL PUBLIC LICENSE". Todo o código fonte
+pode ser obtido no site do projeto.
+
+0.6.9 - 16 de Junho de 2016
+
+    * Criado o driver de aplicação Brazil
+     
+      Criado um novo driver dentro da aplicação chamado "brazil"
+      1. Suporte para os modelos da linha APC Back-UPS.
+      2.Estimativas de timeleft dentro da aplicação. O nobreak não fornece
+        nenhuma informação de timeleft automaticamente.
+        
+    * Aplicação para interpolação
+      
+      Para estimar o timeleft do nobreak foi criada uma aplicação para
+      resolver equações lineares que permitem obter dados em uma curva
+      contínua onde só havia dados discretos
+
+    * Alterações no apctest      
+      
+      A aplicação apctest foi alterada para dar suporte a esse driver.
+      
+    * Instalador para Microsoft Windows
+      
+      O driver USB para Microsoft Windows foi alterado para o driver da APC
+      do Brasil.
+      
+    * Autoconf 
+    
+      Mudanças nos arquivos de autoconf para gerar outro configure e Makefile
+
+
+----------------------------------------------------------------------------
+
+             Release Notes for apcupsd 3.14.x
 
 Apcupsd 3.14.x is the latest STABLE release, containing many bug fixes and
 new features over the previous 3.12.x stable series. Users of all previous

@@ -1,24 +1,11 @@
 #!/bin/bash
 
-TAG="0.5.5"
-REMOTE_USER="wagner"
-REMOTE_SERVER="192.168.22.4"
-
-APCUPSD_PATH="/home/wagner/apcupsd-brazil/apcupsd-brazil-${TAG}"
-
-PATH_OLD="${PATH}"
-export PATH="/home/wagner/apcupsd-brazil/cross-tools/mingw32/bin:${PATH}"
-
-echo -en "APCUPSD_PATH=${APCUPSD_PATH}\n"
-echo -en "PATH=${PATH}\n\n"
 
 apcupsd_error()
 {
 	echo -en "\e[31m\e[5m"
-	echo -en "\nERROR"
-	if [ -z "$1" ]; then
-		echo -n "$1"
-	fi;
+	echo -en "\nERROR!!! "
+	echo -n "$1"
 	echo -en "!!!\n\n"
 	echo -en "\e[49m\e[39m\e[0m"
 
@@ -40,12 +27,17 @@ apcupsd_mingw()
 	cat .out.mingw
 	return 1;
 }
-
+apcupsd_path()
+{
+	if [[ -e "${APTUPSD_PATH}" ]]; then
+		apcupsd_error "O Caminho ${APCUPSD_PATH} já existe"
+	fi;
+	return 0;
+}
 apcupsd_svn()
 {
 	echo "svn..."
-	rm -Rf ${APCUPSD_PATH} &>/dev/null
-	svn checkout https://svn.code.sf.net/p/apcupsd-brazil/svn/tags/${TAG} ${APCUPSD_PATH} &>.out.svn
+	svn checkout http://svn.code.sf.net/p/apcupsd-brazil/svn/tags/${TAG} ${APCUPSD_PATH} &>.out.svn
 	if [[ $? == "0" ]]; then
 		return 0;
 	fi;
@@ -112,8 +104,9 @@ apcupsd_installer()
 }
 apcupsd_scp()
 {
+#platforms/mingw/installer/winapcctrl-0.6.0.exe
 	echo "scp..."
-	scp ${APCUPSD_PATH}/platforms/mingw/installer/winapcupsd-brazil-${TAG}.exe ${REMOTE_USER}@${REMOTE_SERVER}:/tmp &>.out.scp
+	scp ${APCUPSD_PATH}/platforms/mingw/installer/winapcctrl-${TAG}.exe ${REMOTE_USER}@${REMOTE_SERVER}:${REMOTE_PATH} &>.out.scp
 	if [[ $? == "0" ]]; then
 		return 0;
 	fi;
@@ -122,6 +115,36 @@ apcupsd_scp()
 	return 1;
 }
 
+if [[ -z "$1" ]]; then
+	apcupsd_error "Utilize o formato:
+compile TAG_NUMBER
+TAG_NUMBER = x.x.x"
+fi;
+
+TAG=$(echo "${1}" | sed -n '/[0-9]\+\.[0-9]\+\.[0-9]\+/p')
+
+if [[ -z "${TAG}" ]]; then
+	apcupsd_error "Utilize o formato:
+compile TAG_NUMBER
+TAG_NUMBER = x.x.x"
+fi;
+
+REMOTE_USER="wagner"
+REMOTE_SERVER="192.168.22.4"
+REMOTE_PATH=/home/wagner/workspace/apcupsd_brazil_tars
+
+APCUPSD_PATH="/home/wagner/apcupsd-brazil/apcupsd-brazil-${TAG}"
+
+PATH_OLD="${PATH}"
+export PATH="/home/wagner/apcupsd-brazil/cross-tools/mingw32/bin:${PATH}"
+
+echo -en "APCUPSD_PATH=${APCUPSD_PATH}\n"
+echo -en "PATH=${PATH}\n\n"
+
+apcupsd_path
+if [[ $? != "0" ]]; then
+	apcupsd_error path
+fi;
 apcupsd_mingw
 if [[ $? != "0" ]]; then
 	apcupsd_error mingw

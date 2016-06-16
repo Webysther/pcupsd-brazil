@@ -90,7 +90,6 @@ public:
 	double getBatteryVoltageExpectedFinal();
 
 	double getBatteryLoad();
-	bool isBatteryVoltageLow();
 
 	virtual double getInverterEfficiency() = 0;
 	virtual int getBatteryCount() = 0;

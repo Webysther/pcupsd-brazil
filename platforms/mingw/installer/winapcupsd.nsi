@@ -53,7 +53,7 @@ Page custom ApctrayEnter ApctrayExit ""
 !define MUI_FINISHPAGE_SHOWREADME
 !define MUI_FINISHPAGE_SHOWREADME_TEXT "View the ReleaseNotes"
 !define MUI_FINISHPAGE_SHOWREADME_FUNCTION "ShowReadme"
-!define MUI_FINISHPAGE_LINK "Visit Apcupsd Website"
+!define MUI_FINISHPAGE_LINK "Visit ApcCtrl Website"
 !define MUI_FINISHPAGE_LINK_LOCATION "http://apcupsd-brazil.sourceforge.net/"
 !define MUI_PAGE_CUSTOMFUNCTION_SHOW DisableBackButton
 !insertmacro MUI_PAGE_FINISH
@@ -463,7 +463,8 @@ Section "USB Driver" SecUsbDrv
        $DrvError"
   ${Else}
     MessageBox MB_OK|MB_ICONEXCLAMATION  \
-      "Driver USB APC Brasil instalado/atualizado com sucesso."       
+      "Driver USB APC Brasil instalado/atualizado com sucesso. Verifique a porta COM\
+      atribuida ao nobreak e altere o arquivo de configuração."       
   ${EndIf}
   
   

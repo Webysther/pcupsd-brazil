@@ -28,7 +28,7 @@ WINDOWS NT, 2000, 2003, XP
        to get to the list of devices with the "Have Disk..." button. When you 
        get there, choose "Have Disk..."
 
-    f. Browse to "C:\apcupsd\driver" and hit Open
+    f. Browse to "C:\apcctrl\driver" and hit Open
 
     g. Select "American Power Conversion USB UPS (Apcupsd)" and hit
        Next.

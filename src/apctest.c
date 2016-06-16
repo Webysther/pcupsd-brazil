@@ -2978,7 +2978,7 @@ static void brazil_print(){
 	pmsg("TIMELEFT ESTIMATE:      %02.1f minutes\n",((BrazilUpsDriver*)(ups)->driver)->model->getBatteryTimeLeft());
 	pmsg("FLAG LINE 220V:         %s\n",((BrazilUpsDriver*)(ups)->driver)->model->isLine220V()?"true":"false");
 	pmsg("FLAG BATTERY CHARGING:  %s\n",((BrazilUpsDriver*)(ups)->driver)->model->isCharging()?"true":"false");
-	pmsg("FLAG BATTERY LOW:       %s\n",((BrazilUpsDriver*)(ups)->driver)->model->isBatteryVoltageLow()?"true":"false");
+	pmsg("FLAG BATTERY LOW:       %s\n",((BrazilUpsDriver*)(ups)->driver)->model->isBatteryCritical()?"true":"false");
 	pmsg("FLAG BATTERY CRITICAL:  %s\n",((BrazilUpsDriver*)(ups)->driver)->model->isBatteryCritical()?"true":"false");
 	pmsg("FLAG LINE ON:           %s\n",((BrazilUpsDriver*)(ups)->driver)->model->isLineOn()?"true":"false");
 	pmsg("FLAG OUT ON:            %s\n",((BrazilUpsDriver*)(ups)->driver)->model->isOutputOn()?"true":"false");
@@ -3179,7 +3179,7 @@ static void brazil_testBatteryHealth(){
 				br->getBatteryTimeLeft(),
 				br->getBatteryLoad());
 		pmsg("  2.2) Nível de tensão da bateria = %2.1f\%, Battery voltage = %2.2fV, Timeleft = %2.1f minutes.\n",br->getBatteryLevel(),br->getBatteryVoltage(),br->getBatteryTimeLeft());
-	}while(br->getBatteryLevel() > testlimit);
+	}while((br->getBatteryLevel() > testlimit) && (! br->isBatteryCritical()));
 	fflush(CsvFile);
 	fclose(CsvFile);
 
