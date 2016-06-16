@@ -27,6 +27,7 @@ Var ExistingConfig
 Var MainInstalled
 Var TrayInstalled
 Var OrigInstDir
+Var DrvError
 
 ; Paths
 !define WINDIR ${TOPDIR}/src/win32
@@ -394,7 +395,6 @@ Section "Multimon CGI programs" SecMultimon
 SectionEnd
 
 Section "USB Driver" SecUsbDrv
-  Var DrvError
 
   ${InstallUpgradeDriver} "$INSTDIR\driver" $INSTDIR\driver\ftdiport.inf "FTDIBUS\COMPORT&VID_0403&PID_6001"
   ${If} $0 != 1
