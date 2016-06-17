@@ -397,13 +397,8 @@ SectionEnd
 
 Section "USB Driver" SecUsbDrv
 
-  ;Push "$INSTDIR\driver" 
-  ;Push "$INSTDIR\driver\ftdibus.inf"
-  ;Push "USB\VID_0403&PID_6001"
-  
-  ${DisableX64FSRedirection}
-  
-  ExecWait '"$SYSDIR\PnPutil.exe" /a "$INSTDIR\driver\ftdibus.inf"'
+  ${DisableX64FSRedirection}  
+  ExecWait '"$SYSDIR\PnPutil.exe" -i -a "$INSTDIR\driver\ftdiport.inf"'
   ${If} $0 != 1
     MessageBox MB_OK|MB_ICONEXCLAMATION  \
       "Ocorreu algum erro ao instalar os drivers USB APC Brasil. Voce pode \
