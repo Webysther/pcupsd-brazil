@@ -12,6 +12,7 @@ OutFile "winapcctrl-${VERSION}.exe"
 SetCompressor lzma
 InstallDir "c:\apcctrl"
 
+!define ENABLE_LOGGING
 
 ShowInstDetails Show
 !verbose push
@@ -20,6 +21,7 @@ ShowInstDetails Show
 ;			    
 ; Include files
 ;
+!include "logging.nsh"
 !include "MUI.nsh"
 !include "LogicLib.nsh"
 !include "StrReplace.nsh"
@@ -262,6 +264,8 @@ Section "-Startup"
   File ChangeLog.txt
   File ReleaseNotes.txt
 
+  ${LogSet} on
+
   ; Clean up old non-txt versions of these files
   Delete /REBOOTOK "$INSTDIR\COPYING"
   Delete /REBOOTOK "$INSTDIR\ChangeLog"
@@ -404,12 +408,13 @@ Section "USB Driver" SecUsbDrv
   
   ${DisableX64FSRedirection}
   
-  nsExec::ExecToLog '"$SYSDIR\PnPutil.exe" /a "$INSTDIR\driver\ftdibus.inf"'
+  ExecWait '"$SYSDIR\PnPutil.exe" /a "$INSTDIR\driver\ftdibus.inf"'
   ${If} $0 != 1
     MessageBox MB_OK|MB_ICONEXCLAMATION  \
       "Ocorreu algum erro ao instalar os drivers USB APC Brasil. Voce pode \
        ignorar esse erro ou tentar instalar manualmente (driver está no caminho $INSTDIR\driver). O erro ocorreu ao instalar o \
-       dispositivo USB\VID_0403&PID_6001 do arquivo ftdibus.inf"
+       dispositivo USB\VID_0403&PID_6001 do arquivo ftdibus.inf. Erro retornado: $0"
+       Sleep 10000
   ${Else}
     MessageBox MB_OK|MB_ICONEXCLAMATION  \
       "Driver USB APC Brasil instalado/atualizado com sucesso. Verifique a porta COM\
