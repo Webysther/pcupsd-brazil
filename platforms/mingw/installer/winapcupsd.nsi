@@ -12,8 +12,6 @@ OutFile "winapcctrl-${VERSION}.exe"
 SetCompressor lzma
 InstallDir "c:\apcctrl"
 
-!define ENABLE_LOGGING
-
 ShowInstDetails Show
 !verbose push
 !verbose 10
@@ -21,7 +19,6 @@ ShowInstDetails Show
 ;			    
 ; Include files
 ;
-!include "logging.nsh"
 !include "MUI.nsh"
 !include "LogicLib.nsh"
 !include "StrReplace.nsh"
@@ -263,8 +260,6 @@ Section "-Startup"
   File COPYING.txt
   File ChangeLog.txt
   File ReleaseNotes.txt
-
-  ${LogSet} on
 
   ; Clean up old non-txt versions of these files
   Delete /REBOOTOK "$INSTDIR\COPYING"
