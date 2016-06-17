@@ -463,8 +463,8 @@ Section "USB Driver" SecUsbDrv
   
   ${If} $DrvError != ''
     MessageBox MB_OK|MB_ICONEXCLAMATION  \
-      "Ocorreu algum erro ao instalar os drivers USB APC Brasil. Você pode \
-       ignorar esse erro ou tentar instalar manualmente ($INSTDIR\driver). O erro ocorreu ao instalar: 
+      "Ocorreu algum erro ao instalar os drivers USB APC Brasil. Voce pode \
+       ignorar esse erro ou tentar instalar manualmente ($INSTDIR\driver). O erro ocorreu ao instalar:\ 
        $DrvError"
   ${Else}
     MessageBox MB_OK|MB_ICONEXCLAMATION  \
