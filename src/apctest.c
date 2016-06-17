@@ -3206,7 +3206,7 @@ static void brazil_testBatteryHealth(){
 	pmsg("4) Resultados:\n");
 	pmsg("Datas de início e fim do teste:\n");
 	pmsg("  Data de início:                    %04d-%02d-%02d %02d:%02d:%02d UTC\n",1900+tm_start.tm_year,tm_start.tm_mon,tm_start.tm_mday,tm_start.tm_hour,tm_start.tm_min,tm_start.tm_sec);
-	pmsg("  Data de fim:                       %04d-%02d-%02d %02d:%02d:%02d UTC\n\n",1900+tm_end.tm_year,tm_end.tm_mon,tm_end.tm_mday,tm_end.tm_hour,tm_end.tm_min,tm_end.tm_sec);
+	pmsg("  Data de fim:                       %04d-%02d-%02d %02d:%02d:%02d UTC\n",1900+tm_end.tm_year,tm_end.tm_mon,tm_end.tm_mday,tm_end.tm_hour,tm_end.tm_min,tm_end.tm_sec);
 	pmsg("Expectativa antes do início (em função apenas da carga):\n");
 	pmsg("  Tensão da bateria:                 %03.2f V\n",bat_expected);
 	pmsg("  Tempo restante Teórico Peukert:    %02.2f minutos\n",timeleft_peukert);
@@ -3214,24 +3214,24 @@ static void brazil_testBatteryHealth(){
 	pmsg("  Tensão da bateria:                 %03.2f V\n",bat0);
 	pmsg("  Tempo restante da bateria:         %02.2f minutos\n",timeleft0);
 	pmsg("  Potência na saída no início:       %03.2f W\n",power0);
-	pmsg("  Fator de descarga da bateria ini:  %01.2f W\n",batload0);
+	pmsg("  Fator de descarga da bateria ini:  %01.2f C\n",batload0);
 	pmsg("No fim do teste:\n");
 	pmsg("  Tensão da bateria:                 %03.2f V\n",bat1);
 	pmsg("  Tempo restante da bateria:         %03.2f minutos\n",timeleft1);
-	pmsg("  Baterias atingiram nível crítico:  %s\n",(batcritical ? "SIM!" : "NÃO"));
+	pmsg("  Baterias atingiram nível crítico:  %s\n",(batcritical ? "SIM!" : "não"));
 	pmsg("  Potência na saída no fim:          %03.2f W\n",power1);
-	pmsg("  Fator de descarga da bateria fim:  %01.2f W\n",batload1);
-	pmsg("  Houve variação da carga > 25%:     %s\n",(batload_error ? "SIM!" : "NÃO"));
+	pmsg("  Fator de descarga da bateria fim:  %01.2f C\n",batload1);
+	pmsg("  Houve variação da carga > 25%:     %s\n",(batload_error ? "SIM!" : "não"));
 	pmsg("Análise dos resultados:\n");
 	pmsg("  Timeleft0 (estimado no início):    %02.1f minutos\n",timeleft0);
 	pmsg("  Timeleft1 (estimado no fim):       %02.1f minutos\n",timeleft1);
-	pmsg("  Duração teórica do teste:          %02.1f minutos = Diff (Timeleft0 - Timeleft1).\n",timeleft0-timeleft1);
+	pmsg("  Duração teórica do teste:          %02.1f minutos = Timeleft0 - Timeleft1\n",timeleft0-timeleft1);
 	pmsg("  Duração medida do teste:           %02.1f minutos\n",seconds/60);
-	pmsg("  Relação (teórica / medida):        %03.2f\%\n",timeleft_rate*100);
+	pmsg("  Relação (teórica / medida):        %01.2f\n",timeleft_rate);
 	if(batcritical){
 		pmsg("  Nível crítico:                     ATENÇÃO!!! O nobreak informou que as baterias atingiram um nível crítico!\n");
-		pmsg("                                     Ajuste os parâmetros de desligamento para que as baterias não chegem nesse\n");
-		pmsg("                                     estado até que o servidor esteja completamente desligado.\n");
+		pmsg("                                     Ajuste os parâmetros de desligamento para evitar esse estado. Pode ser\n");
+		pmsg("                                     necessário trocar as baterias.\n");
 	}else{
 		pmsg("  Nível crítico:                     OK! O nobreak não informou que as baterias chegaram em um nível crítico até\n");
 		pmsg("                                     esse ponto.\n");
@@ -3242,7 +3242,8 @@ static void brazil_testBatteryHealth(){
 	}else{
 		if(timeleft_rate >= 0.75 && timeleft_rate <= 1.25){
 			pmsg("  Calculos de autonomia:             SUCESSO! O erro entre os Timeleft calculados e a duração medida foi menor que 25\%\n");
-			pmsg("                                     As baterias parece estar boa ou pode ser necessário revisar as rotinas de cálculo.\n");
+			pmsg("                                     As baterias parecem estar em boa condição ou pode ser necessário revisar\n");
+			pmsg("                                     as rotinas de cálculo.\n");
 		}else{
 			pmsg("  Calculos de autonomia:             FALHOU! O erro entre os timeleft calculados e a duração medida foi maior que 25\%.\n");
 			pmsg("                                     Pode ser necessário trocar as baterias ou revisar as rotinas de cálculo.\n");
