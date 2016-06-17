@@ -31,9 +31,9 @@ public:
 	static const double LOAD_MIN = 0.6;
 	static const double LOAD_MAX = 5.0;
 	static const double PEUKERT_POW = 1.54;
-	static const double PEUKERT_MUL = 1.5;
+	static const double PEUKERT_MUL = 1.2;
 	static const double TIMELEFT_POW = 1.58;
-	static const double TIMELEFT_MUL = 1.4;
+	static const double TIMELEFT_MUL = 1.2;
 
 protected:
 	double calcTimeLeftC1(double voltage);
