@@ -465,8 +465,6 @@ SectionEnd
 ;
 Function .onInit
 
-  LogSet on
-
   ; If there is an existing installation, default INSTDIR to location of that
   ; install. Otherwise, if user did not specify INSTDIR on cmdline (using /D), 
   ; default it to %SystemDrive%\apcupsd.
@@ -494,6 +492,8 @@ Function .onInit
   ; Nothing installed yet
   StrCpy $MainInstalled 0
   StrCpy $TrayInstalled 0
+  
+  LogSet on
     
 FunctionEnd
 
