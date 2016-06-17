@@ -403,20 +403,20 @@ Section "USB Driver" SecUsbDrv
   ${If} ${Errors} 
     MessageBox MB_OK|MB_ICONEXCLAMATION  \
       "Ocorreu algum erro ao instalar os drivers USB APC Brasil. Voce pode \
-       ignorar esse erro ou tentar instalar manualmente (driver está no caminho $INSTDIR\driver). O erro ocorreu ao instalar o \
+       ignorar esse erro ou tentar instalar manualmente (driver esta no caminho $INSTDIR\driver). O erro ocorreu ao instalar o \
        arquivo apccdc.inf"
   ${Else}
-    DetailPrint "Instalação do driver apccdc.inf: OK"
+    DetailPrint "Instalacao do driver apccdc.inf: OK"
   ${EndIF}   
   
   ExecWait '"$SYSDIR\PnPutil.exe" -i -a "$INSTDIR\driver\ftdiport.inf"' $0
   ${If} ${Errors} 
     MessageBox MB_OK|MB_ICONEXCLAMATION  \
       "Ocorreu algum erro ao instalar os drivers USB APC Brasil. Voce pode \
-       ignorar esse erro ou tentar instalar manualmente (driver está no caminho $INSTDIR\driver). O erro ocorreu ao instalar o \
+       ignorar esse erro ou tentar instalar manualmente (driver esta no caminho $INSTDIR\driver). O erro ocorreu ao instalar o \
        arquivo ftdiport.inf"
   ${Else}
-    DetailPrint "Instalação do driver ftdiport.inf: OK"
+    DetailPrint "Instalacao do driver ftdiport.inf: OK"
   ${EndIF}   
     
   ${EnableX64FSRedirection}
