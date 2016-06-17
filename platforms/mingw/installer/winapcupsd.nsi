@@ -397,19 +397,23 @@ SectionEnd
 
 Section "USB Driver" SecUsbDrv
 
-  ${DisableX64FSRedirection}  
+  ${DisableX64FSRedirection}
+    
+  ExecWait '"$SYSDIR\PnPutil.exe" -i -a "$INSTDIR\driver\apccdc.inf"'
+  DetailPrint "A instalação do driver apccdc.inf retornou $0"
   ExecWait '"$SYSDIR\PnPutil.exe" -i -a "$INSTDIR\driver\ftdiport.inf"'
-  ${If} $0 != 1
-    MessageBox MB_OK|MB_ICONEXCLAMATION  \
-      "Ocorreu algum erro ao instalar os drivers USB APC Brasil. Voce pode \
-       ignorar esse erro ou tentar instalar manualmente (driver está no caminho $INSTDIR\driver). O erro ocorreu ao instalar o \
-       dispositivo USB\VID_0403&PID_6001 do arquivo ftdibus.inf. Erro retornado: $0"
-       Sleep 10000
-  ${Else}
-    MessageBox MB_OK|MB_ICONEXCLAMATION  \
-      "Driver USB APC Brasil instalado/atualizado com sucesso. Verifique a porta COM\
-      atribuida ao nobreak e altere o arquivo de configuração."       
-  ${EndIf}
+  DetailPrint "A instalação do driver ftdiport.int retornou $0"
+  Sleep 10000
+;  ${If} $0 != 1
+;    MessageBox MB_OK|MB_ICONEXCLAMATION  \
+;      "Ocorreu algum erro ao instalar os drivers USB APC Brasil. Voce pode \
+;       ignorar esse erro ou tentar instalar manualmente (driver está no caminho $INSTDIR\driver). O erro ocorreu ao instalar o \
+;       dispositivo USB\VID_0403&PID_6001 do arquivo ftdibus.inf. Erro retornado: $0"
+;  ${Else}
+;    MessageBox MB_OK|MB_ICONEXCLAMATION  \
+;      "Driver USB APC Brasil instalado/atualizado com sucesso. Verifique a porta COM\
+;      atribuida ao nobreak e altere o arquivo de configuração."       
+;  ${EndIf}
     
   ${EnableX64FSRedirection}
   
