@@ -1,3 +1,6 @@
+!include "winver.nsh"
+!include "drvsetup.nsh"
+ 
 ;
 ; Written by Kuba Ober
 ; Copyright (c) 2004 Kuba Ober
@@ -19,6 +22,7 @@
 ; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 ; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ; DEALINGS IN THE SOFTWARE.
+ 
 ;
 ; U S A G E
 ;
@@ -42,61 +46,60 @@
 ;
 ; You DON'T want to put the driver in any of system directories. Windows
 ; will do it when the device is first plugged in.
-
-!define InstallUpgradeDriver '!insertmacro "_installUpgradeDriverConstructor"'
-
-!macro _installUpgradeDriverConstructor PATH INF HID
-  Push "${PATH}"
-  Push "${INF}"
-  Push "${HID}"
-  Call InstallUpgradeDriver
-!macroend
-
-; BOOL UpdateDriverForPlugAndPlayDevices(HWND, PSTR, PSTR, DWORD, PBOOL);
-!define sysUpdateDriverForPlugAndPlayDevices "newdev::UpdateDriverForPlugAndPlayDevices(i, t, t, i, *i) i"
-
-; the masked value of ERROR_NO_SUCH_DEVINST is 523
-!define ERROR_NO_SUCH_DEVINST -536870389
  
-!define INSTALLFLAG_FORCE 1
-
 Function InstallUpgradeDriver
  
-   Pop $R0 ; HID
-   Pop $R1 ; INFPATH
-   Pop $R2 ; INFDIR
-
-   ; Check Windows version
-   ${If} ${AtLeastWin2000}
-      Goto lbl_upgrade
-   ${EndIf}
-
-   DetailPrint "This version of Windows does not support driver updates."
-   Goto lbl_done
-
-   ; Upgrade the driver if the device is already plugged in
+ Pop $R0 ; HID
+ Pop $R1 ; INFPATH
+ Pop $R2 ; INFDIR
+ 
+ ; Get the Windows version
+ Call GetWindowsVersion
+ Pop $R3 ; Windows Version
+ ;DetailPrint 'Windows Version: $R3'
+ StrCmp $R3 '2000' lbl_upgrade
+ StrCmp $R3 'XP' lbl_upgrade
+ StrCmp $R3 '2003' lbl_upgrade
+ DetailPrint "Windows $R3 doesn't support automatic driver updates."
+ 
+ ; Upgrade the driver if the device is already plugged in
+ Goto lbl_noupgrade
 lbl_upgrade:
-   System::Get '${sysUpdateDriverForPlugAndPlayDevices}'
-   Pop $0
-   StrCmp $0 'error' lbl_noapi
-   DetailPrint "Updating the USB driver..."
-   ; 0, HID, INFPATH, 0, 0
-   Push $INSTDIR ; Otherwise this function will swallow it, dunno why
-   System::Call '${sysUpdateDriverForPlugAndPlayDevices}?e (0, R0, R1, ${INSTALLFLAG_FORCE}, 0) .r0'
-   Pop $1 ; last error
-   Pop $INSTDIR
-   IntCmp $0 1 lbl_done
-   IntCmp $1 ${ERROR_NO_SUCH_DEVINST} lbl_notplugged
-
-   DetailPrint "Driver update failed: ($0,$1)"
-   Goto lbl_done
-
+ System::Get '${sysUpdateDriverForPlugAndPlayDevices}'
+ Pop $0
+ StrCmp $0 'error' lbl_noapi
+ DetailPrint "Updating the driver..."
+ ; 0, HID, INFPATH, 0, 0
+ Push $INSTDIR ; Otherwise this function will swallow it, dunno why
+ System::Call '${sysUpdateDriverForPlugAndPlayDevices}?e (0, R0, R1, 0, 0) .r0'
+ Pop $1 ; last error
+ Pop $INSTDIR
+ IntCmp $0 1 lbl_done
+ IntCmp $1 ${ERROR_NO_SUCH_DEVINST} lbl_notplugged
+ 
+ DetailPrint "Driver update has failed. ($R3:$0,$1)"
+ Goto lbl_noupgrade
 lbl_notplugged:
-   DetailPrint "The device is not plugged in, cannot update the driver."
-   Goto lbl_done
-
+ DetailPrint "The device is not plugged in, cannot update the driver."
+ Goto lbl_noupgrade
 lbl_noapi:
-   DetailPrint "This version of Windows does not support driver updates."
-
+ DetailPrint "Your Windows $R3 doesn't support driver updates."
+ 
+lbl_noupgrade:
+ ; Pre-install the driver
+ System::Get '${sysSetupCopyOEMInf}'
+ Pop $0
+ StrCmp $0 'error' lbl_inoapi
+ DetailPrint "Installing the driver..."
+ ; INFPATH, INFDIR, SPOST_PATH, "", 0, 0, 0, 0
+ System::Call '${sysSetupCopyOEMInf}?e (R1, R2, ${SPOST_PATH}, 0, 0, 0, 0, 0) .r0'
+ Pop $1 ; last error
+ IntCmp $0 1 lbl_nodriver
+ DetailPrint 'Driver pre-installation has failed with error #$1 ($R3)'
+ Goto lbl_done
+lbl_inoapi:
+ DetailPrint "Your Windows $R3 doesn't support driver pre-installation."
+lbl_nodriver:
 lbl_done:
+ 
 FunctionEnd
