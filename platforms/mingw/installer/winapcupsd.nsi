@@ -12,6 +12,11 @@ OutFile "winapcctrl-${VERSION}.exe"
 SetCompressor lzma
 InstallDir "c:\apcctrl"
 
+
+ShowInstDetails Show
+!verbose push
+!verbose 2
+
 ;			    
 ; Include files
 ;
@@ -67,7 +72,7 @@ Page custom ApctrayEnter ApctrayExit ""
 
 !insertmacro MUI_LANGUAGE "English"
 
-DirText "Setup will install Apcupsd BRAZIL ${VERSION} to the directory \
+DirText "Setup will install ApcCtrl BRAZIL ${VERSION} to the directory \
          specified below."
 
 ; Disable back button
@@ -330,9 +335,6 @@ Section "Apcupsd Service" SecService
   File ${TOPDIR}\platforms\mingw\winusb\i386\ftserui2.dll
   File ${TOPDIR}\platforms\mingw\winusb\i386\ftlang.dll  
   
-  File ${DEPKGS}\winddk\redist\wdf\x86\*.dll
-  File ${DEPKGS}\winddk\redist\wdf\amd64\*.dll
-
   SetOutPath "$INSTDIR\etc\apcupsd"
   File ${TOPDIR}\platforms\mingw\apccontrol.bat
   File ${TOPDIR}\platforms\mingw\apcupsd.conf.in
@@ -464,7 +466,7 @@ Section "USB Driver" SecUsbDrv
   ${If} $DrvError != ''
     MessageBox MB_OK|MB_ICONEXCLAMATION  \
       "Ocorreu algum erro ao instalar os drivers USB APC Brasil. Voce pode \
-       ignorar esse erro ou tentar instalar manualmente ($INSTDIR\driver). O erro ocorreu ao instalar:\ 
+       ignorar esse erro ou tentar instalar manualmente ($INSTDIR\driver). O erro ocorreu ao instalar: \
        $DrvError"
   ${Else}
     MessageBox MB_OK|MB_ICONEXCLAMATION  \
@@ -673,6 +675,11 @@ Section "Uninstall"
   ; remove directories used
   RMDir "$INSTDIR\bin"
   RMDir "$INSTDIR\cgi"
+  RMDir "$INSTDIR\driver\amd64"
+  RMDir "$INSTDIR\driver\i386"
+  RMDir "$INSTDIR\driver\Static\amd64"
+  RMDir "$INSTDIR\driver\Static\i386"
+  RMDir "$INSTDIR\driver\Static"
   RMDir "$INSTDIR\driver"
   RMDir "$INSTDIR\etc\apcupsd"
   RMDir "$INSTDIR\etc"
