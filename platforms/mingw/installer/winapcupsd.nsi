@@ -493,9 +493,6 @@ Function .onInit
   StrCpy $MainInstalled 0
   StrCpy $TrayInstalled 0
   
-  scons NSIS_CONFIG_LOG=yes  
-  LogSet on
-    
 FunctionEnd
 
 
