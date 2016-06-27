@@ -2973,7 +2973,7 @@ static void brazil_print(){
 	pmsg("OUT TOTAL POWER NOM:    %04.1f VA\n",((BrazilUpsDriver*)(ups)->driver)->model->getOutputPowerNom());
 	pmsg("BATTERY 1207 SERIE:     %02.1f \n",((BrazilUpsDriver*)(ups)->driver)->model->getBattery12V07ASerie());
 	pmsg("BATTERY 1207 PARALLEL:  %02.1f \n",((BrazilUpsDriver*)(ups)->driver)->model->getBattery12V07AParallel());
-	pmsg("BATTERY EXPANDER:       %02d A\n",ups->expander_ampere);
+	pmsg("BATTERY EXPANDER:       %d A\n",ups->expander_ampere);
 	pmsg("BATTERY VOLTAGE:        %02.1f V\n",((BrazilUpsDriver*)(ups)->driver)->model->getBatteryVoltage());
 	pmsg("BATTERY VOLTAGE NOM:    %02.1f V\n",((BrazilUpsDriver*)(ups)->driver)->model->getBatteryVoltageNom());
 	pmsg("TEMPERATURE:            %02.1f oC\n",((BrazilUpsDriver*)(ups)->driver)->model->getTemperature());
@@ -2984,7 +2984,6 @@ static void brazil_print(){
 	pmsg("FLAG LINE ON:           %s\n",((BrazilUpsDriver*)(ups)->driver)->model->isLineMode()?"true":"false");
 	pmsg("FLAG OUT ON:            %s\n",((BrazilUpsDriver*)(ups)->driver)->model->isOutputOn()?"true":"false");
 	pmsg("FLAG OVERLOAD:          %s\n",((BrazilUpsDriver*)(ups)->driver)->model->isOverload()?"true":"false");
-	pmsg("HAS SHUTDOWN AUTO:      %s\n",((BrazilUpsDriver*)(ups)->driver)->model->hasShutdownAuto()?"true":"false");
 }
 static void brazil_last(){
 	char *events = 0;
@@ -3136,8 +3135,8 @@ static void brazil_testBatteryHealth(){
 	FILE *CsvFile=fopen (csv_filename,"w");
 	setvbuf (CsvFile , NULL , _IOFBF , 65535 );
 
-	double timeleft0, timeleft1, bat0, bat1, power0, power1, batload0, batload1, batload, bat_expected, timeleft_peukert, timeleft_rate, seconds;
-	bool batload_error, batcritical;
+	double timeleft0, timeleft1, bat0, bat1, power0, power1, batload0, batload1, bat_expected, timeleft_peukert, timeleft_rate, seconds;
+	bool batcritical;
 
 	bat_expected = br->getBatteryVoltageExpectedInitial();
 	timeleft_peukert = br->getBatteryTimeLeft();
@@ -3159,7 +3158,6 @@ static void brazil_testBatteryHealth(){
 	power0 = br->getOutputActivePower();
 	batcritical = false;
 
-	batload_error = false;
 	int transcorrido = 0;
 	char datetime[50];
 	fprintf(CsvFile,"\n");
@@ -3168,10 +3166,6 @@ static void brazil_testBatteryHealth(){
 		((BrazilUpsDriver*)(ups)->driver)->refresh();
 		time(&now);
 		gmtime_r(&now, &tm_now);
-		batload = br->getBatteryLoad();
-		if((batload > batload0 * 1.25) || (batload < batload0 * 0.75)){
-			batload_error = true;
-		}
 		transcorrido = floor(now - start);
 		if(br->isBatteryCritical()){
 			batcritical = true;
@@ -3223,7 +3217,6 @@ static void brazil_testBatteryHealth(){
 	pmsg("  Baterias atingiram nível crítico:  %s\n",(batcritical ? "SIM!" : "não"));
 	pmsg("  Potência na saída no fim:          %03.2f W\n",power1);
 	pmsg("  Fator de descarga da bateria fim:  %01.2f C\n",batload1);
-	pmsg("  Houve variação da carga > 25%:     %s\n",(batload_error ? "SIM!" : "não"));
 	pmsg("Análise dos resultados:\n");
 	pmsg("  Timeleft0 (estimado no início):    %02.1f minutos\n",timeleft0);
 	pmsg("  Timeleft1 (estimado no fim):       %02.1f minutos\n",timeleft1);
@@ -3238,19 +3231,14 @@ static void brazil_testBatteryHealth(){
 		pmsg("  Nível crítico:                     OK! O nobreak não informou que as baterias chegaram em um nível crítico até\n");
 		pmsg("                                     esse ponto.\n");
 	}
-	if(batload_error){
-		pmsg("  Calculos de autonomia:             FALHOU!!! Houve variação da carga maior que 25%. Essa variação compromete o teste!\n");
-		pmsg("                                     Garanta que a carga não tenha uma variação maior que 25% durante esse teste.\n");
+	if(timeleft_rate >= 0.75 && timeleft_rate <= 1.25){
+		pmsg("  Calculos de autonomia:             SUCESSO! O erro entre os Timeleft calculados e a duração medida foi menor que 25\%\n");
+		pmsg("                                     As baterias parecem estar em boa condição ou pode ser necessário revisar\n");
+		pmsg("                                     as rotinas de cálculo.\n");
 	}else{
-		if(timeleft_rate >= 0.75 && timeleft_rate <= 1.25){
-			pmsg("  Calculos de autonomia:             SUCESSO! O erro entre os Timeleft calculados e a duração medida foi menor que 25\%\n");
-			pmsg("                                     As baterias parecem estar em boa condição ou pode ser necessário revisar\n");
-			pmsg("                                     as rotinas de cálculo.\n");
-		}else{
-			pmsg("  Calculos de autonomia:             FALHOU! O erro entre os timeleft calculados e a duração medida foi maior que 25\%.\n");
-			pmsg("                                     Pode ser necessário trocar as baterias ou revisar as rotinas de cálculo.\n");
-			pmsg("                                     Ajuste os valores obtidos no arquivo de configuração.\n");
-		}
+		pmsg("  Calculos de autonomia:             FALHOU! O erro entre os timeleft calculados e a duração medida foi maior que 25\%.\n");
+		pmsg("                                     Pode ser necessário trocar as baterias ou revisar as rotinas de cálculo.\n");
+		pmsg("                                     Ajuste os valores obtidos no arquivo de configuração.\n");
 	}
 	pmsg("\n");
 	pmsg("5) Dados extras gravados no arquivo:    %s\n",csv_filename);

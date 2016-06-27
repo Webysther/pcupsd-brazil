@@ -174,13 +174,10 @@ bool BrazilUpsDriver::kill_power()
 	    printf("\n\nLine is present! Turn off in 1 or 2 minutes and turn on in 2 or 3 minutes!!!\n\n");
 		Dmsg(50, "Setting kill_power with timeout!!! The UPS will turn off in 1 minute and turn on in 2 minutes!\n");
 		this->programmation(true, 1, true, 2);
-	}else if(this->model->hasShutdownAuto()){
+	}else{
 	    printf("\n\nSetting auto shutdown and auto turn on!!! The UPS only do this if there is NO load!!\n\n");
 		Dmsg(50, "Setting kill_power with shutdownAuto!!!\n");
 		this->shutdownAuto();
-	}else{
-	    printf("\n\nSetting turn off in 1 or 2 minutes!!!!!\n\n");
-		this->programmation(true, 1, false, 2);
 	}
 	return true;
 }
@@ -309,10 +306,20 @@ bool BrazilUpsDriver::shutdownAuto()
 		return false;
 	}
 	unsigned char *cmd = 0;
-	int size = this->model->generateCmdScheduleSet(&cmd, false, 0 , false, 0 );
+	int size = 0;
+	if(this->model->hasShutdownAuto()){
+		size = this->model->generateCmdShutdownAuto(&cmd);
+	}else{
+		/*
+		 * O modelo bz1200-br não responde ao comando de shutdown auto. Mas pode
+		 * ser configurado para desligar quando sem carga e então religar
+		 * quando a tensão de rede voltar.
+		 */
+		size = this->model->generateCmdScheduleSet(&cmd, false, 0 , false, 0 );
+	}
 	if(size > 0){
 		this->send(cmd,size);
-		log_event(_ups, LOG_NOTICE, "shutdownAuto sent.\n");
+		log_event(_ups, LOG_NOTICE, "shutdown auto sent.\n");
 		return true;
 	}
 	return false;

@@ -70,7 +70,7 @@ int BrazilModelBackUPS2200::getLineVoltageMax(){
 	}
 }
 bool BrazilModelBackUPS2200::hasShutdownAuto(){
-	return true;
+	return false;
 }
 
 double BrazilModelBackUPS2200::getBattery12V07ASerie(){
