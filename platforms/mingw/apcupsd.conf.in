@@ -72,6 +72,15 @@ NOLOGINDIR @nologdir@
 # ======== Configuration parameters used during power failures ==========
 #
 
+# The BATTEXPANDER is the number in AMPERES of battery expander connected
+#   in the UPS to add extra timeleft. This value must be a integer
+#   number (WITH OUT point) and represents the value of C/20. 
+#   For example: one battery of 12V 7A/h you must inform the value 7.
+#
+#   This information is used just by driver brazil. 
+#
+BATTEXPANDER 0
+
 # The ONBATTERYDELAY is the time in seconds from when a power failure
 #   is detected until we react to it with an onbattery event.
 #

@@ -10,7 +10,7 @@
 PACKAGE = apcupsd
 DISTNAME = debian
 DISTVER = 8.4
-VERSION = 0.6.8
+VERSION = 0.7.0
 
 #
 # programs needed by compilation

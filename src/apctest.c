@@ -2971,7 +2971,9 @@ static void brazil_print(){
 	pmsg("OUT ACT POWER NOM:      %04.1f W\n",((BrazilUpsDriver*)(ups)->driver)->model->getOutputActivePowerNom());
 	pmsg("OUT TOTAL POWER:        %04.1f VA\n",((BrazilUpsDriver*)(ups)->driver)->model->getOutputPower());
 	pmsg("OUT TOTAL POWER NOM:    %04.1f VA\n",((BrazilUpsDriver*)(ups)->driver)->model->getOutputPowerNom());
-	pmsg("BATTERY 12V NUMBER:     %02d \n",((BrazilUpsDriver*)(ups)->driver)->model->getBatteryCount());
+	pmsg("BATTERY 1207 SERIE:     %02.1f \n",((BrazilUpsDriver*)(ups)->driver)->model->getBattery12V07ASerie());
+	pmsg("BATTERY 1207 PARALLEL:  %02.1f \n",((BrazilUpsDriver*)(ups)->driver)->model->getBattery12V07AParallel());
+	pmsg("BATTERY EXPANDER:       %02d A\n",ups->expander_ampere);
 	pmsg("BATTERY VOLTAGE:        %02.1f V\n",((BrazilUpsDriver*)(ups)->driver)->model->getBatteryVoltage());
 	pmsg("BATTERY VOLTAGE NOM:    %02.1f V\n",((BrazilUpsDriver*)(ups)->driver)->model->getBatteryVoltageNom());
 	pmsg("TEMPERATURE:            %02.1f oC\n",((BrazilUpsDriver*)(ups)->driver)->model->getTemperature());
@@ -2979,7 +2981,7 @@ static void brazil_print(){
 	pmsg("FLAG LINE 220V:         %s\n",((BrazilUpsDriver*)(ups)->driver)->model->isLine220V()?"true":"false");
 	pmsg("FLAG BATTERY CHARGING:  %s\n",((BrazilUpsDriver*)(ups)->driver)->model->isCharging()?"true":"false");
 	pmsg("FLAG BATTERY CRITICAL:  %s\n",((BrazilUpsDriver*)(ups)->driver)->model->isBatteryCritical()?"true":"false");
-	pmsg("FLAG LINE ON:           %s\n",((BrazilUpsDriver*)(ups)->driver)->model->isLineOn()?"true":"false");
+	pmsg("FLAG LINE ON:           %s\n",((BrazilUpsDriver*)(ups)->driver)->model->isLineMode()?"true":"false");
 	pmsg("FLAG OUT ON:            %s\n",((BrazilUpsDriver*)(ups)->driver)->model->isOutputOn()?"true":"false");
 	pmsg("FLAG OVERLOAD:          %s\n",((BrazilUpsDriver*)(ups)->driver)->model->isOverload()?"true":"false");
 	pmsg("HAS SHUTDOWN AUTO:      %s\n",((BrazilUpsDriver*)(ups)->driver)->model->hasShutdownAuto()?"true":"false");
@@ -3054,13 +3056,13 @@ static void brazil_getSchedule(){
 			"		Thursday:  %s\n"
 			"		Friday:    %s\n"
 			"		Saturday:  %s\n",\
-			(((BrazilUpsDriver*)(ups)->driver)->model->isProgrammationDayOfWeek(Sunday) ? "true" : "false"),\
-			(((BrazilUpsDriver*)(ups)->driver)->model->isProgrammationDayOfWeek(Monday) ? "true" : "false"),\
-			(((BrazilUpsDriver*)(ups)->driver)->model->isProgrammationDayOfWeek(Tuesday) ? "true" : "false"),\
-			(((BrazilUpsDriver*)(ups)->driver)->model->isProgrammationDayOfWeek(Wednesday) ? "true" : "false"),\
-			(((BrazilUpsDriver*)(ups)->driver)->model->isProgrammationDayOfWeek(Thursday) ? "true" : "false"),\
-			(((BrazilUpsDriver*)(ups)->driver)->model->isProgrammationDayOfWeek(Friday) ? "true" : "false"),\
-			(((BrazilUpsDriver*)(ups)->driver)->model->isProgrammationDayOfWeek(Saturday) ? "true" : "false")\
+			(((BrazilUpsDriver*)(ups)->driver)->model->isScheduleSetDayOfWeek(Sunday) ? "true" : "false"),\
+			(((BrazilUpsDriver*)(ups)->driver)->model->isScheduleSetDayOfWeek(Monday) ? "true" : "false"),\
+			(((BrazilUpsDriver*)(ups)->driver)->model->isScheduleSetDayOfWeek(Tuesday) ? "true" : "false"),\
+			(((BrazilUpsDriver*)(ups)->driver)->model->isScheduleSetDayOfWeek(Wednesday) ? "true" : "false"),\
+			(((BrazilUpsDriver*)(ups)->driver)->model->isScheduleSetDayOfWeek(Thursday) ? "true" : "false"),\
+			(((BrazilUpsDriver*)(ups)->driver)->model->isScheduleSetDayOfWeek(Friday) ? "true" : "false"),\
+			(((BrazilUpsDriver*)(ups)->driver)->model->isScheduleSetDayOfWeek(Saturday) ? "true" : "false")\
 	);
 	strpos += sprintf(str+strpos,"\n");
 
@@ -3118,7 +3120,7 @@ static void brazil_testBatteryHealth(){
 		return;
 	}
 
-	if(! br->isLineOn()){
+	if(! br->isLineMode()){
 		pmsg("\nAttention!!! The UPS is not connected to mains. Correct and try again.\n\n");
 		return;
 	}
@@ -3276,7 +3278,7 @@ static void brazil_testTimeLeftRoutines(){
 	fprintf(CsvFile,"\"Tensão de saída nominal:\",\"%3.0d\"\n",br->getOutputVoltageNom());
 	fprintf(CsvFile,"\"Potência de saída real (ativa) nominal:\",\"%4.0f\"\n",br->getOutputActivePowerNom());
 	fprintf(CsvFile,"\"Potência de saída total (ativa+reativa) nominal:\",\"%4.0f\"\n",br->getOutputPowerNom());
-	fprintf(CsvFile,"\"Número de baterias 12V:\",\"%1.0d\"\n",br->getBatteryCount());
+	fprintf(CsvFile,"\"Número de baterias 12V:\",\"%1.1f\"\n",br->getBattery12V07ASerie());
 	fprintf(CsvFile,"\n");
 	fprintf(CsvFile,"\"### DADOS INICIAIS TEÓRICOS\"\n");
 	fprintf(CsvFile,"\"Os dados à seguir são funções unicamente da corrente requerida da bateria (A).\"\n");

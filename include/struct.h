@@ -319,6 +319,7 @@ class UPSINFO {
 
    /* Items specified from config file */
    int annoy;
+   int expander_ampere;			   /* Battery expander in AMPERES */
    int maxtime;
    int annoydelay;                 /* delay before annoying users with logoff request */
    int onbattdelay;                /* delay before reacting to a power failure */

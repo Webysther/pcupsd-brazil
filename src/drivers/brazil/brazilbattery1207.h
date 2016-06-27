@@ -5,16 +5,17 @@
  *      Author: wagner
  */
 
-#ifndef SRC_DRIVERS_BRAZIL_BRAZILBATTERY_H_
-#define SRC_DRIVERS_BRAZIL_BRAZILBATTERY_H_
+#ifndef SRC_DRIVERS_BRAZIL_BRAZILBATTERY1207_H_
+#define SRC_DRIVERS_BRAZIL_BRAZILBATTERY1207_H_
 
-class BrazilBattery
+class BrazilBattery1207
 {
 public:
-	BrazilBattery();
-	virtual ~BrazilBattery();
+	BrazilBattery1207();
+	virtual ~BrazilBattery1207();
 
-	void setBatteryCount(int battery_12v_count);
+	void setBatteryCount(double battery_1207_serie,double battery_1207_parallel);
+	void setExpander(double ampers_per_hour_nominal);
 	double getBatteryVoltageNom();
 
 	double calcBatteryLoadC1(double act_power);
@@ -45,9 +46,11 @@ protected:
 	static const double COEF_VI[];
 	static const double COEF_VF[];
 
-	int battery_12v_count;
+	double battery_1207_serie;
+	double battery_1207_parallel;
+	double battery_expander;
 private:
 
 };
 
-#endif /* SRC_DRIVERS_BRAZIL_BRAZILBATTERY_H_ */
+#endif /* SRC_DRIVERS_BRAZIL_BRAZILBATTERY1207_H_ */

@@ -52,6 +52,7 @@ public:
 	virtual bool turnLineOn(bool turnon);
 	virtual bool turnOutputOn(bool turnon);
 	virtual bool shutdownAuto();
+	virtual bool turnContinueMode();
 
 	BrazilModelAbstract *model;
 

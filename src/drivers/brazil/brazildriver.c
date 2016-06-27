@@ -138,9 +138,16 @@ bool BrazilUpsDriver::setup()
 		return false;
 	}else{
 		if(!(hibernate_ups || shutdown_ups)){
-			this->programmation(false,0,false,0);
-			this->turnLineOn(true);
-			this->turnOutputOn(true);
+			if(! this->model->isScheduleSet()){
+				this->programmation(false,0,false,0);
+			}
+			if(! this->model->isLineMode()){
+				this->turnLineOn(true);
+			}
+			if(! this->model->isOutputOn()){
+				this->turnOutputOn(true);
+			}
+			this->turnContinueMode();
 		}
 		return true;
 	}
@@ -153,7 +160,6 @@ bool BrazilUpsDriver::shutdown()
 		return false;
 	}
 	Dmsg(50, "Setting shutdown with timeout in 1 or 2 minutes!!!\n");
-    printf("\n\nShutdown between 1 or 2 minutes!!!\n\n");
 	this->programmation(true, 1, false, 0);
 	return true;
 }
@@ -164,7 +170,7 @@ bool BrazilUpsDriver::kill_power()
 		log_event(_ups, LOG_ERR, "Kill power fail! There is no model instantiated.");
 		return false;
 	}
-	if(this->model->isLineOn()){
+	if(this->model->isLineMode()){
 	    printf("\n\nLine is present! Turn off in 1 or 2 minutes and turn on in 2 or 3 minutes!!!\n\n");
 		Dmsg(50, "Setting kill_power with timeout!!! The UPS will turn off in 1 minute and turn on in 2 minutes!\n");
 		this->programmation(true, 1, true, 2);
@@ -196,14 +202,14 @@ bool BrazilUpsDriver::programmation(bool turnoff, unsigned int turnoff_minutes, 
 		return false;
 	}
 	unsigned char *cmd = 0;
-	int size = this->model->generateCmdProgrammation(&cmd, turnoff, turnoff_minutes, turnon, turnon_minutes);
+	int size = this->model->generateCmdScheduleSet(&cmd, turnoff, turnoff_minutes, turnon, turnon_minutes);
 
 	if(size > 0){
 		int whait = 1;
 		while(whait > 0 && whait <= 5){
 			this->send(cmd,size);
 			this->ReadData(false);
-			if(((turnoff || turnon) && this->model->isProgrammationSet()) || (!(turnoff || turnon) && !this->model->isProgrammationSet())){
+			if(((turnoff || turnon) && this->model->isScheduleSet()) || (!(turnoff || turnon) && !this->model->isScheduleSet())){
 				whait = 0;
 			}else{
 				whait++;
@@ -238,10 +244,10 @@ bool BrazilUpsDriver::turnLineOn(bool turnon)
 		while(whait > 0 && whait <= 5){
 			this->send(cmd,size);
 			this->ReadData(false);
-			if((turnon && this->model->isLineOn()) || (!turnon && !this->model->isLineOn())){
+			if((turnon && this->model->isLineMode()) || (!turnon && !this->model->isLineMode())){
 				whait = 0;
 			}else{
-				Dmsg(50, "LineOn programmation! set: %s; read_LineOn: %s.\n",(turnon?"true":"false"),(this->model->isLineOn()?"true":"false"));
+				Dmsg(50, "LineOn programmation! set: %s; read_LineOn: %s.\n",(turnon?"true":"false"),(this->model->isLineMode()?"true":"false"));
 				whait++;
 				sleep(1);
 			}
@@ -303,10 +309,26 @@ bool BrazilUpsDriver::shutdownAuto()
 		return false;
 	}
 	unsigned char *cmd = 0;
-	int size = this->model->generateCmdProgrammation(&cmd, false, 0 , false, 0 );
+	int size = this->model->generateCmdScheduleSet(&cmd, false, 0 , false, 0 );
 	if(size > 0){
 		this->send(cmd,size);
 		log_event(_ups, LOG_NOTICE, "shutdownAuto sent.\n");
+		return true;
+	}
+	return false;
+}
+bool BrazilUpsDriver::turnContinueMode()
+{
+	Dmsg(50, "continueMode start.\n");
+	if(! this->setup()){
+		log_event(_ups, LOG_ERR, "continue mode! There is no model instanciated.");
+		return false;
+	}
+	unsigned char *cmd = 0;
+	int size = this->model->generateCmdContinueMode(&cmd);
+	if(size > 0){
+		this->send(cmd,size);
+		log_event(_ups, LOG_NOTICE, "continue mode sent.\n");
 		return true;
 	}
 	return false;
@@ -446,6 +468,8 @@ int BrazilUpsDriver::ReadData(bool getevents)
 					if(this->model == 0){
 						log_event(_ups, LOG_ERR, "APC Brazil. Model %u not recognized.",this->_buffer[bufpos]);
 						bufpos++;
+					}else{
+						this->model->bat->setExpander(_ups->expander_ampere);
 					}
 				}
 				if(this->model != 0){
@@ -581,7 +605,7 @@ bool BrazilUpsDriver::read_volatile_data()
 	/* save time stamp */
 	time(&_ups->poll_time);
 
-	_ups->set_online(this->model->isLineOn());
+	_ups->set_online(this->model->isLineMode());
 
 	/* Nominal voltage can change because the UPSs are bivolt */
 	_ups->NomInputVoltage = this->model->getLineVoltageNom();
@@ -591,7 +615,7 @@ bool BrazilUpsDriver::read_volatile_data()
 	/* LINE_FREQ */
 	_ups->LineFreq = this->model->getLineFrequency();
 
-	if(this->model->isLineOn()){
+	if(this->model->isLineMode()){
 		_ups->OutputFreq = this->model->getLineFrequency();
 	}else{
 		_ups->OutputFreq = 60;
@@ -612,7 +636,7 @@ bool BrazilUpsDriver::read_volatile_data()
 
 	/* BATT_FULL Battery level percentage */
 	double batlevel;
-	if(this->model->isLineOn()){
+	if(this->model->isLineMode()){
 		if(this->model->isCharging()){
 			/*
 			 * Para sinalizar que a bateria está sendo carregada e não sabemos o real estado dela o nível de tensão fica alternando
@@ -650,7 +674,7 @@ bool BrazilUpsDriver::read_volatile_data()
 			"Critical battery: %s; "
 			"Date (yyyy-mm-dd HH:MM:SS WeekDay): %04d-%02d-%02d %02d:%02d:%02d %1d; "
 			"Days of week programmed (Sunday-Saturday): %1d%1d%1d%1d%1d%1d%1d.\n",
-			(this->model->isLineOn()?"true":"false"),
+			(this->model->isLineMode()?"true":"false"),
 			(this->model->isOutputOn()?"true":"false"),
 			(this->model->isLine220V()?"true":"false"),
 			(this->model->isCharging()?"true":"false"),
@@ -663,13 +687,13 @@ bool BrazilUpsDriver::read_volatile_data()
 			this->model->getMinute(),
 			this->model->getSecond(),
 			this->model->getDayOfWeek(),
-			this->model->isProgrammationDayOfWeek(Sunday),
-			this->model->isProgrammationDayOfWeek(Monday),
-			this->model->isProgrammationDayOfWeek(Tuesday),
-			this->model->isProgrammationDayOfWeek(Wednesday),
-			this->model->isProgrammationDayOfWeek(Thursday),
-			this->model->isProgrammationDayOfWeek(Friday),
-			this->model->isProgrammationDayOfWeek(Saturday)
+			this->model->isScheduleSetDayOfWeek(Sunday),
+			this->model->isScheduleSetDayOfWeek(Monday),
+			this->model->isScheduleSetDayOfWeek(Tuesday),
+			this->model->isScheduleSetDayOfWeek(Wednesday),
+			this->model->isScheduleSetDayOfWeek(Thursday),
+			this->model->isScheduleSetDayOfWeek(Friday),
+			this->model->isScheduleSetDayOfWeek(Saturday)
 	);
 
 

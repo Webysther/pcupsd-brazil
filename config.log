@@ -315,7 +315,7 @@ configure:5204: $? = 0
 configure:5204: result: yes
 configure:5204: checking for strlcpy
 configure:5204: gcc -o conftest -g  -I/usr/local/include  -L/usr/local/lib64 -L/usr/local/lib conftest.c  >&5
-/tmp/ccstpvi0.o: In function `main':
+/tmp/ccUY4MhQ.o: In function `main':
 /home/wagner/workspace/apcupsd_brazil/conftest.c:55: undefined reference to `strlcpy'
 collect2: error: ld returned 1 exit status
 configure:5204: $? = 1
@@ -381,7 +381,7 @@ configure: failed program was:
 configure:5204: result: no
 configure:5204: checking for strlcat
 configure:5204: gcc -o conftest -g  -I/usr/local/include  -L/usr/local/lib64 -L/usr/local/lib conftest.c  >&5
-/tmp/cc1VxEeH.o: In function `main':
+/tmp/ccIJFIjW.o: In function `main':
 /home/wagner/workspace/apcupsd_brazil/conftest.c:55: undefined reference to `strlcat'
 collect2: error: ld returned 1 exit status
 configure:5204: $? = 1
@@ -1871,7 +1871,7 @@ UPSCABLE='simple'
 UPSTYPE='brazil'
 USB_DRIVER=''
 USB_TYPE=''
-VERSION='0.6.8'
+VERSION='0.7.0'
 WALL='/usr/bin/wall'
 WIN32=''
 WINDRES=''

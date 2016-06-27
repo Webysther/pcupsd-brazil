@@ -6,7 +6,7 @@
  */
 
 /*
- * Copyright (C) 2001-2006 Kern Sibbald
+ * Copyright (C) 2015-2016 Wagner Popov dos Santos
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of version 2 of the GNU General
@@ -73,9 +73,7 @@ int BrazilModelBackUPS::testEvents(unsigned char *buffer, unsigned int datasize)
 						return -1;
 					}
 				}
-				// len: 08; pos: 00; data: 00(172); 01(163); 02(245); 03(000); 04(164); 05(003); 06(128); 07(191);.
 			}else{
-
 			}
 		}
 	}else{
@@ -211,10 +209,10 @@ int BrazilModelBackUPS::getEventsStr(char **out){
 double BrazilModelBackUPS::getTemperature(){
 	return this->_buffer[4];
 }
-bool BrazilModelBackUPS::isProgrammationSet(){
+bool BrazilModelBackUPS::isScheduleSet(){
 	return (this->_buffer[17] & 0x7F) != 0; //0B01111111 = 0x7F
 }
-bool BrazilModelBackUPS::isProgrammationDayOfWeek(DAYS_OF_WEEK day){
+bool BrazilModelBackUPS::isScheduleSetDayOfWeek(DAYS_OF_WEEK day){
 	switch(day){
 	case(Sunday): 		return this->_buffer[17] & 0x01; //0B00000001;
 	case(Monday): 		return this->_buffer[17] & 0x02; //0B00000010;
@@ -270,7 +268,7 @@ double BrazilModelBackUPS::getBatteryVoltage(){
 	return this->TENSAO_BATERIA_F1 * this->_buffer[3] + this->TENSAO_BATERIA_F2;
 }
 double BrazilModelBackUPS::getLineVoltage(){
-	if(! this->isLineOn()){
+	if(! this->isLineMode()){
 		return 0;
 	}else{
 		if(! this->isLine220V()){
@@ -290,7 +288,7 @@ double BrazilModelBackUPS::getOutputVoltage(){
 		return 0;
 	}else{
 		int index = this->getRegulatingRelay();
-		if(this->isLineOn()){
+		if(this->isLineMode()){
 			return this->TENSAO_SAIDA_F1_MR[index] * this->_buffer[1] + this->TENSAO_SAIDA_F2_MR[index];
 		}else{
 			return this->getOutputVoltageNom();
@@ -298,7 +296,7 @@ double BrazilModelBackUPS::getOutputVoltage(){
 	}
 }
 double BrazilModelBackUPS::getOutputCurrent(){
-	if(this->isLineOn()){
+	if(this->isLineMode()){
 		return  this->CORRENTE_SAIDA_F1_MR * this->_buffer[5] + this->CORRENTE_SAIDA_F2_MR;;
 	}else{
 		if(this->isOutputOn()){
@@ -335,7 +333,7 @@ const unsigned int BrazilModelBackUPS::getRegulatingRelay(){
 	return r;
 }
 bool BrazilModelBackUPS::isCharging(){
-	if(! this->isLineOn()){
+	if(! this->isLineMode()){
 		return false;
 	}else{
 		return ((this->_buffer[20] & 0x2) == 2);
@@ -344,14 +342,23 @@ bool BrazilModelBackUPS::isCharging(){
 bool BrazilModelBackUPS::isLine220V(){
 	return ((this->_buffer[20] & 0x40) == 0x40);
 }
-bool BrazilModelBackUPS::isLineOn(){
+bool BrazilModelBackUPS::isOutput220V(){
+	return false;
+}
+bool BrazilModelBackUPS::isLineMode(){
 	return ((this->_buffer[20] & 0x20) != 0x20);
+}
+bool BrazilModelBackUPS::isBatteryMode(){
+	return ! this->isLineMode();
 }
 bool BrazilModelBackUPS::isOutputOn(){
 	return ((this->_buffer[20] & 0x08) == 0x08);
 }
 bool BrazilModelBackUPS::isOverload(){
 	return ((this->_buffer[20] & 0x80) == 0x80);
+}
+bool BrazilModelBackUPS::isOverHeat(){
+	return false;
 }
 bool BrazilModelBackUPS::isBatteryCritical(){
 	return ((this->_buffer[20] & 0x04) == 0x04);
@@ -389,11 +396,29 @@ int BrazilModelBackUPS::generateCmdTurnOutputOn(unsigned char **cmd, bool turnon
 	(*cmd)[3] = (unsigned char)(*cmd)[1] + (*cmd)[2];
 	return size;
 }
+int BrazilModelBackUPS::generateCmdShutdownAuto(unsigned char **cmd){
+	const int size = 4;
+	*cmd = (unsigned char*) malloc(sizeof(char) * size);
+	(*cmd)[0] = (unsigned char)204;		// cmd shutdown auto start
+	(*cmd)[1] = (unsigned char)9;		// cmd shutdown auto start
+	(*cmd)[2] = (unsigned char)9;
+	(*cmd)[3] = (unsigned char)(*cmd)[1] + (*cmd)[2];
+	return size;
+}
+int BrazilModelBackUPS::generateCmdContinueMode(unsigned char **cmd){
+	return 0;
+}
+int BrazilModelBackUPS::generateCmdGetEvents(unsigned char **cmd){
+	const int size = 1;
+	*cmd = (unsigned char*) malloc(sizeof(char) * size);
+	(*cmd)[0] = (unsigned char)205;		// cmd program turn line
+	return size;
+}
 /*
  * set=true to program shutdown
  * set=false to clear shutdown programation
  */
-int BrazilModelBackUPS::generateCmdProgrammation(unsigned char **cmd, bool turnoff, unsigned int turnoff_minutes, bool turnon, unsigned int turnon_minutes)
+int BrazilModelBackUPS::generateCmdScheduleSet(unsigned char **cmd, bool turnoff, unsigned int turnoff_minutes, bool turnon, unsigned int turnon_minutes)
 {
 	time_t now;
 	time(&now);
@@ -418,7 +443,7 @@ int BrazilModelBackUPS::generateCmdProgrammation(unsigned char **cmd, bool turno
 	(*cmd)[2] = (unsigned char)tm_now.tm_min;						// current minute
 	(*cmd)[3] = (unsigned char)tm_now.tm_sec;						// current seconds
 	(*cmd)[8] = (unsigned char)tm_now.tm_wday << 5;				// current day of week
-	(*cmd)[8] |= ((unsigned char)tm_now.tm_mday) & 0x1F1;		// 0B00011111 = 0x1F // current day oy month
+	(*cmd)[8] |= ((unsigned char)tm_now.tm_mday) & 0x1F;		// 0B00011111 = 0x1F // current day oy month
 	(*cmd)[9] = ((unsigned char)(tm_now.tm_mon + 1) & 0x0F) << 4;						// current month
 	(*cmd)[9] |= ((unsigned char)((tm_now.tm_year - 98) % 0x10)) & 0x0F; // 0B00001111 = 0x0F  // current year
 	if(turnoff || turnon){
@@ -470,7 +495,7 @@ int BrazilModelBackUPS::generateCmdProgrammation(unsigned char **cmd, bool turno
 		(*cmd)[5] = (unsigned char)0;       // minute to turn on - rand number.
 		(*cmd)[6] = (unsigned char)0;		// hour to turn off - rand number.
 		(*cmd)[7] = (unsigned char)0;       // minute to turn off - rand number.
-		(*cmd)[10] = 0x80; //0B10000000 = 0x80;		// none day of week to execute programation
+		(*cmd)[10] = 0x80; //0B10000000 = 0x80;		// none day of week to execute programation! But set auto shutdown
 	}
 
 	unsigned int checksum = 0;
@@ -479,21 +504,6 @@ int BrazilModelBackUPS::generateCmdProgrammation(unsigned char **cmd, bool turno
 	}
 	(*cmd)[11] = (unsigned char) checksum % 256;
 
-	return size;
-}
-int BrazilModelBackUPS::generateCmdShutdown(unsigned char **cmd){
-	const int size = 4;
-	*cmd = (unsigned char*) malloc(sizeof(char) * size);
-	(*cmd)[0] = (unsigned char)204;		// cmd shutdown auto start
-	(*cmd)[1] = (unsigned char)9;		// cmd shutdown auto start
-	(*cmd)[2] = (unsigned char)9;
-	(*cmd)[3] = (unsigned char)(*cmd)[1] + (*cmd)[2];
-	return size;
-}
-int BrazilModelBackUPS::generateCmdGetEvents(unsigned char **cmd){
-	const int size = 1;
-	*cmd = (unsigned char*) malloc(sizeof(char) * size);
-	(*cmd)[0] = (unsigned char)205;		// cmd program turn line
 	return size;
 }
 

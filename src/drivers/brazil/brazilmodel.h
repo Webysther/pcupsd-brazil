@@ -28,7 +28,7 @@
 #ifndef SRC_DRIVERS_BRAZIL_BRAZILMODEL_H_
 #define SRC_DRIVERS_BRAZIL_BRAZILMODEL_H_
 
-#include "brazilbattery.h"
+#include "brazilbattery1207.h"
 
 enum DAYS_OF_WEEK{
 	Sunday = 0,
@@ -68,9 +68,9 @@ public:
 	virtual double getOutputCurrent() = 0;
 	virtual double getOutputActivePower() = 0;
 
-	virtual bool isProgrammationSet() = 0;
+	virtual bool isScheduleSet() = 0;
 
-	virtual bool isProgrammationDayOfWeek(DAYS_OF_WEEK day) = 0;
+	virtual bool isScheduleSetDayOfWeek(DAYS_OF_WEEK day) = 0;
 	virtual unsigned char getTurnOffHour() = 0;
 	virtual unsigned char getTurnOffMinute() = 0;
 	virtual unsigned char getTurnOnHour() = 0;
@@ -92,7 +92,8 @@ public:
 	double getBatteryLoad();
 
 	virtual double getInverterEfficiency() = 0;
-	virtual int getBatteryCount() = 0;
+	virtual double getBattery12V07ASerie() = 0;
+	virtual double getBattery12V07AParallel() = 0;
 
 	virtual double getOutputPowerNom() = 0;
 	virtual double getOutputActivePowerNom() = 0;
@@ -103,16 +104,20 @@ public:
 
 	virtual int generateCmdTurnLineOn(unsigned char **cmd, bool turnon) = 0;
 	virtual int generateCmdTurnOutputOn(unsigned char **cmd, bool turnon) = 0;
-	virtual int generateCmdProgrammation(unsigned char **cmd, bool turnoff, unsigned int turnoff_minutes, bool turnon, unsigned int turnon_minutes) = 0;
-	virtual int generateCmdShutdown(unsigned char **cmd) = 0;
+	virtual int generateCmdScheduleSet(unsigned char **cmd, bool turnoff, unsigned int turnoff_minutes, bool turnon, unsigned int turnon_minutes) = 0;
+	virtual int generateCmdShutdownAuto(unsigned char **cmd) = 0;
+	virtual int generateCmdContinueMode(unsigned char **cmd) = 0;
 	virtual int generateCmdGetEvents(unsigned char **cmd) = 0;
 
 	virtual bool hasShutdownAuto() = 0;
 	virtual char *getModelName() = 0;
-	virtual bool isLineOn() = 0;
+	virtual bool isLineMode() = 0;
+	virtual bool isBatteryMode() = 0;
 	virtual bool isOverload() = 0;
+	virtual bool isOverHeat() = 0;
 	virtual bool isCharging() = 0;
 	virtual bool isLine220V() = 0;
+	virtual bool isOutput220V() = 0;
 	virtual bool isOutputOn() = 0;
 	virtual bool isBatteryCritical() = 0;
 
@@ -133,7 +138,7 @@ public:
 
 	static const unsigned int BUFFERLEN = 200;
 
-	BrazilBattery *bat;
+	BrazilBattery1207 *bat;
 
 protected:
 	unsigned char _buffer[BrazilModelAbstract::BUFFERLEN];
@@ -157,8 +162,6 @@ public:
 	BrazilModelBackUPS(unsigned char model);
 	virtual ~BrazilModelBackUPS();
 
-	static BrazilModelBackUPS *Factory();
-
 	virtual int testEvents(unsigned char *buffer, unsigned int datasize);
 	virtual bool setBuffer(unsigned char *buffer, unsigned int datasize);
 	virtual bool setEvents(unsigned char *buffer, unsigned int datasize);
@@ -172,9 +175,9 @@ public:
 	virtual double getOutputCurrent();
 	virtual double getOutputActivePower();
 
-	virtual bool isProgrammationSet();
+	virtual bool isScheduleSet();
 
-	virtual bool isProgrammationDayOfWeek(DAYS_OF_WEEK day);
+	virtual bool isScheduleSetDayOfWeek(DAYS_OF_WEEK day);
 	virtual unsigned char getTurnOffHour();
 	virtual unsigned char getTurnOffMinute();
 	virtual unsigned char getTurnOnHour();
@@ -187,17 +190,21 @@ public:
 	virtual unsigned char getMinute();
 	virtual unsigned char getSecond();
 
-	virtual bool isLineOn();
+	virtual bool isLineMode();
+	virtual bool isBatteryMode();
 	virtual bool isOverload();
+	virtual bool isOverHeat();
 	virtual bool isCharging();
 	virtual bool isLine220V();
+	virtual bool isOutput220V();
 	virtual bool isOutputOn();
 	virtual bool isBatteryCritical();
 
 	virtual int generateCmdTurnLineOn(unsigned char **cmd, bool turnon);
 	virtual int generateCmdTurnOutputOn(unsigned char **cmd, bool turnon);
-	virtual int generateCmdProgrammation(unsigned char **cmd, bool turnoff, unsigned int turnoff_minutes, bool turnon, unsigned int turnon_minutes);
-	virtual int generateCmdShutdown(unsigned char **cmd);
+	virtual int generateCmdScheduleSet(unsigned char **cmd, bool turnoff, unsigned int turnoff_minutes, bool turnon, unsigned int turnon_minutes);
+	virtual int generateCmdShutdownAuto(unsigned char **cmd);
+	virtual int generateCmdContinueMode(unsigned char **cmd);
 	virtual int generateCmdGetEvents(unsigned char **cmd);
 
 	static const unsigned char SUBTENSAO_ENTRADA = 1;
@@ -257,15 +264,14 @@ class BrazilModelBackUPS1200: public BrazilModelBackUPS
 public:
 	BrazilModelBackUPS1200(unsigned char model);
 
-	static BrazilModelBackUPS1200 *Factory();
-
 	double getOutputPowerNom();
 	double getOutputActivePowerNom();
 	int getOutputVoltageNom();
 	int getLineVoltageNom();
 	int getLineVoltageMin();
 	int getLineVoltageMax();
-	int getBatteryCount();
+	double getBattery12V07ASerie();
+	double getBattery12V07AParallel();
 	double getInverterEfficiency();
 
 	bool hasShutdownAuto();
@@ -282,15 +288,14 @@ class BrazilModelBackUPS1500: public BrazilModelBackUPS
 public:
 	BrazilModelBackUPS1500(unsigned char model);
 
-	static BrazilModelBackUPS1500 *Factory();
-
 	double getOutputPowerNom();
 	double getOutputActivePowerNom();
 	int getOutputVoltageNom();
 	int getLineVoltageNom();
 	int getLineVoltageMin();
 	int getLineVoltageMax();
-	int getBatteryCount();
+	double getBattery12V07ASerie();
+	double getBattery12V07AParallel();
 	double getInverterEfficiency();
 
 	bool hasShutdownAuto();
@@ -306,15 +311,14 @@ class BrazilModelBackUPS2200: public BrazilModelBackUPS
 public:
 	BrazilModelBackUPS2200(unsigned char model);
 
-	static BrazilModelBackUPS2200 *Factory();
-
 	double getOutputPowerNom();
 	double getOutputActivePowerNom();
 	int getOutputVoltageNom();
 	int getLineVoltageNom();
 	int getLineVoltageMin();
 	int getLineVoltageMax();
-	int getBatteryCount();
+	double getBattery12V07ASerie();
+	double getBattery12V07AParallel();
 	double getInverterEfficiency();
 
 	bool hasShutdownAuto();
@@ -330,15 +334,14 @@ class BrazilModelBackUPS2200_22: public BrazilModelBackUPS
 public:
 	BrazilModelBackUPS2200_22(unsigned char model);
 
-	static BrazilModelBackUPS2200_22 *Factory();
-
 	double getOutputPowerNom();
 	double getOutputActivePowerNom();
 	int getOutputVoltageNom();
 	int getLineVoltageNom();
 	int getLineVoltageMin();
 	int getLineVoltageMax();
-	int getBatteryCount();
+	double getBattery12V07ASerie();
+	double getBattery12V07AParallel();
 	double getInverterEfficiency();
 
 	bool hasShutdownAuto();
@@ -354,8 +357,6 @@ class BrazilModelBackUPS700: public BrazilModelBackUPS
 public:
 	BrazilModelBackUPS700(unsigned char model);
 
-	static BrazilModelBackUPS700 *Factory();
-
 	const unsigned int getRegulatingRelay();
 
 	double getOutputPowerNom();
@@ -364,7 +365,8 @@ public:
 	int getLineVoltageNom();
 	int getLineVoltageMin();
 	int getLineVoltageMax();
-	int getBatteryCount();
+	double getBattery12V07ASerie();
+	double getBattery12V07AParallel();
 	double getInverterEfficiency();
 
 	bool hasShutdownAuto();
@@ -380,15 +382,14 @@ class BrazilModelBackUPS800: public BrazilModelBackUPS
 public:
 	BrazilModelBackUPS800(unsigned char model);
 
-	static BrazilModelBackUPS800 *Factory();
-
 	double getOutputPowerNom();
 	double getOutputActivePowerNom();
 	int getOutputVoltageNom();
 	int getLineVoltageNom();
 	int getLineVoltageMin();
 	int getLineVoltageMax();
-	int getBatteryCount();
+	double getBattery12V07ASerie();
+	double getBattery12V07AParallel();
 	double getInverterEfficiency();
 
 	bool hasShutdownAuto();
@@ -399,5 +400,230 @@ protected:
 private:
 };
 
+class BrazilModelSolis: public BrazilModelAbstract
+{
+public:
+	BrazilModelSolis(unsigned char model);
+	virtual ~BrazilModelSolis();
+
+	virtual int testEvents(unsigned char *buffer, unsigned int datasize);
+	virtual bool setBuffer(unsigned char *buffer, unsigned int datasize);
+	virtual bool setEvents(unsigned char *buffer, unsigned int datasize);
+	virtual int getEventsStr(char **out);
+
+	virtual double getTemperature();
+	virtual double getBatteryVoltage();
+	virtual double getLineVoltage();
+	virtual double getLineFrequency();
+	virtual double getOutputVoltage();
+	virtual double getOutputCurrent();
+	virtual double getOutputActivePower();
+
+	virtual bool isScheduleSet();
+
+	virtual bool isScheduleSetDayOfWeek(DAYS_OF_WEEK day);
+	virtual unsigned char getTurnOffHour();
+	virtual unsigned char getTurnOffMinute();
+	virtual unsigned char getTurnOnHour();
+	virtual unsigned char getTurnOnMinute();
+	virtual unsigned int getYear();
+	virtual unsigned char getMonth();
+	virtual unsigned char getDayOfMonth();
+	virtual unsigned char getDayOfWeek();
+	virtual unsigned char getHour();
+	virtual unsigned char getMinute();
+	virtual unsigned char getSecond();
+
+	virtual bool isLineMode();
+	virtual bool isBatteryMode();
+	virtual bool isOverload();
+	virtual bool isOverHeat();
+	virtual bool isCharging();
+	virtual bool isLine220V();
+	virtual bool isOutput220V();
+	virtual bool isOutputOn();
+	virtual bool isBatteryCritical();
+
+	virtual int generateCmdTurnLineOn(unsigned char **cmd, bool turnon);
+	virtual int generateCmdTurnOutputOn(unsigned char **cmd, bool turnon);
+	virtual int generateCmdScheduleSet(unsigned char **cmd, bool turnoff, unsigned int turnoff_minutes, bool turnon, unsigned int turnon_minutes);
+	virtual int generateCmdShutdownAuto(unsigned char **cmd);
+	virtual int generateCmdContinueMode(unsigned char **cmd);
+	virtual int generateCmdGetEvents(unsigned char **cmd);
+
+	static const unsigned int MSGLEN = 25;
+protected:
+	double CST_BATT_VOLT_MULT;
+	double CST_BATT_VOLT_OFFSET;
+	double CST_INPUT_FREQUENCY;
+	double CST_INPUT_VOLT_110_MULT;
+	double CST_INPUT_VOLT_110_OFFSET;
+	double CST_INPUT_VOLT_220_MULT;
+	double CST_INPUT_VOLT_220_OFFSET;
+	double CST_OUTPUT_VOLT_220_MULT_BATT;
+	double CST_OUTPUT_VOLT_220_OFFSET_BATT;
+	double CST_OUTPUT_VOLT_220_MULT_LINE;
+	double CST_OUTPUT_VOLT_220_OFFSET_LINE;
+	double CST_OUTPUT_VOLT_110_MULT_BATT;
+	double CST_OUTPUT_VOLT_110_OFFSET_BATT;
+	double CST_OUTPUT_VOLT_110_MULT_LINE;
+	double CST_OUTPUT_VOLT_110_OFFSET_LINE;
+	double CST_OUTPUT_CURRENT_220_MULT_BATT;
+	double CST_OUTPUT_CURRENT_220_OFFSET_BATT;
+	double CST_OUTPUT_CURRENT_220_MULT_LINE;
+	double CST_OUTPUT_CURRENT_220_OFFSET_LINE;
+	double CST_OUTPUT_CURRENT_110_MULT_BATT;
+	double CST_OUTPUT_CURRENT_110_OFFSET_BATT;
+	double CST_OUTPUT_CURRENT_110_MULT_LINE;
+	double CST_OUTPUT_CURRENT_110_OFFSET_LINE;
+	double CST_OUTPUT_POWER_220_MULT_LINE;
+	double CST_OUTPUT_POWER_220_OFFSET_LINE;
+	double CST_OUTPUT_POWER_220_MULT_BATT;
+	double CST_OUTPUT_POWER_220_OFFSET_BATT;
+	double CST_OUTPUT_POWER_110_MULT_LINE;
+	double CST_OUTPUT_POWER_110_OFFSET_LINE;
+	double CST_OUTPUT_POWER_110_MULT_BATT;
+	double CST_OUTPUT_POWER_110_OFFSET_BATT;
+
+private:
+};
+
+class BrazilModelSolis700: public BrazilModelSolis
+{
+public:
+	BrazilModelSolis700(unsigned char model);
+
+	double getOutputPowerNom();
+	double getOutputActivePowerNom();
+	int getOutputVoltageNom();
+	int getLineVoltageNom();
+	int getLineVoltageMin();
+	int getLineVoltageMax();
+	double getBattery12V07ASerie();
+	double getBattery12V07AParallel();
+	double getInverterEfficiency();
+
+	bool hasShutdownAuto();
+	char *getModelName();
+
+protected:
+
+private:
+};
+
+class BrazilModelSolis1000_a: public BrazilModelSolis
+{
+public:
+	BrazilModelSolis1000_a(unsigned char model);
+
+	double getOutputPowerNom();
+	double getOutputActivePowerNom();
+	int getOutputVoltageNom();
+	int getLineVoltageNom();
+	int getLineVoltageMin();
+	int getLineVoltageMax();
+	double getBattery12V07ASerie();
+	double getBattery12V07AParallel();
+	double getInverterEfficiency();
+
+	bool hasShutdownAuto();
+	char *getModelName();
+
+protected:
+
+private:
+};
+
+class BrazilModelSolis1000_b: public BrazilModelSolis
+{
+public:
+	BrazilModelSolis1000_b(unsigned char model);
+
+	double getOutputPowerNom();
+	double getOutputActivePowerNom();
+	int getOutputVoltageNom();
+	int getLineVoltageNom();
+	int getLineVoltageMin();
+	int getLineVoltageMax();
+	double getBattery12V07ASerie();
+	double getBattery12V07AParallel();
+	double getInverterEfficiency();
+
+	bool hasShutdownAuto();
+	char *getModelName();
+
+protected:
+
+private:
+};
+
+class BrazilModelSolis2000_a: public BrazilModelSolis
+{
+public:
+	BrazilModelSolis2000_a(unsigned char model);
+
+	double getOutputPowerNom();
+	double getOutputActivePowerNom();
+	int getOutputVoltageNom();
+	int getLineVoltageNom();
+	int getLineVoltageMin();
+	int getLineVoltageMax();
+	double getBattery12V07ASerie();
+	double getBattery12V07AParallel();
+	double getInverterEfficiency();
+
+	bool hasShutdownAuto();
+	char *getModelName();
+
+protected:
+
+private:
+};
+
+class BrazilModelSolis2000_b: public BrazilModelSolis
+{
+public:
+	BrazilModelSolis2000_b(unsigned char model);
+
+	double getOutputPowerNom();
+	double getOutputActivePowerNom();
+	int getOutputVoltageNom();
+	int getLineVoltageNom();
+	int getLineVoltageMin();
+	int getLineVoltageMax();
+	double getBattery12V07ASerie();
+	double getBattery12V07AParallel();
+	double getInverterEfficiency();
+
+	bool hasShutdownAuto();
+	char *getModelName();
+
+protected:
+
+private:
+};
+
+class BrazilModelSolis3000: public BrazilModelSolis
+{
+public:
+	BrazilModelSolis3000(unsigned char model);
+
+	double getOutputPowerNom();
+	double getOutputActivePowerNom();
+	int getOutputVoltageNom();
+	int getLineVoltageNom();
+	int getLineVoltageMin();
+	int getLineVoltageMax();
+	double getBattery12V07ASerie();
+	double getBattery12V07AParallel();
+	double getInverterEfficiency();
+
+	bool hasShutdownAuto();
+	char *getModelName();
+
+protected:
+
+private:
+};
 
 #endif /* SRC_DRIVERS_BRAZIL_BRAZILMODEL_H_ */
