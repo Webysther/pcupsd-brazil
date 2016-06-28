@@ -10,7 +10,7 @@
 PACKAGE = apcupsd
 DISTNAME = debian
 DISTVER = 8.4
-VERSION = 0.7.0
+VERSION = 0.7.1
 
 #
 # programs needed by compilation
@@ -73,8 +73,8 @@ X_LIBS =
 X_EXTRA_LIBS = 
 
 CPPFLAGS =  -I/usr/local/include -I$(topdir)/include $(EXTRAINCS)
-CFLAGS = $(CPPFLAGS) -g -Wall 
-CXXFLAGS = $(CPPFLAGS) -g -fno-exceptions -fno-rtti -Wall 
+CFLAGS = $(CPPFLAGS) -g -O2 -Wall 
+CXXFLAGS = $(CPPFLAGS) -g -O2 -fno-exceptions -fno-rtti -Wall 
 OBJCFLAGS = $(CPPFLAGS) $(CFLAGS)
 LDFLAGS =  -L/usr/local/lib64 -L/usr/local/lib
 LIBS =  -lm -lsupc++
