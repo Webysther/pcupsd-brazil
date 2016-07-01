@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-apcupsd_error()
+apcctrl_error()
 {
 	echo -en "\e[31m\e[5m"
 	echo -en "\nERROR!!! "
@@ -16,29 +16,31 @@ apcupsd_error()
 	exit 2
 }
 
-apcupsd_mingw()
-{
-	echo "mingw..."
-	mingw32-g++ -v &>.out.mingw
-	if [[ $? == "0" ]]; then
-		return 0;
-	fi;
-
-	cat .out.mingw
-	return 1;
-}
-apcupsd_path()
+apcctrl_path()
 {
     echo "path..."
-	if [[ -e "${APTUPSD_PATH}" ]]; then
-		apcupsd_error "O Caminho ${APCUPSD_PATH} já existe"
+	if [[ -e "${APCCTRL_PATH}" ]]; then
+		apcctrl_error "O Caminho ${APCCTRL_PATH} já existe"
 	fi;
 	return 0;
 }
-apcupsd_svn()
+
+apcctrl_mingw()
+{
+    echo "mingw..."
+    mingw32-g++ -v &>.out.mingw
+    if [[ $? == "0" ]]; then
+        return 0;
+    fi;
+
+    cat .out.mingw
+    return 1;
+}
+
+apcctrl_svn()
 {
 	echo "svn..."
-	svn checkout http://svn.code.sf.net/p/apcupsd-brazil/svn/tags/${TAG} ${APCUPSD_PATH} &>.out.svn
+	svn checkout http://svn.code.sf.net/p/apcupsd-brazil/svn/tags/${TAG} ${APCCTRL_PATH} &>.out.svn
 	if [[ $? == "0" ]]; then
 		return 0;
 	fi;
@@ -47,10 +49,10 @@ apcupsd_svn()
 	return 1;
 }
 
-apcupsd_configure()
+apcctrl_configure()
 {
 	echo "configure..."
-	cd ${APCUPSD_PATH}
+	cd ${APCCTRL_PATH}
 	CONFIG=$(./configure --host=mingw32 \
 	       --prefix=/apcupsd \
 	       --sbindir=/apcupsd/bin \
@@ -77,10 +79,10 @@ apcupsd_configure()
 	return 1;
 }
 
-apcupsd_make()
+apcctrl_make()
 {
 	echo "make..."
-	cd ${APCUPSD_PATH}
+	cd ${APCCTRL_PATH}
 	make &>.out.make
 	if [[ $? == "0" ]]; then
 		return 0;
@@ -91,10 +93,10 @@ apcupsd_make()
 
 }
 
-apcupsd_installer() 
+apcctrl_installer() 
 {
 	echo "installer..."
-	cd ${APCUPSD_PATH}/platforms/mingw/
+	cd ${APCCTRL_PATH}/platforms/mingw/
 	make winapcupsd.exe &>.out.installer
 	if [[ $? == "0" ]]; then
 		return 0;
@@ -103,11 +105,11 @@ apcupsd_installer()
 	cat .out.installer
 	return 1;
 }
-apcupsd_scp()
+apcctrl_scp()
 {
 #platforms/mingw/installer/winapcctrl-0.6.0.exe
 	echo "scp..."
-	scp ${APCUPSD_PATH}/platforms/mingw/installer/winapcctrl-${TAG}.exe ${REMOTE_USER}@${REMOTE_SERVER}:${REMOTE_PATH} &>.out.scp
+	scp ${APCCTRL_PATH}/platforms/mingw/installer/winapcctrl-${TAG}.exe ${REMOTE_USER}@${REMOTE_SERVER}:${REMOTE_PATH} &>.out.scp
 	if [[ $? == "0" ]]; then
 		return 0;
 	fi;
@@ -117,7 +119,7 @@ apcupsd_scp()
 }
 
 if [[ -z "$1" ]]; then
-	apcupsd_error "Utilize o formato:
+	apcctrl_error "Utilize o formato:
 compile TAG_NUMBER
 TAG_NUMBER = x.x.x"
 fi;
@@ -125,7 +127,7 @@ fi;
 TAG=$(echo "${1}" | sed -n '/[0-9]\+\.[0-9]\+\.[0-9]\+/p')
 
 if [[ -z "${TAG}" ]]; then
-	apcupsd_error "Utilize o formato:
+	apcctrl_error "Utilize o formato:
 compile TAG_NUMBER
 TAG_NUMBER = x.x.x"
 fi;
@@ -134,41 +136,41 @@ REMOTE_USER="wagner"
 REMOTE_SERVER="192.168.22.4"
 REMOTE_PATH=/home/wagner/workspace/apcupsd_brazil_tars
 
-APCUPSD_PATH="/home/wagner/apcupsd-brazil/apcupsd-brazil-${TAG}"
+APCCTRL_PATH="/home/wagner/apcupsd-brazil/apcupsd-brazil-${TAG}"
 
 PATH_OLD="${PATH}"
 export PATH="/home/wagner/apcupsd-brazil/cross-tools/mingw32/bin:${PATH}"
 
-echo -en "APCUPSD_PATH=${APCUPSD_PATH}\n"
+echo -en "APCCTRL_PATH=${APCCTRL_PATH}\n"
 echo -en "PATH=${PATH}\n\n"
 
-apcupsd_path
+apcctrl_path
 if [[ $? != "0" ]]; then
-	apcupsd_error path
+	apcctrl_error path
 fi;
-apcupsd_mingw
+apcctrl_mingw
 if [[ $? != "0" ]]; then
-	apcupsd_error mingw
+	apcctrl_error mingw
 fi;
-apcupsd_svn
+apcctrl_svn
 if [[ $? != "0" ]]; then
-	apcupsd_error svn
+	apcctrl_error svn
 fi;
-apcupsd_configure
+apcctrl_configure
 if [[ $? != "0" ]]; then
-	apcupsd_error configure
+	apcctrl_error configure
 fi;
-apcupsd_make
+apcctrl_make
 if [[ $? != "0" ]]; then
-	apcupsd_error make
+	apcctrl_error make
 fi;
-apcupsd_installer
+apcctrl_installer
 if [[ $? != "0" ]]; then
-	apcupsd_error installer
+	apcctrl_error installer
 fi;
-apcupsd_scp
+apcctrl_scp
 if [[ $? != "0" ]]; then
-	apcupsd_error scp
+	apcctrl_error scp
 fi;
 
 echo -en "\e[40m\e[32m\e[5m"
