@@ -5,7 +5,14 @@
     * Suporte para os modelos com protocolo solis
       Smart-UPS BR 1000va..
       
+0.7.4 - 01 de julho de 2016
 
+    * Mudança no shutdownauto
+    
+0.7.5 - 01 de julho de 2016
+
+    * Correção de BUG grave. Duplo desligamento! Por detecção de ausência de carga
+      e por shutdown puro sem timeout específico.
 
 
 ----------------------------------------------------------------------------
