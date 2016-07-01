@@ -307,22 +307,18 @@ bool BrazilUpsDriver::shutdownAuto()
 	}
 	unsigned char *cmd = 0;
 	int size = 0;
-	if(this->model->hasShutdownAuto()){
-		size = this->model->generateCmdShutdownAuto(&cmd);
-	}else{
-		/*
-		 * O modelo bz1200-br não responde ao comando de shutdown auto. Mas pode
-		 * ser configurado para desligar quando sem carga e então religar
-		 * quando a tensão de rede voltar.
-		 */
-		size = this->model->generateCmdScheduleSet(&cmd, false, 0 , false, 0 );
-	}
+	size = this->model->generateCmdShutdownAuto(&cmd);
 	if(size > 0){
 		this->send(cmd,size);
 		log_event(_ups, LOG_NOTICE, "shutdown auto sent.\n");
-		return true;
 	}
-	return false;
+	sleep(1);
+	size = this->model->generateCmdScheduleSet(&cmd, false, 0 , false, 0 );
+	if(size > 0){
+		this->send(cmd,size);
+		log_event(_ups, LOG_NOTICE, "schedule sent.\n");
+	}
+	return true;
 }
 bool BrazilUpsDriver::turnContinueMode()
 {

@@ -70,7 +70,7 @@ int BrazilModelBackUPS800::getLineVoltageMax(){
 	}
 }
 bool BrazilModelBackUPS800::hasShutdownAuto(){
-	return false;
+	return true;
 }
 
 double BrazilModelBackUPS800::getBattery12V07ASerie(){
