@@ -397,13 +397,14 @@ int BrazilModelBackUPS::generateCmdTurnOutputOn(unsigned char **cmd, bool turnon
 	return size;
 }
 int BrazilModelBackUPS::generateCmdShutdownAuto(unsigned char **cmd){
-	const int size = 4;
-	*cmd = (unsigned char*) malloc(sizeof(char) * size);
-	(*cmd)[0] = (unsigned char)204;		// cmd shutdown auto start
-	(*cmd)[1] = (unsigned char)9;		// cmd shutdown auto start
-	(*cmd)[2] = (unsigned char)9;
-	(*cmd)[3] = (unsigned char)(*cmd)[1] + (*cmd)[2];
-	return size;
+	return 0;
+//	const int size = 4;
+//	*cmd = (unsigned char*) malloc(sizeof(char) * size);
+//	(*cmd)[0] = (unsigned char)204;		// cmd shutdown auto start
+//	(*cmd)[1] = (unsigned char)9;		// cmd shutdown auto start
+//	(*cmd)[2] = (unsigned char)9;
+//	(*cmd)[3] = (unsigned char)(*cmd)[1] + (*cmd)[2];
+//	return size;
 }
 int BrazilModelBackUPS::generateCmdContinueMode(unsigned char **cmd){
 	return 0;
