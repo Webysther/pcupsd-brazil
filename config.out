@@ -1,9 +1,9 @@
 
 
-Configuration on Tue Jun 28 14:36:09 BRT 2016:
+Configuration on Fri Sep  2 14:51:45 BRT 2016:
 
   Host:                       x86_64-unknown-linux-gnu -- debian 8.4
-  Apcupsd version:            0.7.1 (13 June 2016)
+  Apcupsd version:            0.7.5 (13 June 2016)
   Source code location:       .
   Install binaries:           /sbin
   Install config files:       /etc/apcupsd
@@ -15,7 +15,7 @@ Configuration on Tue Jun 28 14:36:09 BRT 2016:
   Power Fail dir              /etc/apcupsd
   Compiler:                   g++ 4.9.2-10)
   Preprocessor flags:          -I/usr/local/include
-  Compiler flags:             -g -O2 -fno-exceptions -fno-rtti -Wall 
+  Compiler flags:             -g -fno-exceptions -fno-rtti -Wall 
   Linker:                     gcc
   Linker flags:                -L/usr/local/lib64 -L/usr/local/lib
   Host and version:           debian 8.4
@@ -36,4 +36,11 @@ Configuration on Tue Jun 28 14:36:09 BRT 2016:
   enable-dist-install:        yes
   enable-gapcmon:             no
   enable-apcagent:            no
+
+  ****** ATENÇÃO ******
+
+  O projeto ApcCtrl necessita da sua ajuda! Informe todos os resultados do seu teste
+  para os desenvolvedores através do site www.apcctrl.com.br. Atualmente apenas os modelos
+  BACK UPS BR 1200VA e 1500VA foram reportados.
+
   

@@ -21,7 +21,7 @@
 #define HAVE_ARPA_NAMESER_H 1
 
 /* Define if building APC-Microsol Brazil driver */
-#define HAVE_BRAZIL_DRIVER 1
+#define HAVE_BRAZIL_DRIVER /**/
 
 /* Define if building for BSDi */
 /* #undef HAVE_BSDI_OS */

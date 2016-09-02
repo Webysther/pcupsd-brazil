@@ -1517,6 +1517,13 @@ Configuration on `date`:
   enable-dist-install:        ${with_distdir}
   enable-gapcmon:             ${GAPCMON_ENABLED}
   enable-apcagent:            ${APCAGENT_ENABLED}
+  
+  ****** ATENÇÃO ******
+  
+  O projeto ApcCtrl necessita da sua ajuda! Informe todos os resultados do seu teste
+  para os desenvolvedores através do site www.apcctrl.com.br. Atualmente apenas os modelos
+  BACK UPS BR 1200VA e 1500VA foram reportados.
+  
   " > config.out
 
 cat config.out
