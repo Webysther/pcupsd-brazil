@@ -1,2 +1,2 @@
 /etc/apcctrl/apcctrl.conf
-/etc/init.d/apcupsd
+/etc/init.d/apcctrl

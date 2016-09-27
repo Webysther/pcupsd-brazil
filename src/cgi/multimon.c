@@ -560,7 +560,7 @@ int main(int argc, char **argv)
     time (&tod);
     strftime (timestr, sizeof(timestr), "%a %b %d %X %Z %Y", localtime(&tod));
     printf ("<tr><th class=\"Outer\" colspan=\"%d\">\n", numfields);
-    (void) puts ("<span class=\"Title\">APCUPSD UPS Network Monitor</span>");
+    (void) puts ("<span class=\"Title\">APCCTRL UPS Network Monitor</span>");
     printf ("<br /><span class=\"SubTitle\">%s</span></th></tr>\n", timestr);
 
     /* print column names */

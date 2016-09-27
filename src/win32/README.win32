@@ -1,14 +1,14 @@
 
-This directory <apcupsd>/src/win32 contains the build
-environment for building the native Win32 version of apcupsd.
+This directory <apcctrl>/src/win32 contains the build
+environment for building the native Win32 version of apcctrl.
 Note!!! This process is not yet totally working as the code is
 still being developed.
 
 The directory structure that you need to have is:
-  apcupsd/src/win32     Makefiles and scripts
-     apcupsd            Visual Studio Files
-      Release           Release objects, and apcupsd.exe
-       Debug            Debug object, and apcupsd.exe produced
+  apcctrl/src/win32     Makefiles and scripts
+     apcctrl            Visual Studio Files
+      Release           Release objects, and apcctrl.exe
+       Debug            Debug object, and apcctrl.exe produced
                            by VC++
     lib                 Links to core lib code
 
@@ -17,13 +17,13 @@ The directory structure that you need to have is:
 
 depkgs-win32 is released in a separate .tar.gz file that contains the
 source for the pthreads library needed to build the
-Win32 apcupsd.  
+Win32 apcctrl.  
 
 To build it:
 - We are using Microsoft Visual Studio .NET 2003 as the compiler,
   but the build is done via scripting using the latest Cygwin
   environment.
-- For this version of apcupsd, you must have msvcr71.dll
+- For this version of apcctrl, you must have msvcr71.dll
   installed in c:/windows/system32 (i.e. Windows VC++ 2003)
   The newwinbacula.nsi.in files have this hard coded in.
 - Make sure nmake is on your PATH.
@@ -41,7 +41,7 @@ To build it:
     (make the two patches described below to in Nicolas' notes to wx)
     cd depkgs-win32
     make
-- cd apcupsd
+- cd apcctrl
   ./configure (appropriate options, see below)
   cd src/win32
 - ensure that the docs fully built docs are in the doc directory
@@ -53,18 +53,18 @@ Some technical points:
   C++ code, so for all existing C++ files that are in a .c file, we
   keep the "source" in src/win32/lib as a .cpp file that simply includes
   the original .c file. This allows x.c to be compiled.  
-- The directory src/win32/apcupsd contains the necessary makefiles, ...
-  for Microsoft C++ to build apcupsd.  It also has all the object files
-  in either src/win32/apcupsd/Release or src/win32/apcupsd/Debug depending
+- The directory src/win32/apcctrl contains the necessary makefiles, ...
+  for Microsoft C++ to build apcctrl.  It also has all the object files
+  in either src/win32/apcctrl/Release or src/win32/apcctrl/Debug depending
   on the build you are doing.
-  A few important files in src/win32/apcupsd are:
+  A few important files in src/win32/apcctrl are:
     filelist  -- the list of all the files that need to be compiled.
                  The extension is not specified and is assumed to be .cpp
     genmake.sh -- when this file is executed, it will take as input
-                  (automatically) filelist and use apcupsd-obj.mak.in 
-                  and apcupsd.mak.in as templates to build apcupsd.mak,
-    apcupsd.mak -- this is the makefile that is processed by nmake to
-                   compile and link apcupsd.
+                  (automatically) filelist and use apcctrl-obj.mak.in 
+                  and apcctrl.mak.in as templates to build apcctrl.mak,
+    apcctrl.mak -- this is the makefile that is processed by nmake to
+                   compile and link apcctrl.
 
   Everytime you add a new source file or rename one, you must update
   filelist and re-run genmake.sh ("./genmake.sh").    
@@ -79,32 +79,32 @@ Here is the script that I use under cygwin to build it:
 ==== build script =========
 #!/bin/sh
 
-#  rm -rf k winapcupsd-*.tar.gz
-# cp -a k:/home/kern/apcupsd/n k
+#  rm -rf k winapcctrl-*.tar.gz
+# cp -a k:/home/kern/apcctrl/n k
 cp kernswinconfig k
 cd k
 ./kernswinconfig
 make
 cd src/win32
-make winapcupsd.exe
+make winapcctrl.exe
 VERSION=`sed -n -e 's/^.*VERSION.*"\(.*\)"$/\1/p' ../../include/version.h`
-cp -pf winapcupsd-$VERSION.exe k:/home/kern/apcupsd
+cp -pf winapcctrl-$VERSION.exe k:/home/kern/apcctrl
 if test $? -eq 0 ; then
    echo "Build failed ..."
 fi
-ls -l k:/home/kern/apcupsd/winapcupsd-$VERSION.exe
+ls -l k:/home/kern/apcctrl/winapcctrl-$VERSION.exe
 ======== end build script ==============
 
 === kernswinconfig ===
 #!/bin/sh
-# This is Kern's configure script for the Win32 version of apcupsd
+# This is Kern's configure script for the Win32 version of apcctrl
 ./configure \
-  --prefix=/apcupsd \
-  --sbindir=/apcupsd/bin \
-  --sysconfdir=/apcupsd/etc/apcctrl \
-  --with-pid-dir=/apcupsd/etc/apcctrl \
-  --mandir=/apcupsd \
-  --with-cgi-bin=/apcupsd/etc/apcctrl/cgi \
+  --prefix=/apcctrl \
+  --sbindir=/apcctrl/bin \
+  --sysconfdir=/apcctrl/etc/apcctrl \
+  --with-pid-dir=/apcctrl/etc/apcctrl \
+  --mandir=/apcctrl \
+  --with-cgi-bin=/apcctrl/etc/apcctrl/cgi \
   --enable-master-slave \
   --enable-net \
   --enable-apcsmart \
@@ -170,7 +170,7 @@ PROMPT='$P$G'
 PS1='\e[34m\]\w\[\e[0m\]$\040'
 PS2='> '
 PS4='+ '
-PWD=/home/kern/apcupsd
+PWD=/home/kern/apcctrl
 SESSIONNAME=Console
 SHELL=/bin/bash
 SHELLOPTS=braceexpand:emacs:hashall:histexpand:history:interactive-comments:monitor

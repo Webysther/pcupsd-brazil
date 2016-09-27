@@ -1,4 +1,4 @@
-// This file has been adapted to the Win32 version of Apcupsd
+// This file has been adapted to the Win32 version of apcctrl
 // by Kern E. Sibbald.  Many thanks to ATT and James Weatherall,
 // the original author, for providing an excellent template.
 //
@@ -8,7 +8,7 @@
 // Copyright (2000) Kern E. Sibbald
 //
 
-// Implementation of service-oriented functionality of Apcupsd
+// Implementation of service-oriented functionality of apcctrl
 
 #include "winapi.h"
 #include "compat.h"
@@ -33,21 +33,21 @@ typedef BOOL (WINAPI * ChangeServiceConfig2Func)(SC_HANDLE, DWORD, LPVOID);
 typedef DWORD (* RegisterServiceProcessFunc)(DWORD, DWORD);
 
 // Internal service name
-static char SERVICE_NAME[] = "Apcupsd";
+static char SERVICE_NAME[] = "apcctrl";
 
 // Displayed service name
-static const char SERVICE_DISPLAYNAME[] = "Apcupsd UPS Monitor";
+static const char SERVICE_DISPLAYNAME[] = "apcctrl UPS Monitor";
 
 // Service description
-static char APCUPSD_SERVICE_DESCRIPTION[] = 
-   "Apcupsd provides shutdown of your computer "
+static char APCCTRL_SERVICE_DESCRIPTION[] = 
+   "apcctrl provides shutdown of your computer "
    "in the event of a power failure.";
 
 // List other required serves 
 #define SERVICE_DEPENDENCIES __TEXT("tcpip\0afd\0+File System\0") 
 
 // SERVICE MAIN ROUTINE
-int upsService::ApcupsdServiceMain()
+int upsService::apcctrlServiceMain()
 {
    // How to run as a service depends upon the OS being used
    switch (g_os_version_info.dwPlatformId) {
@@ -59,8 +59,8 @@ int upsService::ApcupsdServiceMain()
       kerneldll = LoadLibrary("KERNEL32.DLL");
       if (kerneldll == NULL) {
          MessageBox(NULL,
-                    "KERNEL32.DLL not found: Apcupsd service not started", 
-                    "Apcupsd Service", MB_OK);
+                    "KERNEL32.DLL not found: apcctrl service not started", 
+                    "apcctrl Service", MB_OK);
          break;
       }
 
@@ -71,8 +71,8 @@ int upsService::ApcupsdServiceMain()
             kerneldll, "RegisterServiceProcess");
       if (RegisterServiceProcess == NULL) {
          MessageBox(NULL,
-                    "Registry service not found: Apcupsd service not started",
-                    "Apcupsd Service", MB_OK);
+                    "Registry service not found: apcctrl service not started",
+                    "apcctrl Service", MB_OK);
          log_error_message("Registry service not found"); 
          FreeLibrary(kerneldll);
          break;
@@ -82,7 +82,7 @@ int upsService::ApcupsdServiceMain()
       RegisterServiceProcess(0, 1);
 
       // Run the main program as a service
-      ApcupsdAppMain(1);
+      apcctrlAppMain(1);
 
       // Then remove the service from the system service table
       RegisterServiceProcess(0, 0);
@@ -119,7 +119,7 @@ void WINAPI upsService::ServiceMain(DWORD argc, char **argv)
     if (m_hstatus == 0) {
        log_error_message("RegisterServiceCtlHandler failed"); 
        MessageBox(NULL, "Contact Register Service Handler failure",
-                  "Apcupsd service", MB_OK);
+                  "apcctrl service", MB_OK);
        return;
     }
 
@@ -140,7 +140,7 @@ void WINAPI upsService::ServiceMain(DWORD argc, char **argv)
     CreateThread(NULL, 0, ServiceWorkThread, NULL, 0, NULL);
 }
 
-// SERVICE START ROUTINE - thread that calls ApcupsdAppMain
+// SERVICE START ROUTINE - thread that calls apcctrlAppMain
 // NT/Win2K/WinXP ONLY !!!
 DWORD WINAPI upsService::ServiceWorkThread(LPVOID lpwThreadParam)
 {
@@ -149,7 +149,7 @@ DWORD WINAPI upsService::ServiceWorkThread(LPVOID lpwThreadParam)
           SERVICE_RUNNING,       // service state
           NO_ERROR,              // exit code
           0)) {                  // wait hint
-       MessageBox(NULL, "Report Service failure", "Apcupsd Service", MB_OK);
+       MessageBox(NULL, "Report Service failure", "apcctrl Service", MB_OK);
        log_error_message("ReportStatus RUNNING failed"); 
        return 0;
     }
@@ -157,8 +157,8 @@ DWORD WINAPI upsService::ServiceWorkThread(LPVOID lpwThreadParam)
     // Save the current thread identifier
     m_servicethread = GetCurrentThreadId();
 
-    /* Call Apcupsd main code */
-    ApcupsdAppMain(1);
+    /* Call apcctrl main code */
+    apcctrlAppMain(1);
 
     /* Mark that we're no longer running */
     m_servicethread = 0;
@@ -171,7 +171,7 @@ DWORD WINAPI upsService::ServiceWorkThread(LPVOID lpwThreadParam)
 // SERVICE STOP ROUTINE - NT/Win2K/WinXP ONLY !!!
 void upsService::ServiceStop()
 {
-   ApcupsdTerminate();
+   apcctrlTerminate();
 }
 
 // SERVICE INSTALL ROUTINE
@@ -184,7 +184,7 @@ int upsService::InstallService(bool quiet)
    if (GetModuleFileName(NULL, path, MAXPATH) == 0) {
       if (!quiet) {
          MessageBox(NULL,
-                    "Unable to install Apcupsd service", SERVICE_NAME,
+                    "Unable to install apcctrl service", SERVICE_NAME,
                     MB_ICONEXCLAMATION | MB_OK);
       }
       return 0;
@@ -193,8 +193,8 @@ int upsService::InstallService(bool quiet)
    // Append the service-start flag to the end of the path
    // Length is path len plus quotes, space, start flag, and NUL terminator
    char servicecmd[MAXPATH];
-   if (strlen(path) + 4 + strlen(ApcupsdRunService) < MAXPATH) {
-      sprintf(servicecmd, "\"%s\" %s", path, ApcupsdRunService);
+   if (strlen(path) + 4 + strlen(apcctrlRunService) < MAXPATH) {
+      sprintf(servicecmd, "\"%s\" %s", path, apcctrlRunService);
    } else {
       if (!quiet) {
          MessageBox(NULL,
@@ -204,7 +204,7 @@ int upsService::InstallService(bool quiet)
       return 0;
    }
 
-   // How to add the Apcupsd service depends upon the OS
+   // How to add the apcctrl service depends upon the OS
    switch (g_os_version_info.dwPlatformId) {
 
    // Windows 95/98/Me
@@ -216,16 +216,16 @@ int upsService::InstallService(bool quiet)
               &runservices) != ERROR_SUCCESS) {
          log_error_message("Cannot write System Registry"); 
          MessageBox(NULL, _("The System Registry could not be updated - "
-                            "the Apcupsd service was not installed"),
+                            "the apcctrl service was not installed"),
                     SERVICE_NAME, MB_ICONEXCLAMATION | MB_OK);
          break;
       }
 
-      // Attempt to add a Apcupsd key
+      // Attempt to add a apcctrl key
       if (RegSetValueEx(runservices, SERVICE_NAME, 0, REG_SZ,
             (unsigned char *)servicecmd, strlen(servicecmd)+1) != ERROR_SUCCESS) {
          RegCloseKey(runservices);
-         MessageBox(NULL, "The Apcupsd service could not be installed",
+         MessageBox(NULL, "The apcctrl service could not be installed",
                     SERVICE_NAME, MB_ICONEXCLAMATION | MB_OK);
          break;
       }
@@ -238,9 +238,9 @@ int upsService::InstallService(bool quiet)
       // We have successfully installed the service!
       if (!quiet) {
          MessageBox(NULL,
-                    _("The Apcupsd UPS service was successfully installed.\n"
+                    _("The apcctrl UPS service was successfully installed.\n"
                       "The service may be started by double clicking on the\n"
-                      "Apcupsd \"Start\" icon and will automatically\n"
+                      "apcctrl \"Start\" icon and will automatically\n"
                       "be run the next time this machine is rebooted. "),
                     SERVICE_NAME, MB_ICONINFORMATION | MB_OK);
       }
@@ -254,12 +254,12 @@ int upsService::InstallService(bool quiet)
       if (hsrvmanager == NULL) {
          MessageBox(NULL,
             _("The Service Control Manager could not be contacted - "
-              "the Apcupsd service was not installed"),
+              "the apcctrl service was not installed"),
             SERVICE_NAME, MB_ICONEXCLAMATION | MB_OK);
          break;
       }
 
-      // Create an entry for the Apcupsd service
+      // Create an entry for the apcctrl service
       SC_HANDLE hservice;
       hservice = CreateService(
               hsrvmanager,                    // SCManager database
@@ -279,14 +279,14 @@ int upsService::InstallService(bool quiet)
       if (hservice == NULL) {
          if (!quiet || GetLastError() != ERROR_SERVICE_EXISTS) {
             MessageBox(NULL,
-                       "The Apcupsd service could not be installed",
+                       "The apcctrl service could not be installed",
                        SERVICE_NAME, MB_ICONEXCLAMATION | MB_OK);
          }
          CloseServiceHandle(hsrvmanager);
          break;
       }
 
-      SetServiceDescription(hservice, APCUPSD_SERVICE_DESCRIPTION);
+      SetServiceDescription(hservice, APCCTRL_SERVICE_DESCRIPTION);
 
       CloseServiceHandle(hservice);
       CloseServiceHandle(hsrvmanager);
@@ -297,7 +297,7 @@ int upsService::InstallService(bool quiet)
       // Everything went fine
       if (!quiet) {
          MessageBox(NULL,
-              _("The Apcupsd UPS service was successfully installed.\n"
+              _("The apcctrl UPS service was successfully installed.\n"
                 "The service may be started from the Control Panel and will\n"
                 "automatically be run the next time this machine is rebooted."),
               SERVICE_NAME,
@@ -308,7 +308,7 @@ int upsService::InstallService(bool quiet)
    default:
       MessageBox(NULL, 
                  _("Unknown Windows operating system.\n"     
-                 "Cannot install Apcupsd service.\n"),
+                 "Cannot install apcctrl service.\n"),
                  SERVICE_NAME, MB_ICONEXCLAMATION | MB_OK);
        break;     
    }
@@ -320,7 +320,7 @@ int upsService::InstallService(bool quiet)
 // SERVICE REMOVE ROUTINE
 int upsService::RemoveService(bool quiet)
 {
-   // How to remove the Apcupsd service depends upon the OS
+   // How to remove the apcctrl service depends upon the OS
    switch (g_os_version_info.dwPlatformId) {
 
    // Windows 95/98/Me
@@ -334,15 +334,15 @@ int upsService::RemoveService(bool quiet)
             MessageBox(NULL, 
                        _("Could not find registry entry.\n"
                          "Service probably not registerd - "
-                         "the Apcupsd service was not removed"),
+                         "the apcctrl service was not removed"),
                        SERVICE_NAME, MB_ICONEXCLAMATION | MB_OK);
          }
       } else {
-         // Attempt to delete the Apcupsd key
+         // Attempt to delete the apcctrl key
          if (RegDeleteValue(runservices, SERVICE_NAME) != ERROR_SUCCESS) {
             if (!quiet) {
                MessageBox(NULL, _("Could not delete Registry key.\n"
-                                  "The Apcupsd service could not be removed"),
+                                  "The apcctrl service could not be removed"),
                           SERVICE_NAME, MB_ICONEXCLAMATION | MB_OK);
             }
          }
@@ -351,15 +351,15 @@ int upsService::RemoveService(bool quiet)
          break;
       }
 
-      // Try to kill any running copy of Apcupsd
-      ApcupsdTerminate();
+      // Try to kill any running copy of apcctrl
+      apcctrlTerminate();
 
       // Indicate that we're no longer installed to run as a service
       SetServiceFlag(0);
 
       // We have successfully removed the service!
       if (!quiet) {
-         MessageBox(NULL, "The Apcupsd service has been removed",
+         MessageBox(NULL, "The apcctrl service has been removed",
                     SERVICE_NAME, MB_ICONINFORMATION | MB_OK);
       }
       break;
@@ -369,7 +369,7 @@ int upsService::RemoveService(bool quiet)
       SC_HANDLE hservice = OpenNTService();
       if (!StopNTService(hservice)) {
          // Service could not be stopped
-         MessageBox(NULL, "The Apcupsd service could not be stopped",
+         MessageBox(NULL, "The apcctrl service could not be stopped",
                     SERVICE_NAME, MB_ICONEXCLAMATION | MB_OK);
       }
 
@@ -379,12 +379,12 @@ int upsService::RemoveService(bool quiet)
 
          // Service successfully removed
          if (!quiet) {
-            MessageBox(NULL, "The Apcupsd service has been removed",
+            MessageBox(NULL, "The apcctrl service has been removed",
                        SERVICE_NAME, MB_ICONINFORMATION | MB_OK);
          }
       } else {
          // Failed to remove
-         MessageBox(NULL, "The Apcupsd service could not be removed",
+         MessageBox(NULL, "The apcctrl service could not be removed",
                     SERVICE_NAME, MB_ICONEXCLAMATION | MB_OK);
       }
 
@@ -524,18 +524,18 @@ void upsService::SetServiceDescription(SC_HANDLE hService, LPSTR lpDesc)
 
 void upsService::SetServiceFlag(DWORD flag)
 {
-   // Create or open HKLM\Software\Apcupsd key
-   HKEY apcupsd;
-   RegCreateKey(HKEY_LOCAL_MACHINE, "Software\\Apcupsd", &apcupsd);
+   // Create or open HKLM\Software\apcctrl key
+   HKEY apcctrl;
+   RegCreateKey(HKEY_LOCAL_MACHINE, "Software\\apcctrl", &apcctrl);
 
    // Add InstalledService value
    RegSetValueEx(
-      apcupsd, "InstalledService", 0, REG_DWORD, (BYTE*)&flag, sizeof(flag));
+      apcctrl, "InstalledService", 0, REG_DWORD, (BYTE*)&flag, sizeof(flag));
 }
 
 BOOL upsService::StopNTService(SC_HANDLE hservice)
 {
-   // Try to stop the Apcupsd service
+   // Try to stop the apcctrl service
    SERVICE_STATUS status;
    status.dwCurrentState = SERVICE_RUNNING;
    if (ControlService(hservice, SERVICE_CONTROL_STOP, &status)) {

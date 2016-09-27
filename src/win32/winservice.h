@@ -1,4 +1,4 @@
-// This file has been adapted to the Win32 version of Apcupsd
+// This file has been adapted to the Win32 version of apcctrl
 // by Kern E. Sibbald.  Many thanks to ATT and James Weatherall,
 // the original author, for providing an excellent template.
 //
@@ -30,14 +30,14 @@ public:
 
    // INSTALL & START FUNCTIONS
 
-   // Routine called by WinMain to cause Apcupsd to be installed
+   // Routine called by WinMain to cause apcctrl to be installed
    // as a service.
-   static int ApcupsdServiceMain();
+   static int apcctrlServiceMain();
 
-   // Routine to install the Apcupsd service on the local machine
+   // Routine to install the apcctrl service on the local machine
    static int InstallService(bool quiet);
 
-   // Routine to remove the Apcupsd service from the local machine
+   // Routine to remove the apcctrl service from the local machine
    static int RemoveService(bool quiet);
 
    // Stop the service
@@ -68,7 +68,7 @@ public:
    // Stop an NT service with the given handle
    static BOOL StopNTService(SC_HANDLE hservice);
 
-   // Open the Apcupsd NT service
+   // Open the apcctrl NT service
    static SC_HANDLE OpenNTService();
 
    

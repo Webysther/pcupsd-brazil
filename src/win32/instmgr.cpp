@@ -21,7 +21,7 @@
 #include <stdio.h>
 
 const char *InstanceManager::INSTANCES_KEY =
-   "Software\\Apcupsd\\Apctray\\instances";
+   "Software\\apcctrl\\Apctray\\instances";
 
 const MonitorConfig InstanceManager::DEFAULT_CONFIG =
 {

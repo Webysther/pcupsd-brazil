@@ -1,7 +1,7 @@
 /* gapcmon.h               serial-0087-0 ************************************
 
   GKT+ GUI with Notification Area (System Tray) support.  Program  for 
-  monitoring the apcupsd.sourceforge.net package.
+  monitoring the apcctrl.sourceforge.net package.
   Copyright (C) 2006 James Scott, Jr. <skoona@users.sourceforge.net>
 
   This program is free software; you can redistribute it and/or modify
@@ -38,7 +38,7 @@ G_BEGIN_DECLS
 #endif
 
 #define GAPC_PROG_NAME    "gapcmon"
-#define GAPC_GROUP_TITLE "<i>  Uninterruptible Power Supply Monitor...</i>\n  for APCUPSD"
+#define GAPC_GROUP_TITLE "<i>  Uninterruptible Power Supply Monitor...</i>\n  for APCCTRL"
 #define GAPC_WINDOW_TITLE  "gapcmon: UPS Information Panels"
 #define GAPC_CP_GROUP_KEY    "/apps/gapcmon/controller"
 #define GAPC_CP_SYSTRAY_KEY  "/apps/gapcmon/controller/use_systray"
@@ -406,7 +406,7 @@ typedef struct _System_Control_Data {
 /* ************************************************************************* */
 
 #define GAPC_GLOSSARY  "<span size=\"xx-large\"><b>GAPCMON</b></span>\n \
-A monitor for UPS's under the management of APCUPSD.\n\n \
+A monitor for UPS's under the management of APCCTRL.\n\n \
 When active, gapcmon provides three visual objects to interact with. \
 First is the main control.panel where monitors are defined, enabled, and listed when \
 active. Second are notification area icons that manage the visibility of each window or \
@@ -435,10 +435,10 @@ data from the network.\n\
 <b><i>Graph refresh:</i></b>\nMultiplied by the network refresh value to determine \
 the total number of seconds between graph data collections.\n\
 \n\
-<b><i>Hostname or IP Address:</i></b>\nThe hostname or address where an apcupsd NIS interface \
+<b><i>Hostname or IP Address:</i></b>\nThe hostname or address where an apcctrl NIS interface \
 is running.\n\
 \n\
-<b><i>Port:</i></b>\nThe NIS access port on the APCUPSD host; defaults to 3551.\n\
+<b><i>Port:</i></b>\nThe NIS access port on the APCCTRL host; defaults to 3551.\n\
 \n\
 <b><i>Add | Remove Buttons:</i></b>\nButtons to add or remove a monitor entry from the \
 list of monitors above.  Add, adds with defaulted values at end of list.  Remove, removes \
@@ -480,7 +480,7 @@ A more in-depth view of the monitored UPS's environmental values.  Software, pro
 and operational values are available and updated every 'network_refresh' seconds.\n\
 \n\
 <b>POWER EVENTS PAGE</b>\n\
-A log of all power events recorded by APCUPSD on the server.\n\
+A log of all power events recorded by APCCTRL on the server.\n\
 \n\
 <b>FULL UPS STATUS PAGE</b>\n\
 A listing of the output from apcaccess showing the actual state as reported \

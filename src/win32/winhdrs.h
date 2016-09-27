@@ -21,7 +21,7 @@
 // whence you received this file, check http://www.uk.research.att.com/vnc or contact
 // the authors on vnc@uk.research.att.com for information on obtaining it.
 
-// This file has been adapted to the Win32 version of Apcupsd
+// This file has been adapted to the Win32 version of apcctrl
 // by Kern E. Sibbald.  Many thanks to ATT and James Weatherall,
 // the original author, for providing an excellent template.
 //

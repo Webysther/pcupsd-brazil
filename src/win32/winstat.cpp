@@ -1,4 +1,4 @@
-// This file has been adapted to the Win32 version of Apcupsd
+// This file has been adapted to the Win32 version of apcctrl
 // by Kern E. Sibbald.  Many thanks to ATT and James Weatherall,
 // the original author, for providing an excellent template.
 //
@@ -168,7 +168,7 @@ void upsStatus::Update(StatMgr *statmgr)
       return;
    }
 
-   // Fetch full status from apcupsd
+   // Fetch full status from apcctrl
    alist<astring> keys, values;
    if (!statmgr->GetAll(keys, values) || keys.empty())
    {

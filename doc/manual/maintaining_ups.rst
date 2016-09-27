@@ -166,7 +166,7 @@ Battery Installation
 Although you can do a hot swap of your batteries while the computer and
 any other connected equipment is running, it may not be very satisfactory 
 because the UPS will not always detect that the batteries have been swapped 
-and apcupsd will continue to report "Low Battery". 
+and apcctrl will continue to report "Low Battery". 
 
 There are several ways to correct this situation: 
 
@@ -237,7 +237,7 @@ For a "smart" or "smart signalling" Back-UPS Pro or Smart-UPS:
     Smart-UPS are controlled by a microprocessor within the UPS. 
     Sometimes it is necessary to reset this microprocessor, especially 
     after the installation of new batteries. Stop the PowerChute plus 
-    [or apcupsd] software from running and disconnect the serial cable. 
+    [or apcctrl] software from running and disconnect the serial cable. 
     There must be at least a 30% load attached to the UPS during this 
     procedure, but the process will cause the UPS to shut off and cut 
     power to its outlets. Therefore, attach a non-critical load to the 
@@ -307,13 +307,13 @@ For a Matrix UPS:
     1. Battery capacity must be 100% at start of calibration (all packs must indicated as float).
     2. Initial "Estimated Run Time" must not exceed 128 minutes (remove battery packs if necessary).
     3. Load must be above 25%.
-    4. Load must not fluctuate more than ± 5%.
-    5. The UPS must be allowed to run down to 25% battery capacity. PowerChute [or apcupsd] and Accessories must be removed since they can abort the calibration prematurely.
+    4. Load must not fluctuate more than ï¿½ 5%.
+    5. The UPS must be allowed to run down to 25% battery capacity. PowerChute [or apcctrl] and Accessories must be removed since they can abort the calibration prematurely.
 
 For a "dumb" or "simple signalling" UPS (eg a Back-UPS):
 
     This could be done if you have changed your equipment load or battery. 
-    Stop the PowerChute [or apcupsd] software from running; disconnect the 
+    Stop the PowerChute [or apcctrl] software from running; disconnect the 
     serial cable between the computer and UPS. Next unplug the UPS from the 
     wall [suggest not disconnecting but simply turning off the utility power 
     thereby preserving the earthing] and let it run on battery until it 
@@ -415,7 +415,7 @@ presumably for register 0, in the following table::
   
 The instructions for resetting the battery constant are as follows:
 
-1. Shutdown the apcupsd daemon;
+1. Shutdown the apcctrl daemon;
 2. Run apctest;
 3. Choose option 6 to enter terminal mode;
 4. Enter Y (UPS should respond SM);

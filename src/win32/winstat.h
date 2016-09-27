@@ -1,4 +1,4 @@
-// This file has been adapted to the Win32 version of Apcupsd
+// This file has been adapted to the Win32 version of apcctrl
 // by Kern E. Sibbald.  Many thanks to ATT and James Weatherall,
 // the original author, for providing an excellent template.
 //
@@ -20,7 +20,7 @@ class Meter;
 class ListView;
 class upsMenu;
 
-// Object implementing the Status dialogue for apcupsd
+// Object implementing the Status dialogue for apcctrl
 class upsStatus
 {
 public:

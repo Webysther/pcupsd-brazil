@@ -7,16 +7,16 @@
 *              Jonathan Benson <jbenson@technologist.com>
 * Any feedback, comments, etc should be directed at me and NOT Russell
 *
-* This program has been extensively adapted for Apcupsd by
+* This program has been extensively adapted for apcctrl by
 *   Kern Sibbald, 2000   <kern@sibbald.com>
-*   Any comments should be directed to <apcupsd-devel@apcupsd.org>
-*   Many thanks to Jonathan for his initial port to apcupsd, it
-*   has now become an official part of apcupsd.
+*   Any comments should be directed to <apcctrl-devel@apcctrl.org>
+*   Many thanks to Jonathan for his initial port to apcctrl, it
+*   has now become an official part of apcctrl.
 *
 
 I have modified the scripts by Russell Kroll that work with his upstools
-suite to suit the apcupsd available at:
-http://www.dyer.vanderbilt.edu/server/apcupsd/
+suite to suit the apcctrl available at:
+http://www.dyer.vanderbilt.edu/server/apcctrl/
 
 I've also added various features (see below).
 

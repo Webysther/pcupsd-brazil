@@ -8,8 +8,8 @@ More changes made by Gordon Morehouse <nphyre@evernex.com> April 2001
 
 This package is now maintained by Martin Mitchell <martin@debian.org>.
 
-It was downloaded from http://ftp.oasi.gpa.it/pub/apcupsd/stable.
-An alternative download site is http://www.sibbald.com/apcupsd.
+It was downloaded from http://ftp.oasi.gpa.it/pub/apcctrl/stable.
+An alternative download site is http://www.sibbald.com/apcctrl.
 
 Upstream Author(s): 
     Riccardo Facchetti <riccardo@master.oasi.gpa.it>
@@ -17,5 +17,5 @@ Upstream Author(s):
     Kern Sibbald <kern@sibbald.com>
     and others.
 
-Apcupsd is placed under the GNU General Public License, a copy of which may
+apcctrl is placed under the GNU General Public License, a copy of which may
 be found in /usr/share/common-licenses/GPL.

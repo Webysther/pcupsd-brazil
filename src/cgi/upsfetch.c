@@ -1,18 +1,18 @@
 /*
- * upsfetch - utility program to retrieve data from apcupsd.status
+ * upsfetch - utility program to retrieve data from apcctrl.status
  *
  * Original Author: Russell Kroll <rkroll@exploits.org>
  *
  * This source creates a handy object file that can be linked into other
- * programs for easy retrieval of common UPS parameters from the apcupsd
+ * programs for easy retrieval of common UPS parameters from the apcctrl
  * status file.
  *
  * Modified: Jonathan Benson <jbenson@technologist.com>
- *         19/6/98 to suit apcupsd
+ *         19/6/98 to suit apcctrl
  *         23/6/98 added more graphs and menu options
  *
  * Modified: Kern Sibbald <kern@sibbald.com>
- *         2 Nov 99 to work with apcupsd named pipes
+ *         2 Nov 99 to work with apcctrl named pipes
  *         5 Nov 99 added more graphs         
  *        11 Nov 99 to work with apcnetd networking
  *                  also modified it to be a bit closer 
@@ -38,7 +38,7 @@ char errmsg[200] = "";
 /* List of variables that can be read by getupsvar()   
  * First field is that name given to getupsvar(),
  * Second field is our internal name as produced by the STATUS 
- *   output from apcupsd.
+ *   output from apcctrl.
  * Third field, if 0 returns everything to the end of the
  *    line, and if 1 returns only to first space (e.g. integers,
  *    and floating point values.

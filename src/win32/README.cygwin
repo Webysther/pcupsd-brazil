@@ -1,11 +1,11 @@
 
 This document will briefly try to explain how to build the
-Cygwin version of apcupsd for Win32 systems.  We are working on
+Cygwin version of apcctrl for Win32 systems.  We are working on
 a native Win32 build, but for the moment, the only working Win32
-version of apcupsd is built with Cygwin.
+version of apcctrl is built with Cygwin.
 
 The directory structure that you need to have is:
-  apcupsd               Full source, including
+  apcctrl               Full source, including
                           pre-built doc source, which we
                           do on a Unix/Linux system.
 
@@ -17,42 +17,42 @@ To build it:
   my cygwin environment below).
 - The build is done in an rxvt window under the latest version
   of cygwin.
-- cd apcupsd
+- cd apcctrl
   ./configure (suitable options -- see below)
   make
   cd src/win32
-  make winapcupsd.exe
+  make winapcctrl.exe
 
 Here is the script that I use under cygwin to build it:
 ==== build script =========
 #!/bin/sh
 
-#  rm -rf k winapcupsd-*.tar.gz
-# cp -a k:/home/kern/apcupsd/n k
+#  rm -rf k winapcctrl-*.tar.gz
+# cp -a k:/home/kern/apcctrl/n k
 cp kernswinconfig k
 cd k
 ./kernswinconfig
 make
 cd src/win32
-make winapcupsd.exe
+make winapcctrl.exe
 VERSION=`sed -n -e 's/^.*VERSION.*"\(.*\)"$/\1/p' ../../include/version.h`
-cp -pf winapcupsd-$VERSION.exe k:/home/kern/apcupsd
+cp -pf winapcctrl-$VERSION.exe k:/home/kern/apcctrl
 if test $? -eq 0 ; then
    echo "Build failed ..."
 fi
-ls -l k:/home/kern/apcupsd/winapcupsd-$VERSION.exe
+ls -l k:/home/kern/apcctrl/winapcctrl-$VERSION.exe
 ======== end build script ==============
 
 === kernswinconfig ===
 #!/bin/sh
-# This is Kern's configure script for the Win32 version of apcupsd
+# This is Kern's configure script for the Win32 version of apcctrl
 ./configure \
-  --prefix=/apcupsd \
-  --sbindir=/apcupsd/bin \
-  --sysconfdir=/apcupsd/etc/apcctrl \
-  --with-pid-dir=/apcupsd/etc/apcctrl \
-  --mandir=/apcupsd \
-  --with-cgi-bin=/apcupsd/etc/apcctrl/cgi \
+  --prefix=/apcctrl \
+  --sbindir=/apcctrl/bin \
+  --sysconfdir=/apcctrl/etc/apcctrl \
+  --with-pid-dir=/apcctrl/etc/apcctrl \
+  --mandir=/apcctrl \
+  --with-cgi-bin=/apcctrl/etc/apcctrl/cgi \
   --enable-master-slave \
   --enable-net \
   --enable-apcsmart \
@@ -118,7 +118,7 @@ PROMPT='$P$G'
 PS1='\e[34m\]\w\[\e[0m\]$\040'
 PS2='> '
 PS4='+ '
-PWD=/home/kern/apcupsd
+PWD=/home/kern/apcctrl
 SESSIONNAME=Console
 SHELL=/bin/bash
 SHELLOPTS=braceexpand:emacs:hashall:histexpand:history:interactive-comments:monitor

@@ -91,7 +91,7 @@ void BalloonMgr::post()
    NOTIFYICONDATA nid;
    nid.hWnd = balloon.hwnd;
    nid.cbSize = sizeof(nid);
-   nid.uID = IDI_APCUPSD;
+   nid.uID = IDI_APCCTRL;
    nid.uFlags = NIF_INFO;
    strlcpy(nid.szInfo, balloon.text, sizeof(nid.szInfo));
    strlcpy(nid.szInfoTitle, balloon.title, sizeof(nid.szInfoTitle));
@@ -121,7 +121,7 @@ void BalloonMgr::clear()
    NOTIFYICONDATA nid;
    nid.hWnd = balloon.hwnd;
    nid.cbSize = sizeof(nid);
-   nid.uID = IDI_APCUPSD;
+   nid.uID = IDI_APCCTRL;
    nid.uFlags = NIF_INFO;
    nid.uTimeout = 0;
    nid.szInfoTitle[0] = '\0';

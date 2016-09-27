@@ -1,4 +1,4 @@
-// This file has been adapted to the Win32 version of Apcupsd
+// This file has been adapted to the Win32 version of apcctrl
 // by Kern E. Sibbald.  Many thanks to ATT and James Weatherall,
 // the original author, for providing an excellent template.
 //
@@ -33,25 +33,25 @@ enum {
    WM_APCTRAY_ADD
 };
 
-// Apcupsd application window constants
-#define APCUPSD_WINDOW_CLASS		"apcupsd"
-#define APCUPSD_WINDOW_NAME		"apcupsd"
+// apcctrl application window constants
+#define APCCTRL_WINDOW_CLASS		"apcctrl"
+#define APCCTRL_WINDOW_NAME		"apcctrl"
 
 // apctray window constants
 #define APCTRAY_WINDOW_CLASS		"apctray"
 #define APCTRAY_WINDOW_NAME		"apctray"
 
 // Command line option to start in service mode
-extern char ApcupsdRunService[];
+extern char apcctrlRunService[];
 
 // Names of various global events
-#define APCUPSD_STOP_EVENT_NAME  "Global\\ApcupsdStopEvent"
+#define APCCTRL_STOP_EVENT_NAME  "Global\\apcctrlStopEvent"
 #define APCTRAY_STOP_EVENT_NAME  "Global\\ApctrayStopEvent"
 
 // Main UPS server routine - Exported by winmain for use by winservice
-extern int ApcupsdAppMain(int service);
+extern int apcctrlAppMain(int service);
 
-// Stop apcupsd - Exported by winmain for use by winservice
-extern void ApcupsdTerminate();
+// Stop apcctrl - Exported by winmain for use by winservice
+extern void apcctrlTerminate();
 
 #endif // WINUPS_H

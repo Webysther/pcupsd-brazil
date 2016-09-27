@@ -1,4 +1,4 @@
-// This file has been adapted to the Win32 version of Apcupsd
+// This file has been adapted to the Win32 version of apcctrl
 // by Kern E. Sibbald.  Many thanks to ATT and James Weatherall,
 // the original author, for providing an excellent template.
 //
@@ -17,8 +17,8 @@
 #include <pthread.h>
 #include <errno.h>
 
-// Apcupsd UNIX main entrypoint
-extern int ApcupsdMain(int argc, char **argv);
+// apcctrl UNIX main entrypoint
+extern int apcctrlMain(int argc, char **argv);
 
 // Custom headers
 #include "apcconfig.h"
@@ -29,25 +29,25 @@ extern int ApcupsdMain(int argc, char **argv);
 #include "winapi.h"
 
 // Standard command-line flag definitions
-char ApcupsdRunService[] =        "/service";
-char ApcupsdRunAsUserApp[] =      "/run";
-char ApcupsdInstallService[] =    "/install";
-char ApcupsdRemoveService[] =     "/remove";
-char ApcupsdKillRunningCopy[] =   "/kill";
-char ApcupsdShowHelp[] =          "/help";
-char ApcupsdQuiet[] =             "/quiet";
+char apcctrlRunService[] =        "/service";
+char apcctrlRunAsUserApp[] =      "/run";
+char apcctrlInstallService[] =    "/install";
+char apcctrlRemoveService[] =     "/remove";
+char apcctrlKillRunningCopy[] =   "/kill";
+char apcctrlShowHelp[] =          "/help";
+char apcctrlQuiet[] =             "/quiet";
 
 // Usage string
-static const char *ApcupsdUsageText =
-   "apcupsd [/quiet] [/run] [/kill] [/install] [/remove] [/help]\n";
+static const char *apcctrlUsageText =
+   "apcctrl [/quiet] [/run] [/kill] [/install] [/remove] [/help]\n";
 
 // Application instance
 static HINSTANCE hAppInstance;
 
 // Command line argument storage
 #define MAX_COMMAND_ARGS 100
-static char apcupsd_name[] = "apcupsd";
-static char *command_args[MAX_COMMAND_ARGS] = { apcupsd_name, NULL };
+static char apcctrl_name[] = "apcctrl";
+static char *command_args[MAX_COMMAND_ARGS] = { apcctrl_name, NULL };
 static int num_command_args = 1;
 static char *winargs[MAX_COMMAND_ARGS];
 static int num_winargs = 0;
@@ -83,52 +83,52 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
    // Default Windows argument
    if (num_winargs == 0)
-      winargs[num_winargs++] = ApcupsdRunAsUserApp;
+      winargs[num_winargs++] = apcctrlRunAsUserApp;
 
    // Act on Windows arguments...
    for (int i = 0; i < num_winargs; i++) {
       // /service
-      if (strcasecmp(winargs[i], ApcupsdRunService) == 0) {
-         // Run Apcupsd as a service
-         return upsService::ApcupsdServiceMain();
+      if (strcasecmp(winargs[i], apcctrlRunService) == 0) {
+         // Run apcctrl as a service
+         return upsService::apcctrlServiceMain();
       }
       // /run  (this is the default if no command line arguments)
-      if (strcasecmp(winargs[i], ApcupsdRunAsUserApp) == 0) {
-         // Apcupsd is being run as a user-level program
-         return ApcupsdAppMain(0);
+      if (strcasecmp(winargs[i], apcctrlRunAsUserApp) == 0) {
+         // apcctrl is being run as a user-level program
+         return apcctrlAppMain(0);
       }
       // /install
-      if (strcasecmp(winargs[i], ApcupsdInstallService) == 0) {
-         // Install Apcupsd as a service
+      if (strcasecmp(winargs[i], apcctrlInstallService) == 0) {
+         // Install apcctrl as a service
          return upsService::InstallService(quiet);
       }
       // /remove
-      if (strcasecmp(winargs[i], ApcupsdRemoveService) == 0) {
-         // Remove the Apcupsd service
+      if (strcasecmp(winargs[i], apcctrlRemoveService) == 0) {
+         // Remove the apcctrl service
          return upsService::RemoveService(quiet);
       }
       // /kill
-      if (strcasecmp(winargs[i], ApcupsdKillRunningCopy) == 0) {
-         // Kill any already running copy of Apcupsd
-         ApcupsdTerminate();
+      if (strcasecmp(winargs[i], apcctrlKillRunningCopy) == 0) {
+         // Kill any already running copy of apcctrl
+         apcctrlTerminate();
          return 0;
       }
       // /quiet
-      if (strcasecmp(winargs[i], ApcupsdQuiet) == 0) {
+      if (strcasecmp(winargs[i], apcctrlQuiet) == 0) {
          // Set quiet flag and go on to next argument
          quiet = true;
          continue;
       }
       // /help
-      if (strcasecmp(winargs[i], ApcupsdShowHelp) == 0) {
-         MessageBox(NULL, ApcupsdUsageText, "Apcupsd Usage",
+      if (strcasecmp(winargs[i], apcctrlShowHelp) == 0) {
+         MessageBox(NULL, apcctrlUsageText, "apcctrl Usage",
                     MB_OK | MB_ICONINFORMATION);
          return 0;
       }
 
       // Unknown option: Show the usage dialog
       MessageBox(NULL, winargs[i], "Bad Command Line Options", MB_OK);
-      MessageBox(NULL, ApcupsdUsageText, "Apcupsd Usage",
+      MessageBox(NULL, apcctrlUsageText, "apcctrl Usage",
                  MB_OK | MB_ICONINFORMATION);
       return 1;
    }
@@ -151,29 +151,29 @@ static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
    }
 }
 
-static void PostToApcupsd(UINT message, WPARAM wParam, LPARAM lParam)
+static void PostToapcctrl(UINT message, WPARAM wParam, LPARAM lParam)
 {
-  // Locate the hidden Apcupsd window
-  HWND hservwnd = FindWindowEx(NULL, NULL, APCUPSD_WINDOW_CLASS, APCUPSD_WINDOW_NAME);
+  // Locate the hidden apcctrl window
+  HWND hservwnd = FindWindowEx(NULL, NULL, APCCTRL_WINDOW_CLASS, APCCTRL_WINDOW_NAME);
   if (hservwnd == NULL)
      return;
 
-  // Post the message to Apcupsd
+  // Post the message to apcctrl
   PostMessage(hservwnd, message, wParam, lParam);
 }
 
-void ApcupsdTerminate()
+void apcctrlTerminate()
 {
-   // Old versions of apcupsd and modern versions running on WinNT and
+   // Old versions of apcctrl and modern versions running on WinNT and
    // earlier need to receive a window message.
-   PostToApcupsd(WM_CLOSE, 0, 0);
+   PostToapcctrl(WM_CLOSE, 0, 0);
 
-   // New apcupsd on Win2K and above listen for an event to be signaled.
-   // This allows stopping apcupsd instances running under LocalSystem
+   // New apcctrl on Win2K and above listen for an event to be signaled.
+   // This allows stopping apcctrl instances running under LocalSystem
    // and those started on other desktops.
    if (g_os_version >= WINDOWS_2000)
    {
-      HANDLE evt = OpenEvent(EVENT_MODIFY_STATE, FALSE, APCUPSD_STOP_EVENT_NAME);
+      HANDLE evt = OpenEvent(EVENT_MODIFY_STATE, FALSE, APCCTRL_STOP_EVENT_NAME);
       if (evt != NULL)
       {
          SetEvent(evt);
@@ -182,17 +182,17 @@ void ApcupsdTerminate()
    }
 }
 
-// Called as a thread from ApcupsdAppMain()
-// Here we invoke apcupsd UNIX main loop
-void *ApcupsdMain(LPVOID lpwThreadParam)
+// Called as a thread from apcctrlAppMain()
+// Here we invoke apcctrl UNIX main loop
+void *apcctrlMain(LPVOID lpwThreadParam)
 {
    pthread_detach(pthread_self());
 
-   // Call the "real" apcupsd
-   ApcupsdMain(num_command_args, command_args);
+   // Call the "real" apcctrl
+   apcctrlMain(num_command_args, command_args);
 
-   // In case apcupsd returns, terminate application
-   ApcupsdTerminate();
+   // In case apcctrl returns, terminate application
+   apcctrlTerminate();
    return NULL;
 }
 
@@ -204,7 +204,7 @@ DWORD WINAPI EventThread(LPVOID param)
 {
    // Create global exit event and allow Adminstrator access to it so any
    // member of the Administrators group can signal it.
-   exitevt = CreateEvent(NULL, TRUE, FALSE, APCUPSD_STOP_EVENT_NAME);
+   exitevt = CreateEvent(NULL, TRUE, FALSE, APCCTRL_STOP_EVENT_NAME);
    TCHAR name[] = "Administrators";
    GrantAccess(exitevt, EVENT_MODIFY_STATE, TRUSTEE_IS_GROUP, name);
 
@@ -217,7 +217,7 @@ DWORD WINAPI EventThread(LPVOID param)
 
       // Global exit event signaled
       runthread = false;
-      PostToApcupsd(WM_CLOSE, 0, 0);
+      PostToapcctrl(WM_CLOSE, 0, 0);
    }
 
    CloseHandle(exitevt);
@@ -241,14 +241,14 @@ static void WaitForExit()
    wndclass.hCursor = NULL;
    wndclass.hbrBackground = NULL;
    wndclass.lpszMenuName = NULL;
-   wndclass.lpszClassName = APCUPSD_WINDOW_CLASS;
+   wndclass.lpszClassName = APCCTRL_WINDOW_CLASS;
    wndclass.hIconSm = NULL;
    if (RegisterClassEx(&wndclass) == 0)
       return;
 
    // Create dummy window so we can receive Windows messages
-   HWND hwnd = CreateWindow(APCUPSD_WINDOW_CLASS,  // class
-                            APCUPSD_WINDOW_NAME,   // name/title
+   HWND hwnd = CreateWindow(APCCTRL_WINDOW_CLASS,  // class
+                            APCCTRL_WINDOW_NAME,   // name/title
                             0,                     // style
                             0,                     // X pos
                             0,                     // Y pos
@@ -288,24 +288,24 @@ static void WaitForExit()
    DestroyWindow(hwnd);
 }
 
-// This is the main routine for Apcupsd. It spawns a thread to run the
-// UNIX apcupsd back end and waits to be told to exit.
-int ApcupsdAppMain(int service)
+// This is the main routine for apcctrl. It spawns a thread to run the
+// UNIX apcctrl back end and waits to be told to exit.
+int apcctrlAppMain(int service)
 {
    // Set this process to be the last application to be shut down.
    SetProcessShutdownParameters(0x100, 0);
 
    // Check to see if we're already running
-   HANDLE sem = CreateSemaphore(NULL, 0, 1, "apcupsd");
+   HANDLE sem = CreateSemaphore(NULL, 0, 1, "apcctrl");
    if (sem == NULL || GetLastError() == ERROR_ALREADY_EXISTS) {
-      MessageBox(NULL, "Another instance of Apcupsd is already running", 
-                 "Apcupsd Error", MB_OK);
+      MessageBox(NULL, "Another instance of apcctrl is already running", 
+                 "apcctrl Error", MB_OK);
       return 0;
    }
 
-   // Create a thread on which to run apcupsd UNIX main loop
+   // Create a thread on which to run apcctrl UNIX main loop
    pthread_t tid;
-   pthread_create(&tid, NULL, ApcupsdMain, (void *)GetCurrentThreadId());
+   pthread_create(&tid, NULL, apcctrlMain, (void *)GetCurrentThreadId());
 
    // Wait for exit request.
    WaitForExit();

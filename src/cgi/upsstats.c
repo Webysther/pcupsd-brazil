@@ -17,11 +17,11 @@
  *       Makefile.
  *
  * Modified: Jonathan Benson <jbenson@technologist.com>
- *         19/6/98 to suit apcupsd
+ *         19/6/98 to suit apcctrl
  *         23/6/98 added more graphs and menu options
  *
  * Modified: Kern Sibbald <kern@sibbald.com>
- *        Nov 1999 to work with apcupsd networking and
+ *        Nov 1999 to work with apcctrl networking and
  *                 to include as much of the NUT code
  *                   as possible.
  *                 added runtim status
@@ -268,7 +268,7 @@ int main(int argc, char **argv)
      fputs ("\n", stdout);
 
      getupsvar (monhost, "version", answer, sizeof(answer));
-     fputs ("   APCUPSD: Version ", stdout);
+     fputs ("   APCCTRL: Version ", stdout);
      html_puts (answer);
      fputs ("\n", stdout);
 

@@ -23,7 +23,7 @@
 #include "instmgr.h"
 #include <windows.h>
 
-// Object implementing the Status dialogue for apcupsd
+// Object implementing the Status dialogue for apcctrl
 class upsConfig
 {
 public:

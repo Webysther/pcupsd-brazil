@@ -4,7 +4,7 @@ SUBDIRS = compat
 
 include $(topdir)/autoconf/targets.mak
 
-# Objects needed by apcupsd daemon
+# Objects needed by apcctrl daemon
 SRCS := winmain.cpp winservice.cpp
 
 # Objects needed by various windows-specific executables

@@ -16,8 +16,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
    char *msg, *wordPtr;
 
    // Funny things happen with the command line if the
-   // execution comes from c:/Program Files/apcupsd/apcupsd.exe
-   // We get a command line like: Files/apcupsd/apcupsd.exe" options
+   // execution comes from c:/Program Files/apcctrl/apcctrl.exe
+   // We get a command line like: Files/apcctrl/apcctrl.exe" options
    // I.e. someone stops scanning command line on a space, not
    // realizing that the filename is quoted!!!!!!!!!!
    // So if first character is not a double quote and
@@ -44,7 +44,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
    }
 
    // Now display the popup
-   MessageBox(NULL, msg, "Apcupsd message", MB_OK);
+   MessageBox(NULL, msg, "apcctrl message", MB_OK);
 
    return 0;
 }

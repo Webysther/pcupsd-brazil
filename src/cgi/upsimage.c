@@ -14,7 +14,7 @@
  * This binary needs to be installed some place where upsstats can find it.
  *
  * Modified:  Jonathan Benson <jbenson@technologist.com>
- *	    19/6/98 to suit apcupsd
+ *	    19/6/98 to suit apcctrl
  *	    23/6/98 added more graphs and menu options
  *
  * Modified by Kern Sibbald to include additional graphs as well as

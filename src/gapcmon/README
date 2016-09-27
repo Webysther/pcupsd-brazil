@@ -1,11 +1,11 @@
 GAPCMON (a.k.a gapcmon, and gpanel_apcmon)
 
 	A Gtk2/GLib2 GUI application used to monitor UPS devices controlled
-by the APCUPSD package.  The program uses the NIS interface from apcupsd to
+by the APCCTRL package.  The program uses the NIS interface from apcctrl to
 collect event and status information for display to the end-user.  Because of
 this great (NIS) interface, this program can be executed on any OS supported machine
-and use the network socket interface to connect back to apcupsd.  Of course
-apcupsd must be compiled with NIS support (i.e. ./configure --enable-nis ).
+and use the network socket interface to connect back to apcctrl.  Of course
+apcctrl must be compiled with NIS support (i.e. ./configure --enable-nis ).
 
 	One program is included for your use in this package; gapcmon is a 
 regular gtk+ application.
@@ -40,11 +40,11 @@ FEATURES:
 			  ten times the regular refresh time in seconds, and displays 40
 			  collection cycles on screen. 
 		- Information
-			* more detailed view of apcupsd current state and ups current state
+			* more detailed view of apcctrl current state and ups current state
 		- Events
-			* current apcupsd events as reported by apcaccess
+			* current apcctrl events as reported by apcaccess
 		- Status
-			* current apcupsd status  as reported by apcaccess		
+			* current apcctrl status  as reported by apcaccess		
     	- refresh button, and quit button:  
 			* refresh button causes and immediate refresh of all data values
 			* quit button closes the application, or hides the window for monitors
@@ -56,7 +56,7 @@ FEATURES:
 		- Preferences
 			* configuration page allows user to specify the hostname, port, and 
 			  refresh interval in seconds of the server/workstation running 
-			  apcupsd with NIS configured.
+			  apcctrl with NIS configured.
 		- Graph Properties
 			* Alloww user to choose the color of each data series used in the
  			  History graph on monitor windows.
@@ -68,8 +68,8 @@ FEATURES:
 REQUIREMENTS:
 
 	Gtk2/Glib-2.4 runtime support. 
-	APCUPSD installed and configured to NIS support.
-		{ get at http://apcupsd.sourceforge.net  }
+	APCCTRL installed and configured to NIS support.
+		{ get at http://apcctrl.sourceforge.net  }
 
 	* the following packages may need to be installed to build program and
 	  for runtime of binaries on some platforms.
@@ -104,7 +104,7 @@ INSTRUCTIONS:
 
   gapcmon -- Gtk Application
     
-    1. look in gnome menus for the "Applications" group, then select "APCUPSD monitor"
+    1. look in gnome menus for the "Applications" group, then select "APCCTRL monitor"
     	- or enter '# gapcmon' on the command line.
 	2. To configure.
 		- select preferences choice,
@@ -116,13 +116,13 @@ KNOWN BUGS:
 
 MAILING LIST:
 
- http://sourceforge.net/projects/apcupsd,   choose the 'users mailing list' apcupsd-users-request@lists.sourceforge.net
+ http://sourceforge.net/projects/apcctrl,   choose the 'users mailing list' apcctrl-users-request@lists.sourceforge.net
  http://sourceforge.net/projects/gapcmon,   choose the 'Help Forum'
 
 
 WEB SITE:
 
- http://www.apcupsd.com/  or  http://gapcmon.sourceforge.net/  
+ http://www.apcctrl.com/  or  http://gapcmon.sourceforge.net/  
 
 
 CVS CHECKOUT:
@@ -135,13 +135,13 @@ REPORTING BUGS:
  "James Scott Jr"<skoona@users.sourceforge.net>
  or use the HELP Forums on SourceForge for this project.
 
- I also respond to apcupsd-users-request@lists.sourceforge.net, list.
+ I also respond to apcctrl-users-request@lists.sourceforge.net, list.
  
 
 ACKNOWLEDGMENTS & CONTRIBUTORS
 
  Thanks goes to project team creating and 
- maintaining APCUPSD.
+ maintaining APCCTRL.
  
  Thanks is also due to Wesley Terrell for maintaining
  the Debian packages.

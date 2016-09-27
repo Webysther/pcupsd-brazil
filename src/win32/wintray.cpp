@@ -1,4 +1,4 @@
-// This file has been adapted to the Win32 version of Apcupsd
+// This file has been adapted to the Win32 version of apcctrl
 // by Kern E. Sibbald.  Many thanks to ATT and James Weatherall,
 // the original author, for providing an excellent template.
 //
@@ -7,7 +7,7 @@
 // Copyright (2007) Adam D. Kropelin
 // Copyright (2000-2005) Kern E. Sibbald
 
-// Implementation of a system tray icon & menu for Apcupsd
+// Implementation of a system tray icon & menu for apcctrl
 
 #include "apc.h"
 #include <windows.h>
@@ -162,7 +162,7 @@ void upsMenu::SendTrayMsg(DWORD msg)
    memset(&nid, 0, sizeof(nid));
    nid.hWnd = _hwnd;
    nid.cbSize = sizeof(nid);
-   nid.uID = IDI_APCUPSD;
+   nid.uID = IDI_APCCTRL;
    nid.uFlags = NIF_ICON | NIF_MESSAGE;
    nid.uCallbackMessage = WM_APCTRAY_NOTIFY;
 

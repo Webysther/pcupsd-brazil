@@ -37,7 +37,7 @@ The Smart-Custom cable is not an APC product.*
           TxD    3   --------------------  1  RxD  Receive
           GND    5   --------------------  9  Ground
 
-When using this cable with apcupsd specify the following in
+When using this cable with apcctrl specify the following in
 apcctrl.conf:
 
 ::
@@ -58,7 +58,7 @@ The Simple-Custom cable is not an APC product.*
 
 For "dumb" UPSes using voltage signalling, if you are going to
 build your own cable, we recommend to make the cable designed by
-the apcupsd team as follows:
+the apcctrl team as follows:
 
 ::
 
@@ -66,7 +66,7 @@ the apcupsd team as follows:
          
          Signal Computer                  UPS
                 DB9F   4.7K ohm          DB9M
-          DTR    4   --[####]--*              DTR set to +5V by Apcupsd
+          DTR    4   --[####]--*              DTR set to +5V by apcctrl
                                |
           CTS    8   ----------*---------  5  Low Battery
           GND    5   --------------------  4  Ground
@@ -113,27 +113,27 @@ communications are in apcsmart mode. This cable is also valid for
 use on a ShareUPS BASIC Port. It is reported to work on
 SmartUPSes, however the Smart Cable described above is preferred.
 
-To have a better idea of what is going on inside apcupsd,
-for the SIMPLE cable apcupsd reads three signals and sets three:
+To have a better idea of what is going on inside apcctrl,
+for the SIMPLE cable apcctrl reads three signals and sets three:
 
     Reads:
-        CD, which apcupsd uses for the On Battery signal when high.
+        CD, which apcctrl uses for the On Battery signal when high.
          
-        CTS, which apcupsd uses for the Battery Low signal when high.
+        CTS, which apcctrl uses for the Battery Low signal when high.
          
-        RxD (SR), which apcupsd uses for the Line Down
+        RxD (SR), which apcctrl uses for the Line Down
             signal when high. This signal isn't used for much.
          
     Sets:
-        DTR, which apcupsd sets when it detects a power failure (generally
+        DTR, which apcctrl sets when it detects a power failure (generally
              5 to 10 seconds after the CD signal goes high). It
              clears this signal if the CD signal subsequently goes low
              -- i.e. power is restored.
          
-        TxD (ST), which apcupsd clears when it detects that the CD signal
+        TxD (ST), which apcctrl clears when it detects that the CD signal
              has gone low after having gone high - i.e. power is restored.
          
-        RTS, which apcupsd sets for the killpower signal -- to cause the UPS
+        RTS, which apcctrl sets for the killpower signal -- to cause the UPS
              to shut off the power.
 
 Please note that these actions apply only to the SIMPLE cable. The
@@ -144,7 +144,7 @@ cable:
 
 ::
 
-         APCUPSD SIMPLE-CUSTOM CABLE
+         APCCTRL SIMPLE-CUSTOM CABLE
          
          Computer Side  |  Description of Cable           |     UPS Side
          DB9f  |  DB25f |                                 |   DB9m  | DB25m
@@ -158,7 +158,7 @@ cable:
          
          Note: the <- and -> indicate the signal direction.
 
-When using this cable with apcupsd specify the following in
+When using this cable with apcctrl specify the following in
 apcctrl.conf:
 
 ::
@@ -225,7 +225,7 @@ original schematic), the UPS (a BackUPS CS 500 EI) will be unstable
 and likely to rapidly switch from power to batteries (i.e.
 chatter).
 
-When using this cable with apcupsd specify the following in
+When using this cable with apcctrl specify the following in
 apcctrl.conf:
 
 ::
@@ -237,10 +237,10 @@ apcctrl.conf:
 The information for constructing this cable was discovered and
 transmitted to us by slither_man. Many thanks!
 
-Other APC Cables that apcupsd Supports
+Other APC Cables that apcctrl Supports
 --------------------------------------
 
-apcupsd will also support the following off the shelf cables that
+apcctrl will also support the following off the shelf cables that
 are supplied by APC
 
 
@@ -254,11 +254,11 @@ are supplied by APC
 -  All USB cables such as 940-0127[A/B]
 
 
-Voltage Signalling Features Supported by Apcupsd for Various Cables
+Voltage Signalling Features Supported by apcctrl for Various Cables
 -------------------------------------------------------------------
 
 The following table shows the features supported by the current
-version of apcupsd for various cables running the UPS in
+version of apcctrl for various cables running the UPS in
 voltage-signalling mode.
 
 ============= ========== =========== ========== ==================
@@ -591,7 +591,7 @@ Serial BackUPS ES Wiring
 :Contributed by: William Stock
 
 The BackUPS ES has a straight through serial cable with no
-identification on the plugs. To make it work with apcupsd, specify
+identification on the plugs. To make it work with apcctrl, specify
 the { UPSCABLE 940-0119A} and { UPSTYPE backups}. The equivalent of
 cable 940-0119A is done on a PCB inside the unit.
 
@@ -631,11 +631,11 @@ Though these UPSes are USB UPSes, APC supplies a serial cable
 (typically with a green DB9 F connector) that has 940-0128A stamped
 into one side of the plastic serial port connector. The other end
 of the cable is a 10 pin RJ45 connector that plugs into the UPS
-(thanks to Dean Waldow for sending a cable!). Apcupsd version 3.8.5
+(thanks to Dean Waldow for sending a cable!). apcctrl version 3.8.5
 and later supports this cable when specified as { UPSCABLE
 940-0128A} and { UPSTYPE dumb}. However, running in this mode much
 of the information that would be available in USB mode is lost. In
-addition, when apcupsd attempts to instruct the UPS to kill the
+addition, when apcctrl attempts to instruct the UPS to kill the
 power, it begins cycling about 4 times a second between battery and
 line. The solution to the problem (thanks to Tom Suzda) is to
 unplug the UPS and while it is still chattering, press the power
@@ -699,7 +699,7 @@ cable schematic is the following:
 940-0128D is functionally similar to the 940-0128A cable except for
 NC on (6) DTR and (2) RD on the computer side.
 
-Unverified: Try setting apcupsd to ``UPSTYPE dumb`` and ``UPSCABLE 940-0128A``.
+Unverified: Try setting apcctrl to ``UPSTYPE dumb`` and ``UPSCABLE 940-0128A``.
 
 ::
 
@@ -765,7 +765,7 @@ Win32 Implementation Restrictions for Simple UPSes
 
 Due to inadequacies in the
 Win32 API, it is not possible to set/clear/get all the serial port
-line signals. apcupsd can detect: CTS, DSR, RNG, and CD. It can set
+line signals. apcctrl can detect: CTS, DSR, RNG, and CD. It can set
 and clear: RTS and DTR.
 
 This imposes a few minor restrictions on the functionality of some

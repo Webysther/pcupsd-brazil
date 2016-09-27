@@ -1,5 +1,5 @@
 /*
- *  Program to print the full status output from apcupsd
+ *  Program to print the full status output from apcctrl
  *
  *   Kern Sibbald, 17 November 1999
  *
@@ -46,7 +46,7 @@ int main(int argc, char **argv)
 
     (void) extractcgiargs();
 
-    html_begin("APCUPSD Full Status Page", refresh);
+    html_begin("APCCTRL Full Status Page", refresh);
 
     if (!checkhost(monhost)) {
         fputs ("<p><strong>Access to host ", stdout);

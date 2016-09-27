@@ -24,7 +24,7 @@
 #define IDC_WWW                                 1022
 #define IDC_COPYRIGHT                           1023
 #define IDC_TRADEMARK                           1036
-#define IDI_APCUPSD                             40000
+#define IDI_APCCTRL                             40000
 #define IDM_CONFIG                              40000
 #define IDM_ADD                                 40001
 #define IDM_EXIT                                40002

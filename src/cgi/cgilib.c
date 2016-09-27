@@ -190,15 +190,15 @@ void html_begin(const char *title, int refresh)
      * Add a generator tag so that when bugs are logged, we know what version
      * of the code we are dealing with.
      */
-    (void) fputs (" <meta name=\"generator\" content=\"apcupsd ", stdout);
+    (void) fputs (" <meta name=\"generator\" content=\"apcctrl ", stdout);
     html_puts(VERSION);
-    (void) puts(", See: http://www.apcupsd.com/\" />");
+    (void) puts(", See: http://www.apcctrl.com/\" />");
 
     if (refresh != 0) {
         printf (" <meta http-equiv=\"Refresh\" content=\"%d\" />\n", refresh);
     }
 
-    asnprintf(fn, sizeof(fn), "%s/apcupsd.css", SYSCONFDIR);
+    asnprintf(fn, sizeof(fn), "%s/apcctrl.css", SYSCONFDIR);
     hostlist = fopen(fn, "r");
     if (hostlist != NULL) {
         (void) puts (" <style>");

@@ -1,6 +1,6 @@
 #!/bin/sh
 sftp -b - web.sourceforge.net <<-END
-	cd /home/groups/a/ap/apcupsd/htdocs
+	cd /home/groups/a/ap/apcctrl/htdocs
 	-mkdir manual
 	cd manual
 	-rm *
@@ -8,7 +8,7 @@ sftp -b - web.sourceforge.net <<-END
 	put manual.pdf
 	put manual.html
 	put *.png
-	ln manual.pdf apcupsd.pdf
+	ln manual.pdf apcctrl.pdf
 	ln manual.html index.html
 END
 

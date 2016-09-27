@@ -6,14 +6,14 @@ protocol was originally analyzed by Pavel Korensky with additions
 from Andre H. Hendrick beginning in 1995, and we want to give
 credit for good, hard work, where credit is due. After having said
 that, you will see that Steven Freed built much of the original
-apcupsd information file.
+apcctrl information file.
 
-The start of this chapter of the apcupsd manual in HTML format was
+The start of this chapter of the apcctrl manual in HTML format was
 pulled from the Network UPS Tools (NUT) site 
 (http://www.networkupstools.org/ups-protocols/apcsmart.html). It
-has been an invaluable tool in improving apcupsd, and I consider it
+has been an invaluable tool in improving apcctrl, and I consider it
 the Bible of APC UPS programming. In the course of using it, I
-have added information gleaned from apcupsd and information
+have added information gleaned from apcctrl and information
 graciously supplied by APC. 
 
 Description

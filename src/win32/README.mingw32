@@ -1,5 +1,5 @@
 
-This file documents building the native Win32 apcupsd using the
+This file documents building the native Win32 apcctrl using the
 MinGW cross compiler tools on a Linux (possibly other Unix)
 system.  The Win32 build can co-exist in in the same directory at
 the same time as a normal Linux build since all the binaries for
@@ -7,8 +7,8 @@ Win32 are kept in src/win32.
    
 
 The basic directory structure you need to have is:
-  apcupsd                    top level directory -- any name 
-    apcupsd-source           top level apcupsd source directory -- any name
+  apcctrl                    top level directory -- any name 
+    apcctrl-source           top level apcctrl source directory -- any name
       src
         win32                main directory where the Win32 FD is built.
           compat             win32 emulation lib for Unix calls
@@ -21,12 +21,12 @@ The basic directory structure you need to have is:
 
 depkgs-win32 is released in a separate .tar.gz file that contains the
 source for the above mentioned libraries needed to build the
-Win32 apcupsd.  It can be found in the Source Forge apcupsd project
+Win32 apcctrl.  It can be found in the Source Forge apcctrl project
 release section (not yet).  Temporarily, you can find a copy of
 this on:
 
-   www.sibbald.com/download/depkgs-win32-apcupsd.tar.gz
-   www.kroptech.com/~adk0212/apcupsd/depkgs-win32-apcupsd.tar.gz
+   www.sibbald.com/download/depkgs-win32-apcctrl.tar.gz
+   www.kroptech.com/~adk0212/apcctrl/depkgs-win32-apcctrl.tar.gz
 
 It will detar into depkgs-win32.  Note, this version is pre-buit, so
 you can skip the ./build-mingw32 described several steps below, unless
@@ -39,7 +39,7 @@ only run that script once, unless we move to a new version of the tools.
 Now, once you have the directory structure as defined above, you do
 the following once:
 
-  cd apcupsd/apcupsd-source
+  cd apcctrl/apcctrl-source
   ./configure (any standard set of config options the exact ones   
                are not important).
   cd src/win32
@@ -54,21 +54,21 @@ After building the cross-tools, you can proceed to build the depkgs-win32
 packages, which must use the cross-tools compiler.
  
    cd
-   cd apcupsd/depkgs-win32
+   cd apcctrl/depkgs-win32
    ./build-mingw32
 
 The above only needs to be done once as well as long as the cross-tools or
 depkgs-win32 versions do not change. As noted above, the above step
 can be skipped if you dowload the package from www.sibbald.com...
 
-Finally, to build the Win32 apcupsd, do the following:
+Finally, to build the Win32 apcctrl, do the following:
 
-   cd apcupsd-source/src/win32
+   cd apcctrl-source/src/win32
    make -f Makefile.mingw32
 
-This should compile a lot of files, and finally create apcupsd.exe,
+This should compile a lot of files, and finally create apcctrl.exe,
 apcaccess.exe, and pthreadGCE.dll.  You need the dll to run either 
-apcupsd.exe or apcaccess.exe.
+apcctrl.exe or apcaccess.exe.
 
 If you want to change the Makefile, simply edit Makefile.mingw32.in,
 then in the top level directory, do:
@@ -79,7 +79,7 @@ or do any ./configure command.
 
 
 Items to be done:
-- Use syslog from apcupsd lib/wincompat.c so that a dialog
+- Use syslog from apcctrl lib/wincompat.c so that a dialog
   box is used in place of syslog().
 - Implement additional drivers (snmp)
 - Ensure that calling scripts works -- definitely broken
@@ -89,12 +89,12 @@ Items to be done:
 Here is the configure I'm using for the 3.12.x releases:
 
 ./configure \
-       --prefix=/apcupsd \
-       --sbindir=/apcupsd/bin \
-       --sysconfdir=/apcupsd/etc/apcctrl \
-       --with-pid-dir=/apcupsd/etc/apcctrl \
-       --mandir=/apcupsd \
-       --with-cgi-bin=/apcupsd/etc/apcctrl/cgi \
+       --prefix=/apcctrl \
+       --sbindir=/apcctrl/bin \
+       --sysconfdir=/apcctrl/etc/apcctrl \
+       --with-pid-dir=/apcctrl/etc/apcctrl \
+       --mandir=/apcctrl \
+       --with-cgi-bin=/apcctrl/etc/apcctrl/cgi \
        --enable-pthreads \
        --enable-net \
        --enable-snmp \
@@ -130,13 +130,13 @@ The only difference to use the "device driver" method is in how you
 install libusb-win32. Eventually I believe the installer will be able to 
 install the driver automatically, but at the moment it's a manual 
 process. I've made a zip file containing the required pieces:
-<http://www.kroptech.com/~adk0212/apcupsd/apcupsd-libusb-win32.zip>
+<http://www.kroptech.com/~adk0212/apcctrl/apcctrl-libusb-win32.zip>
 
 The basic procedure is:
     1. Extract zip file to <C:\Program Files\LibUSB-Win32>
-    2. ./configure apcupsd source with your favorite options 
+    2. ./configure apcctrl source with your favorite options 
 plus --enable-usb
-    3. Build & install apcupsd
+    3. Build & install apcctrl
     4. Plug in your USB UPS and wait for Windows to recognize it
     5. Open the Windows Device Manager and locate the "Human Interface 
 Devices" section
@@ -149,12 +149,12 @@ sequence of dialogs and options is different, but essentially you need
 to get to the list of devices with the "Have Disk..." button. When you 
 get there, choose "Have Disk..."
     9. Browse to <C:\Program Files\LibUSB-Win32\driver> and hit Open
-    10. Select "American Power Conversion USB UPS (Apcupsd)" and hit 
+    10. Select "American Power Conversion USB UPS (apcctrl)" and hit 
 Next
     11. The driver should be installed.
     12. If you examine the Device Manager tree again, you should see a 
 "LibUSB-Win32 Devices" section, under which is listed "American Power 
-Conversion USB UPS (Apcupsd)". You should NOT see "HID UPS Battery" 
+Conversion USB UPS (apcctrl)". You should NOT see "HID UPS Battery" 
 under the "Batteries" section.
     13. Future plugging/unplugging of the UPS will be handled 
 automatically. The driver only needs to be installed once.
@@ -162,13 +162,13 @@ automatically. The driver only needs to be installed once.
         UPSCABLE usb
         UPSTYPE usb
         DEVICE
-    15. Start apcupsd and watch the magic (or the smoke...)
+    15. Start apcctrl and watch the magic (or the smoke...)
 
 --Adam
 
 P.S. To get back to the Windows standard driver, go into Device Manager 
 and do an "Update Driver..." on "American Power Conversion USB UPS 
-(Apcupsd)". Select the "American Power Conversion USB UPS (Microsoft)" 
+(apcctrl)". Select the "American Power Conversion USB UPS (Microsoft)" 
 driver from the list. After that you should be back where you started 
 and the "Batteries -> HID UPS Battery" entry should be back and the
 

@@ -17,7 +17,7 @@ int main(int argc, char **argv)
    ULONG err;
    MapiRecipDesc recip;
    char addr[100];
-   char default_msg[] = "Apcupsd message";
+   char default_msg[] = "apcctrl message";
    char default_text[] = "No text specified.\n";
    MapiMessage emsg = {0, 
       default_msg,                     /* default subject */

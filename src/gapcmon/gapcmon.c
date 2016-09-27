@@ -1,7 +1,7 @@
 /* gapcmon.c               serial-0088-0 *****************************************
 
   GKT+ GUI with Notification Area (System Tray) support.  Program  for 
-  monitoring the apcupsd.sourceforge.net package.
+  monitoring the apcctrl.sourceforge.net package.
   Copyright (C) 2006 James Scott, Jr. <skoona@users.sourceforge.net>
 
   Command Line Syntax: gapcmon [--help]
@@ -4108,7 +4108,7 @@ static gboolean gapc_util_load_icons(PGAPC_CONFIG pcfg)
        "online.png",
        "onbatt.png",
        "charging.png",
-       "apcupsd.png",
+       "apcctrl.png",
        "unplugged.png",
        "gapc_prefs.png",
        NULL
@@ -4446,7 +4446,7 @@ static gint gapc_panel_about_page(GtkNotebook * notebook, gchar * pch_pname,
 
    about_msg =
       g_strdup_printf("<b>gui monitor for UPSs under the management"
-      " of the APCUPSD.sourceforge.net package</b>\n"
+      " of the APCCTRL.sourceforge.net package</b>\n"
       "<i>http://gapcmon.sourceforge.net/</i>\n\n"
       "Copyright \xC2\xA9 2006 James Scott, Jr.\n"
       "skoona@users.sourceforge.net\n\n"
@@ -5788,7 +5788,7 @@ static gint gapc_monitor_information_page(PGAPC_MONITOR pm, GtkWidget * notebook
    gtk_box_pack_end(GTK_BOX(pbox), rbox, TRUE, TRUE, 0);
    gtk_widget_show(rbox);
 
-   label = gtk_label_new("APCUPSD version\n" "Monitored UPS name\n"
+   label = gtk_label_new("APCCTRL version\n" "Monitored UPS name\n"
       "Cable Driver type\n" "Configuration mode\n" "Last started\n" "UPS State");
    gtk_label_set_use_markup(GTK_LABEL(label), TRUE);
    gtk_label_set_justify(GTK_LABEL(label), GTK_JUSTIFY_RIGHT);
