@@ -7,7 +7,7 @@
 /*
  * Copyright (C) 2001-2006 Kern Sibbald
  * Copyright (C) 1996-99 Andre M. Hedrick <andre@suse.com>
- * Copyright (C) 1999-2001 Riccardo Facchetti <riccardo@apcupsd.org>
+ * Copyright (C) 1999-2001 Riccardo Facchetti <riccardo@apcctrl.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of version 2 of the GNU General
@@ -137,8 +137,8 @@ static UpsDriver *helper_attach_driver(UPSINFO *ups, const char *drvname)
    }
 
    if (!ups->driver) {
-      printf("\nApcupsd driver %s not found.\n"
-             "The available apcupsd drivers are:\n", drvname);
+      printf("\napcctrl driver %s not found.\n"
+             "The available apcctrl drivers are:\n", drvname);
 
       for (i = 0; drivers[i].driver_name; i++)
          printf("%s\n", drivers[i].driver_name);

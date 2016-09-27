@@ -1,10 +1,10 @@
-README file for apcupsd third party rpm contributors
+README file for apcctrl third party rpm contributors
 
 Sat Aug 19 2006
 D. Scott Barninger
 
 This document outlines the procedures to create rpm packages for
-apcupsd for platforms supported in the rpm spec file but not published
+apcctrl for platforms supported in the rpm spec file but not published
 on sourceforge. Contributors wishing to build and supply such rpm
 packages for release on the sourceforge project page should read this 
 documentation. Contributors should contact either Adam Kropelin <adam@kroptech.com>
@@ -18,7 +18,7 @@ shell script build_rpm.sh in this directory.
 2. The packager must sign all rpm packages with his/her personal gpg key
 and supply a copy of the public key as both a text file and as an rpm
 using the spec file rpmkey.spec in this directory.
-3. No modifications to either the apcupsd source code or spec file are
+3. No modifications to either the apcctrl source code or spec file are
 permitted without consulting the project admins.
 4. There will be only one sanctioned packager for a given distribution.
 5. Contributors who submit two or more successful releases may be given

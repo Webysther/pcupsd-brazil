@@ -23,8 +23,8 @@
  */
 
 /*
- * Thanks go to APC/Schneider for providing the Apcupsd team with early access
- * to MODBUS protocol information to facilitate an Apcupsd driver.
+ * Thanks go to APC/Schneider for providing the apcctrl team with early access
+ * to MODBUS protocol information to facilitate an apcctrl driver.
  *
  * APC/Schneider has published the following relevant application notes:
  *

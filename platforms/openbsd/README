@@ -13,7 +13,7 @@ serial port.
 Overview
 --------
 
-The OpenBSD distribution of apcupsd operates a bit differently from
+The OpenBSD distribution of apcctrl operates a bit differently from
 the other distributions; the shutdown sequence (once the UPS can 
 no longer sustain the dependent servers) has been modified.
 
@@ -21,26 +21,26 @@ For most operating systems, the following sequence occurs:
         1. mains power loss
         2. warning messages are sent from the master at various intervals
         3. minimum battery level or max run time is reached
-        4. apcupsd invokes the control script with 'doshutdown' argument,
+        4. apcctrl invokes the control script with 'doshutdown' argument,
            then exits
         5. the control script initiates a system shutdown
-        6. as part of the system shutdown sequence, apcupsd is called in
+        6. as part of the system shutdown sequence, apcctrl is called in
            a "one shot" mode in order to send a message to the UPS telling
            it to kill the power in a configurable number of seconds
         7. the system finishes its halt sequence
         8. the UPS kills power to the system until mains power returns
 
 During the OpenBSD shutdown sequence, however, the second "one shot" call
-to apcupsd will fail because after the shutdown sequence has started, the
+to apcctrl will fail because after the shutdown sequence has started, the
 serial port cannot be reopened.  Therefore, the OpenBSD sequence has been
 modified to the following:
 
         1. mains power loss
         2. warning messages are sent from the master at various intervals
         3. minimum battery level or max run time is reached
-        4. apcupsd sends message to UPS to power off after a configurable
+        4. apcctrl sends message to UPS to power off after a configurable
            number of seconds
-        5. apcupsd invokes the control script with 'doshutdown' argument,
+        5. apcctrl invokes the control script with 'doshutdown' argument,
            then exits
         5. the control script initiates a system shutdown
         6. the system finishes its halt sequence
@@ -60,7 +60,7 @@ modified to the following:
 As a consequence of the above, another difference is that once the
 shutdown sequence has been initiated, it cannot be cancelled even if
 mains power returns.  This has implications for a hetrogeneous environment:
-If the OpenBSD server is running in apcupsd networked mode with another
+If the OpenBSD server is running in apcctrl networked mode with another
 machine such as a Linux server, it is possible for the former to complete
 the shutdown and the latter to cancel it.  Depending on which machine
 is the master and which is the slave, this could either result in one
@@ -77,7 +77,7 @@ Modifying the Power Off Interval
 --------------------------------
 
 [The information in this section is already available in the primary
- apcupsd documents -- this section merely makes things a bit more 
+ apcctrl documents -- this section merely makes things a bit more 
  explicit in the context of OpenBSD.]
 
 Once you have run the commands
@@ -86,16 +86,16 @@ Once you have run the commands
         make 
         make install
 
-in the apcupsd source tree and verified the values (most notably, the
+in the apcctrl source tree and verified the values (most notably, the
 "DEVICE" value) in the /etc/apcctrl/apcctrl.conf file, you should be
-able to manually start apcupsd by executing the following:
+able to manually start apcctrl by executing the following:
 
-        /etc/rc.apcupsd start
+        /etc/rc.apcctrl start
 
 After the daemon starts, you should be able to get your current configuration
 by issuing the command:
 
-        /etc/rc.apcupsd status
+        /etc/rc.apcctrl status
 
 Since the daemon prints status to stderr, you may have to redirect the 
 output to a file in order to view it.  It will also take a few seconds
@@ -117,12 +117,12 @@ is grouped, in the configuration file, with a bunch of other parameters
 used for programming the UPS EEPROM.   Make sure all the other parameters
 are commented out (you only want to change one at a time).
 
-Before you can reset the EPROM, shut down the running apcupsd:
-        /etc/rc.apcupsd stop
-Make sure there are no apcupsd processes left running before you continue:
+Before you can reset the EPROM, shut down the running apcctrl:
+        /etc/rc.apcctrl stop
+Make sure there are no apcctrl processes left running before you continue:
         ps auxww | grep apc
 Now you can modifiy the EPROM with the new configuration file:
-        /sbin/apcupsd -c
+        /sbin/apcctrl -c
 That will take about 30 or 45 seconds to complete.  You should see messages
 regarding which EPROM values have been changed (and what the old values
 were).  Read them to ensure that you didn't change something that you 
@@ -132,5 +132,5 @@ You should probably ensure that the "MINUTES" parameter in your configuration
 file makes sense given the value you selected for "SLEEP" -- chances are
 that you want "MINUTES" to be at least as long as "SLEEP".  Remember that one
 is specified in minutes, and the other in seconds.  The "MINUTES" parameter
-is used whenever apcupsd starts up; you don't need to reset the EPROM when
+is used whenever apcctrl starts up; you don't need to reset the EPROM when
 "MINUTES" is changed.

@@ -1,7 +1,7 @@
 /*
  * smtp.c
  *
- * A simple SMTP mail client for apcupsd.
+ * A simple SMTP mail client for apcctrl.
  *
  * Derived from a SMTPclient:
  *
@@ -29,9 +29,9 @@
  * MA 02111-1307, USA.
  */
 
-#define APCUPSD
+#define APCCTRL
 
-#ifdef APCUPSD
+#ifdef APCCTRL
 
 #include <pwd.h>
 

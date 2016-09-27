@@ -4,7 +4,7 @@
 .Os apctest v3.14.6
 .Sh NAME
 .Nm apctest
-.Nd apcupsd(8) test program
+.Nd apcctrl(8) test program
 .Sh SYNOPSIS
 .Nm
 .Sh DESCRIPTION
@@ -12,7 +12,7 @@
 is a program that enables the running of certain low-level tests to 
 check the operation of the attached simple signalling American Power
 Conversion Corp (APC) UPS and to check that your 
-.Xr apcupsd 8
+.Xr apcctrl 8
 configuration is correctly setup and can establish communication with 
 the UPS.
 .Pp
@@ -23,7 +23,7 @@ configuration variables as well and the performing of a battery
 runtime calibration. It also  provides a simple TTY chat mode which 
 allows direct interaction with the UPS via the APC smart protocol. 
 For details of this protocol and the available commands, refer to the 
-detailed "APC Smart Protocol" section in the apcupsd manual.
+detailed "APC Smart Protocol" section in the apcctrl manual.
 .Pp
 IMPORTANT: Before running
 .Nm
@@ -34,8 +34,8 @@ Check that the UPSCABLE, UPSTYPE and DEVICE configuration directives in the
 .Xr apcctrl.conf 5
 configuration file have been set appropriately; and
 .It
-Shutdown apcupsd if it is running. You cannot run both
-.Xr apcupsd
+Shutdown apcctrl if it is running. You cannot run both
+.Xr apcctrl
 and
 .Nm
 at the same time.
@@ -126,7 +126,7 @@ to
 and displays them in rather raw format. This output 
 can be useful for providing technical support if you are having 
 problems with the behaviour of the UPS or 
-.Xr apcupsd 8 . 
+.Xr apcctrl 8 . 
 .Ss Option 2)  Perform a Battery Runtime Calibration
 This performs a battery runtime calibration. This can only
 be performed if your battery is charged to 100% of capacity. 
@@ -249,27 +249,27 @@ the following menu options will appear:
 .Ss Option 1) Test 1 - normal mode
 The test result depends on the model of UPS and type of cable being 
 used. Refer to the "Using apctest on Serial-Line UPSses" section
-in the apcupsd manual for details.
+in the apcctrl manual for details.
 .Ss Option 2) Test 2 - no cable
 The test result depends on the model of UPS and type of cable being 
 used. Refer to the "Using apctest on Serial-Line UPSses" section
-in the apcupsd manual for details.
+in the apcctrl manual for details.
 .Ss Option 3) Test 3 - no power 
 The test result depends on the model of UPS and type of cable being 
 used. Refer to the "Using apctest on Serial-Line UPSses" section
-in the apcupsd manual for details.
+in the apcctrl manual for details.
 .Ss Option 4) Test 4 - low battery (requires Test 3 first)
 The test result depends on the model of UPS and type of cable being 
 used. Refer to the "Using apctest on Serial-Line UPSses" section
-in the apcupsd manual for details.
+in the apcctrl manual for details.
 .Ss Option 5) Test 5 - battery exhausted
 The test result depends on the model of UPS and type of cable being 
 used. Refer to the "Using apctest on Serial-Line UPSses" section
-in the apcupsd manual for details.
+in the apcctrl manual for details.
 .Ss Option 6) Test 6 - kill UPS power
 The test result depends on the model of UPS and type of cable being 
 used. Refer to the "Using apctest on Serial-Line UPSses" section
-in the apcupsd manual for details.
+in the apcctrl manual for details.
 .Ss Option 7) Test 7 - run tests 1 through 5
 This option has 
 .Nm
@@ -286,10 +286,10 @@ transcript of the
 session
 .Sh SEE ALSO
 .Xr apcctrl.conf 5 , 
-.Xr apcupsd 8 .
+.Xr apcctrl 8 .
 .Pp
-The HTML apcupsd manual installed on your system or available online at
-http://www.apcupsd.org/
+The HTML apcctrl manual installed on your system or available online at
+http://www.apcctrl.org/
 .Sh AUTHORS
 .Ss This page
 .An Trevor Roydhouse (current)

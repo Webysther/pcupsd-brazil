@@ -1,9 +1,9 @@
-TITLE:		Apcupsd
+TITLE:		apcctrl
 LFS VERSION:	any 
 AUTHOR:		John McSwain <jmcswain@infoave.net>
 
 SYNOPSIS:
-	Installing Apcupsd to protect an LFS system using APC UPS.    
+	Installing apcctrl to protect an LFS system using APC UPS.    
 
 HINT:
 version 1.0 (06/27/2001)
@@ -27,41 +27,41 @@ TABLE OF CONTENTS
 1. Introduction
 =================
 
-Apcupsd is useful for controlling American Power Conversion's (APC)
-uninterruptiple power supplies (UPS).  Apcupsd monitors the UPS and during a
+apcctrl is useful for controlling American Power Conversion's (APC)
+uninterruptiple power supplies (UPS).  apcctrl monitors the UPS and during a
 power loss, informs the system users of the failure, and if power is not 
-restored, safely shuts down the system.  The Apcupsd manual (available on line
-at http://www.sibbald.com/apcupsd/manual/index.html or with the software)
+restored, safely shuts down the system.  The apcctrl manual (available on line
+at http://www.sibbald.com/apcctrl/manual/index.html or with the software)
 provides excellent instructions on installing and configuring the software.
 The configure script can identify several standard linux distributions and make
 the correct installation. However, as LFS is by design not standard this hint
 provides the information to protect an LFS system with an APC UPS using
-Apcupsd.
+apcctrl.
 
-The installation of Apcupsd is mostly straightforward until "make install" is
+The installation of apcctrl is mostly straightforward until "make install" is
 completed. Then the LFS user will see the following series of messages:
 
 "Unknown distribution
-You have to manually install apcupsd boot script and
+You have to manually install apcctrl boot script and
 halt script for clean emergency shutdown.
-Please contribute your distribution install to apcupsd team.
+Please contribute your distribution install to apcctrl team.
 I'm sorry: you are on your own."
 
 The purpose of this hint is to provide one method of accomplishing the above
-actions to get Apcupsd up and running on the LFS "unknown" distribution.
+actions to get apcctrl up and running on the LFS "unknown" distribution.
 
 =================
 2. Software
 =================
 
-The Apcupsd software can be found at these sites:
+The apcctrl software can be found at these sites:
 
-http://www.oasi.gpa.it/riccardo/linux/apcupsd/
-http://www.sibbald.com/apcupsd/
-ftp://ftp.oasi.gpa.it/pub/apcupsd/
+http://www.oasi.gpa.it/riccardo/linux/apcctrl/
+http://www.sibbald.com/apcctrl/
+ftp://ftp.oasi.gpa.it/pub/apcctrl/
 
-As of this writing the latest stable release is Apcupsd-3.8.1.  However 
-Apcupsd-3.8.2Beta14 has been used with no problems by this author.
+As of this writing the latest stable release is apcctrl-3.8.1.  However 
+apcctrl-3.8.2Beta14 has been used with no problems by this author.
 
 
 ===================
@@ -69,8 +69,8 @@ Apcupsd-3.8.2Beta14 has been used with no problems by this author.
 ===================
 
 Obtain the source and unpack it in a suitable place such as /usr/src/.
-Compiler optimizations can be used with Apcupsd.  See Optimization.txt hint
-and the Apcupsd manual for more information.
+Compiler optimizations can be used with apcctrl.  See Optimization.txt hint
+and the apcctrl manual for more information.
 
 ===================
 3.1 Generic
@@ -80,7 +80,7 @@ Run the following command:
 ./configure --prefix=/usr --sbindir=/sbin
 
 This is a basic installation.  If you have a smartups and wish to have a web
-interface to the APC unit's status from your web server see the Apcupsd manual.
+interface to the APC unit's status from your web server see the apcctrl manual.
 You will probably want to run the above commands with additions:
 
 ./configure --prefix=/usr --sbindir=/sbin \
@@ -106,12 +106,12 @@ installed.
 Use the template script in /etc/init.d as a guide to make the boot script.
 
 cd /etc/init.d
-cp template apcupsd
+cp template apcctrl
 
-Now edit the apcupsd file to make the following bootscript:
+Now edit the apcctrl file to make the following bootscript:
 
 #!/bin/sh
-# Begin /etc/init.d/apcupsd
+# Begin /etc/init.d/apcctrl
 #
 # S200 in /etc/rc{2,3,4,5}.d and K990 /etc/rc{0,1,6}.d
 #
@@ -122,19 +122,19 @@ case "$1" in
 		# House keeping if this were a restart from powerfail
 		rm -f /etc/apcctrl/powerfail
 		rm -f /etc/nologin
-		# Start apcupsd
-                echo -n "Starting apcupsd power management ..."
-                loadproc /sbin/apcupsd
+		# Start apcctrl
+                echo -n "Starting apcctrl power management ..."
+                loadproc /sbin/apcctrl
                 ;;
 
         stop)
-                echo -n "Stopping apcupsd power management..."
-                killproc apcupsd
+                echo -n "Stopping apcctrl power management..."
+                killproc apcctrl
                 ;;
 
         reload)
-                echo -n "Reloading apcupsd power management ..."
-                reloadproc apcupsd
+                echo -n "Reloading apcctrl power management ..."
+                reloadproc apcctrl
                 ;;
 
         restart)
@@ -144,7 +144,7 @@ case "$1" in
                 ;;
 
         status)
-                statusproc apcupsd
+                statusproc apcctrl
                 ;;
 
         *)
@@ -154,7 +154,7 @@ case "$1" in
 
 esac
 
-# End /etc/init.d/apcupsd
+# End /etc/init.d/apcctrl
 
 
 =====================
@@ -166,7 +166,7 @@ This poweroff script is needed to shutdown the UPS after the system has halted.
 power returns the UPS will come back on and the system will power up (providing
 your atx bios supports powerup).  
 
-Apcupsd for most distributions modifies the existing halt script.  Rather than
+apcctrl for most distributions modifies the existing halt script.  Rather than
 that route we are making a separate script called UPSdown.
 
 Using a text editor create UPSdown as follows in /etc/init.d:
@@ -182,7 +182,7 @@ Using a text editor create UPSdown as follows in /etc/init.d:
 # See if this is a powerfail situation
 if [ -f /etc/apcctrl/powerfail ]; then
         echo
-        echo "APCUPSD will now power off the UPS"
+        echo "APCCTRL will now power off the UPS"
         echo
         /etc/apcctrl/apccontrol killpower       
         echo
@@ -196,7 +196,7 @@ fi
 =========================
 3.2.3 Symlink the scripts
 =========================
-The apcupsd daemon should be started fairly soon in the boot cycle to provide
+The apcctrl daemon should be started fairly soon in the boot cycle to provide
 protection.  Using three digit symlinks, S200 for my system seems appropriate.
 Use your own judgement here.
 
@@ -208,22 +208,22 @@ halt is S999 then UPSdown would be S998.
 Run the following:
 
 cd /etc/init.d &&
-chmod 754 apcupsd UPSdown &&
+chmod 754 apcctrl UPSdown &&
 cd ../rc0.d &&
-ln -s ../init.d/apcupsd K990apcupsd &&
+ln -s ../init.d/apcctrl K990apcctrl &&
 ln -s ../init.d/UPSdown S998UPSdown &&
 cd ../rc1.d &&
-ln -s ../init.d/apcupsd K990apcupsd &&
+ln -s ../init.d/apcctrl K990apcctrl &&
 cd ../rc2.d &&
-ln -s ../init.d/apcupsd S200apcupsd &&
+ln -s ../init.d/apcctrl S200apcctrl &&
 cd ../rc3.d &&
-ln -s ../init.d/apcupsd S200apcupsd &&
+ln -s ../init.d/apcctrl S200apcctrl &&
 cd ../rc4.d &&
-ln -s ../init.d/apcupsd S200apcupsd &&
+ln -s ../init.d/apcctrl S200apcctrl &&
 cd ../rc5.d &&
-ln -s ../init.d/apcupsd S200apcupsd &&
+ln -s ../init.d/apcctrl S200apcctrl &&
 cd ../rc6.d &&
-ln -s ../init.d/apcupsd K990apcupsd
+ln -s ../init.d/apcctrl K990apcctrl
 
 
 ================
@@ -231,16 +231,16 @@ ln -s ../init.d/apcupsd K990apcupsd
 ================
 
 Our generic configure in  3.1 above placed the configuration file in
-/etc/apcctrl.  This file is called apcctrl.conf.  Pleae consult the apcupsd
+/etc/apcctrl.  This file is called apcctrl.conf.  Pleae consult the apcctrl
 manual to determine the settings for your system and APC model UPS.
 
 ================
 5. Conclusion
 ==============
 The above steps were an attempt to have you quickly provide APC UPS power
-protection to your system using Apcupsd software.  The software allows the
+protection to your system using apcctrl software.  The software allows the
 individual user a lot of options depending on his needs and desires.  For
 example I use the cgi feature to be able to see the status of my UPS from a
 browser.  I use the notification feature to mail the electric company that I
 have loss power.  These and other features along with a description of the
-workings of Apcupsd are fully described in the Apcupsd manual. 
+workings of apcctrl are fully described in the apcctrl manual. 

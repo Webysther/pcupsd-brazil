@@ -2,7 +2,7 @@
 #
 # Copyright (C) 1999-2002 Riccardo Facchetti <riccardo@master.oasi.gpa.it>
 #
-#  for apcupsd release 0.7.6 (2 September 2016) - debian
+#  for apcctrl release 0.8.0 (27 September 2016) - debian
 #
 # platforms/apccontrol.  Generated from apccontrol.in by configure.
 #
@@ -18,36 +18,36 @@
 prefix=/usr
 exec_prefix=${prefix}
 
-APCPID=/var/run/apcupsd.pid
-APCUPSD=/sbin/apcupsd
+APCPID=/var/run/apcctrl.pid
+APCCTRL=/sbin/apcctrl
 SHUTDOWN=/sbin/shutdown
 SCRIPTSHELL=/bin/sh
 SCRIPTDIR=/etc/apcctrl
 WALL=wall
 
 export SYSADMIN=root
-export APCUPSD_MAIL="/usr/bin/mail"
+export APCCTRL_MAIL="/usr/bin/mail"
 if [ -f $SCRIPTDIR/config ]; then . $SCRIPTDIR/config ; fi
 
 #
 # Concatenate all output from this script to the events file
 #  Note, the following kills the script in a power fail situation
 #   where the disks are mounted read-only.
-# exec >>/var/log/apcupsd.events 2>&1
+# exec >>/var/log/apcctrl.events 2>&1
 
 #
 # This piece is to substitute the default behaviour with your own script,
 # perl, or C program.
 # You can customize every single command creating an executable file (may be a
 # script or a compiled program) and calling it the same as the $1 parameter
-# passed by apcupsd to this script.
+# passed by apcctrl to this script.
 #
 # After executing your script, apccontrol continues with the default action.
 # If you do not want apccontrol to continue, exit your script with exit 
 # code 99. E.g. "exit 99".
 #
 # WARNING: the apccontrol file will be overwritten every time you update your
-# apcupsd, doing `make install'. Your own customized scripts will _not_ be
+# apcctrl, doing `make install'. Your own customized scripts will _not_ be
 # overwritten. If you wish to make changes to this file (discouraged), you
 # should change apccontrol.sh.in and then rerun the configure process.
 #
@@ -62,10 +62,10 @@ fi
 
 case "$1" in
     killpower)
-	echo "Apccontrol doing: ${APCUPSD} --killpower on UPS ${2}" | ${WALL}
+	echo "Apccontrol doing: ${APCCTRL} --killpower on UPS ${2}" | ${WALL}
 	sleep 10
-	${APCUPSD} --killpower
-	echo "Apccontrol has done: ${APCUPSD} --killpower on UPS ${2}" | ${WALL}
+	${APCCTRL} --killpower
+	echo "Apccontrol has done: ${APCCTRL} --killpower on UPS ${2}" | ${WALL}
     ;;
     commfailure)
 	echo "Warning communications lost with UPS ${2}" | ${WALL}
@@ -104,11 +104,11 @@ case "$1" in
     ;;
     doreboot)
 	echo "UPS ${2} initiating Reboot Sequence" | ${WALL}
-	${SHUTDOWN} -r now "apcupsd UPS ${2} initiated reboot"
+	${SHUTDOWN} -r now "apcctrl UPS ${2} initiated reboot"
     ;;
     doshutdown)
 	echo "UPS ${2} initiated Shutdown Sequence" | ${WALL}
-	${SHUTDOWN} -h now "apcupsd UPS ${2} initiated shutdown"
+	${SHUTDOWN} -h now "apcctrl UPS ${2} initiated shutdown"
     ;;
     annoyme)
 	echo "Power problems with UPS ${2}. Please logoff." | ${WALL}
@@ -132,7 +132,7 @@ case "$1" in
     ;;
     *)	echo "Usage: ${0##*/} command"
 	echo "	     warning: this script is intended to be launched by"
-	echo "	     apcupsd and should never be launched by users."
+	echo "	     apcctrl and should never be launched by users."
 	exit 1
     ;;
 esac

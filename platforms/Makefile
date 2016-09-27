@@ -14,9 +14,9 @@ install-platform:
       $(call INSTORIG,744,$(DISTNAME)/apccontrol,$(sysconfdir)), \
       $(call INSTORIG,744,apccontrol,$(sysconfdir)))
 	$(if $(HALPOLICYDIR),$(call MKDIR,$(HALPOLICYDIR)))
-	$(if $(HALPOLICYDIR),$(call INSTDATA,644,80-apcupsd-ups-policy.fdi,$(HALPOLICYDIR)))
+	$(if $(HALPOLICYDIR),$(call INSTDATA,644,80-apcctrl-ups-policy.fdi,$(HALPOLICYDIR)))
 
 uninstall-platform:
 	$(call UNINST,$(sysconfdir)/apccontrol)
-	$(if $(HALPOLICYDIR),$(call UNINST,$(HALPOLICYDIR)/80-apcupsd-ups-policy.fdi))
+	$(if $(HALPOLICYDIR),$(call UNINST,$(HALPOLICYDIR)/80-apcctrl-ups-policy.fdi))
 

@@ -6,7 +6,7 @@
 
 /*
  * Copyright (C) 2000-2004 Kern Sibbald
- * Copyright (C) 1999-2001 Riccardo Facchetti <riccardo@apcupsd.org>
+ * Copyright (C) 1999-2001 Riccardo Facchetti <riccardo@apcctrl.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of version 2 of the GNU General

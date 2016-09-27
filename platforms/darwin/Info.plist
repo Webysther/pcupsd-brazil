@@ -11,7 +11,7 @@
 	<key>CFBundleIconFile</key>
 	<string></string>
 	<key>CFBundleIdentifier</key>
-	<string>com.apcupsd.driver.dummy</string>
+	<string>com.apcctrl.driver.dummy</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundlePackageType</key>
@@ -129,7 +129,7 @@
 			<key>idVendor</key>
 			<integer>1309</integer>
 		</dict>
-		<!-- The HP T1500 G3 has been shown to work well with apcupsd -->
+		<!-- The HP T1500 G3 has been shown to work well with apcctrl -->
 		<key>HP T1500 G3</key>
 		<dict>
 			<key>CFBundleIdentifier</key>

@@ -1,7 +1,7 @@
 <html>
 <body link="$0000ff" vlink="$0000ff">
 <?php
-/* apcupsd monitoring script
+/* apcctrl monitoring script
   Copyright April 25, 2005, Rob Kroll, rob@killerbob.ca
 
   Because I don't think I can keep anybody from doing what they want with it, nor would I want to, I'm releasing this script
@@ -9,9 +9,9 @@
   your computer blow up, you're on your own. That said, I sincerely doubt that's even possible.
 
   User-Configurable variables below:
-      $statusfile_location       This is the location of the apcupsd.status file, as found in /etc/apcctrl/apcctrl.conf
+      $statusfile_location       This is the location of the apcctrl.status file, as found in /etc/apcctrl/apcctrl.conf
                                  If this file exists, the graphical parse will be displayed.
-      $logfile_location          This is the location of the apcupsd.events file, as found in /etc/apcctrl/apcctrl.conf
+      $logfile_location          This is the location of the apcctrl.events file, as found in /etc/apcctrl/apcctrl.conf
                                  If this file exists, it will be displayed with most recent entries first.
       $showloglines              By default, this script does not display the entire .events file. This is the number of
                                  lines to display by default. The script generates a link that enables displaying the
@@ -25,8 +25,8 @@
 */
 
 
-$statusfile_location = "/var/log/apcupsd.status";
-$logfile_location = "/var/log/apcupsd.events";
+$statusfile_location = "/var/log/apcctrl.status";
+$logfile_location = "/var/log/apcctrl.events";
 
 $showloglines = 5;
 

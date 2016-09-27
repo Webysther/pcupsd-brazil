@@ -594,7 +594,7 @@
 				<int key="NSWindowBacking">2</int>
 				<string key="NSWindowRect">{{378, 358}, {456, 438}}</string>
 				<int key="NSWTFlags">1677722624</int>
-				<string key="NSWindowTitle">Apcupsd Status</string>
+				<string key="NSWindowTitle">apcctrl Status</string>
 				<string key="NSWindowClass">NSWindow</string>
 				<nil key="NSViewClass"/>
 				<nil key="NSUserInterfaceItemIdentifier"/>
@@ -1000,7 +1000,7 @@
 				<int key="NSWindowBacking">2</int>
 				<string key="NSWindowRect">{{196, 239}, {455, 271}}</string>
 				<int key="NSWTFlags">1677721600</int>
-				<string key="NSWindowTitle">Apcupsd Events</string>
+				<string key="NSWindowTitle">apcctrl Events</string>
 				<string key="NSWindowClass">NSWindow</string>
 				<nil key="NSViewClass"/>
 				<nil key="NSUserInterfaceItemIdentifier"/>

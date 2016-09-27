@@ -315,8 +315,8 @@ configure:5204: $? = 0
 configure:5204: result: yes
 configure:5204: checking for strlcpy
 configure:5204: gcc -o conftest -g -O2  -I/usr/local/include  -L/usr/local/lib64 -L/usr/local/lib conftest.c  >&5
-/tmp/ccaAKymZ.o: In function `main':
-/home/wagner/workspace/apcupsd_brazil/conftest.c:55: undefined reference to `strlcpy'
+/tmp/ccECVssG.o: In function `main':
+/home/wagner/workspace/apcctrl/conftest.c:55: undefined reference to `strlcpy'
 collect2: error: ld returned 1 exit status
 configure:5204: $? = 1
 configure: failed program was:
@@ -381,8 +381,8 @@ configure: failed program was:
 configure:5204: result: no
 configure:5204: checking for strlcat
 configure:5204: gcc -o conftest -g -O2  -I/usr/local/include  -L/usr/local/lib64 -L/usr/local/lib conftest.c  >&5
-/tmp/ccyVuQh2.o: In function `main':
-/home/wagner/workspace/apcupsd_brazil/conftest.c:55: undefined reference to `strlcat'
+/tmp/cc6QXhtJ.o: In function `main':
+/home/wagner/workspace/apcctrl/conftest.c:55: undefined reference to `strlcat'
 collect2: error: ld returned 1 exit status
 configure:5204: $? = 1
 configure: failed program was:
@@ -1603,7 +1603,7 @@ config.status:980: creating platforms/etc/offbattery
 config.status:980: creating platforms/etc/onbattery
 config.status:980: creating platforms/etc/apcctrl.conf
 config.status:980: creating examples/safe.apccontrol
-config.status:980: creating platforms/debian/apcupsd
+config.status:980: creating platforms/debian/apcctrl
 config.status:980: creating platforms/debian/ups-monitor
 config.status:980: creating include/apcconfig.h
 config.status:1155: include/apcconfig.h is unchanged
@@ -1717,7 +1717,7 @@ ac_cv_lib_ICE_IceConnectionNumber=yes
 ac_cv_lib_m_sqrt=yes
 ac_cv_member_struct_tm_tm_zone=yes
 ac_cv_objext=o
-ac_cv_path_APCUPSD_MAIL=/usr/bin/mail
+ac_cv_path_APCCTRL_MAIL=/usr/bin/mail
 ac_cv_path_CP=/bin/cp
 ac_cv_path_ECHO=/bin/echo
 ac_cv_path_EGREP='/bin/grep -E'
@@ -1766,13 +1766,13 @@ ac_cv_type_uid_t=yes
 ## Output variables. ##
 ## ----------------- ##
 
-ABSSRCDIR='/home/wagner/workspace/apcupsd_brazil'
+ABSSRCDIR='/home/wagner/workspace/apcctrl'
 APCACCESS='apcaccess'
 APCAGENT=''
+APCCTRL_MAIL='/usr/bin/mail'
 APCDRVLIBS=' $(topdir)/src/drivers/libdrivers.a $(topdir)/src/drivers/apcsmart/libapcsmartdrv.a $(topdir)/src/drivers/dumb/libdumbdrv.a $(topdir)/src/drivers/net/libnetdrv.a $(topdir)/src/drivers/snmplite/libsnmplitedrv.a $(topdir)/src/drivers/brazil/libbrazildrv.a $(topdir)/src/drivers/pcnet/libpcnetdrv.a $(topdir)/src/drivers/modbus/libmodbusdrv.a'
 APCSMART_DRIVER='apcsmart'
 APCTEST='apctest'
-APCUPSD_MAIL='/usr/bin/mail'
 AR='ar'
 AWK='gawk'
 BG=''
@@ -1787,7 +1787,7 @@ CPPFLAGS=' -I/usr/local/include'
 CROSSTOOLS=''
 CXX='g++'
 CXXFLAGS='-g -O2 -fno-exceptions -fno-rtti -Wall'
-DATE='2 September 2016'
+DATE='27 September 2016'
 DEBUG=''
 DEFS='-DHAVE_CONFIG_H'
 DEPKGS=''
@@ -1829,7 +1829,7 @@ LOCKDIR='/var/lock'
 LOGDIR='/var/log'
 LTLIBOBJS=''
 MAKE='make'
-MKINSTALLDIRS='/home/wagner/workspace/apcupsd_brazil/autoconf/mkinstalldirs'
+MKINSTALLDIRS='/home/wagner/workspace/apcctrl/autoconf/mkinstalldirs'
 MODBUS_DRIVER='modbus'
 MODBUS_USB_DRIVER=''
 MV='/bin/mv'
@@ -1871,7 +1871,7 @@ UPSCABLE='simple'
 UPSTYPE='brazil'
 USB_DRIVER=''
 USB_TYPE=''
-VERSION='0.7.6'
+VERSION='0.8.0'
 WALL='/usr/bin/wall'
 WIN32=''
 WINDRES=''
@@ -1917,7 +1917,7 @@ sbindir='/sbin'
 sharedstatedir='${prefix}/com'
 sysconfdir='/etc/apcctrl'
 target_alias=''
-topdir='/home/wagner/workspace/apcupsd_brazil'
+topdir='/home/wagner/workspace/apcctrl'
 usbcfg=''
 
 ## ----------- ##

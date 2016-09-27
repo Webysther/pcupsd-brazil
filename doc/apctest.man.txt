@@ -1,7 +1,7 @@
 APCTEST(8)		  BSD System Manager's Manual		    APCTEST(8)
 
 NAME
-     apctest — apcupsd(8) test program
+     apctest — apcctrl(8) test program
 
 SYNOPSIS
      apctest
@@ -9,7 +9,7 @@ SYNOPSIS
 DESCRIPTION
      apctest is a program that enables the running of certain low-level tests
      to check the operation of the attached simple signalling American Power
-     Conversion Corp (APC) UPS and to check that your apcupsd(8) configuration
+     Conversion Corp (APC) UPS and to check that your apcctrl(8) configuration
      is correctly setup and can establish communication with the UPS.
 
      For an APC UPS operating in APC smart protocol mode, apctest enables the
@@ -18,7 +18,7 @@ DESCRIPTION
      also  provides a simple TTY chat mode which allows direct interaction
      with the UPS via the APC smart protocol.  For details of this protocol
      and the available commands, refer to the detailed "APC Smart Protocol"
-     section in the apcupsd manual.
+     section in the apcctrl manual.
 
      IMPORTANT: Before running apctest
 
@@ -26,7 +26,7 @@ DESCRIPTION
 	 in the apcctrl.conf(5) configuration file have been set appropri‐
 	 ately; and
 
-     ·	 Shutdown apcupsd if it is running. You cannot run both apcupsd and
+     ·	 Shutdown apcctrl if it is running. You cannot run both apcctrl and
 	 apctest at the same time.
 
      When run, apctest displays a menu of options which are different depend‐
@@ -117,7 +117,7 @@ SERIAL PORT (SMART PROTOCOL MODE)
      Selecting this option probes the UPS for all EEPROM configuration vari‐
      able values known to apctest and displays them in rather raw format. This
      output can be useful for providing technical support if you are having
-     problems with the behaviour of the UPS or apcupsd(8).
+     problems with the behaviour of the UPS or apcctrl(8).
 
    Option 2) Perform a Battery Runtime Calibration
      This performs a battery runtime calibration. This can only be performed
@@ -253,32 +253,32 @@ SERIAL PORT (SIMPLE SIGNALLING MODE)
 
    Option 1) Test 1 - normal mode
      The test result depends on the model of UPS and type of cable being used.
-     Refer to the "Using apctest on Serial-Line UPSses" section in the apcupsd
+     Refer to the "Using apctest on Serial-Line UPSses" section in the apcctrl
      manual for details.
 
    Option 2) Test 2 - no cable
      The test result depends on the model of UPS and type of cable being used.
-     Refer to the "Using apctest on Serial-Line UPSses" section in the apcupsd
+     Refer to the "Using apctest on Serial-Line UPSses" section in the apcctrl
      manual for details.
 
    Option 3) Test 3 - no power
      The test result depends on the model of UPS and type of cable being used.
-     Refer to the "Using apctest on Serial-Line UPSses" section in the apcupsd
+     Refer to the "Using apctest on Serial-Line UPSses" section in the apcctrl
      manual for details.
 
    Option 4) Test 4 - low battery (requires Test 3 first)
      The test result depends on the model of UPS and type of cable being used.
-     Refer to the "Using apctest on Serial-Line UPSses" section in the apcupsd
+     Refer to the "Using apctest on Serial-Line UPSses" section in the apcctrl
      manual for details.
 
    Option 5) Test 5 - battery exhausted
      The test result depends on the model of UPS and type of cable being used.
-     Refer to the "Using apctest on Serial-Line UPSses" section in the apcupsd
+     Refer to the "Using apctest on Serial-Line UPSses" section in the apcctrl
      manual for details.
 
    Option 6) Test 6 - kill UPS power
      The test result depends on the model of UPS and type of cable being used.
-     Refer to the "Using apctest on Serial-Line UPSses" section in the apcupsd
+     Refer to the "Using apctest on Serial-Line UPSses" section in the apcctrl
      manual for details.
 
    Option 7) Test 7 - run tests 1 through 5
@@ -294,10 +294,10 @@ FILES
      apctest.out transcript of the apctest session
 
 SEE ALSO
-     apcctrl.conf(5), apcupsd(8).
+     apcctrl.conf(5), apcctrl(8).
 
-     The HTML apcupsd manual installed on your system or available online at
-     http://www.apcupsd.org/
+     The HTML apcctrl manual installed on your system or available online at
+     http://www.apcctrl.org/
 
 AUTHORS
    This page

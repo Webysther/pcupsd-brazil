@@ -673,10 +673,10 @@ bool PcnetUpsDriver::Open()
    time(&_datatime);
 
    /*
-    * Note, we set _ups->fd here so the "core" of apcupsd doesn't
+    * Note, we set _ups->fd here so the "core" of apcctrl doesn't
     * think we are a slave, which is what happens when it is -1.
     * (ADK: Actually this only appears to be true for apctest as
-    * apcupsd proper uses the UPS_slave flag.)
+    * apcctrl proper uses the UPS_slave flag.)
     * Internally, we use the fd in our own private space
     */
    _ups->fd = 1;
@@ -737,7 +737,7 @@ bool PcnetUpsDriver::get_capabilities()
  * Read UPS info that remains unchanged -- e.g. transfer
  * voltages, shutdown delay, ...
  *
- * This routine is called once when apcupsd is starting
+ * This routine is called once when apcctrl is starting
  */
 bool PcnetUpsDriver::read_static_data()
 {

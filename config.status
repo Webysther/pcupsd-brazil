@@ -393,7 +393,7 @@ on `(hostname || uname -n) 2>/dev/null | sed 1q`
 "
 
 # Files that config.status was made for.
-config_files="    autoconf/variables.mak    platforms/apccontrol    platforms/etc/changeme    platforms/etc/commfailure    platforms/etc/commok    platforms/etc/offbattery    platforms/etc/onbattery    platforms/etc/apcctrl.conf    examples/safe.apccontrol          platforms/debian/apcupsd       platforms/debian/ups-monitor"
+config_files="    autoconf/variables.mak    platforms/apccontrol    platforms/etc/changeme    platforms/etc/commfailure    platforms/etc/commok    platforms/etc/offbattery    platforms/etc/onbattery    platforms/etc/apcctrl.conf    examples/safe.apccontrol          platforms/debian/apcctrl       platforms/debian/ups-monitor"
 config_headers=" include/apcconfig.h:autoconf/config.h.in"
 
 ac_cs_usage="\
@@ -433,7 +433,7 @@ Copyright (C) 2012 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/home/wagner/workspace/apcupsd_brazil'
+ac_pwd='/home/wagner/workspace/apcctrl'
 srcdir='.'
 INSTALL='/usr/bin/install -c'
 AWK='gawk'
@@ -621,7 +621,7 @@ S["DISTDIR"]="debian"
 S["EXTRAOBJ"]=""
 S["LIBEXTRAOBJ"]=""
 S["EXTRADEFS"]=""
-S["MKINSTALLDIRS"]="/home/wagner/workspace/apcupsd_brazil/autoconf/mkinstalldirs"
+S["MKINSTALLDIRS"]="/home/wagner/workspace/apcctrl/autoconf/mkinstalldirs"
 S["SYSCONFDIR"]=""
 S["CGIBIN"]="/etc/apcctrl"
 S["GD_LIBS"]=""
@@ -674,7 +674,7 @@ S["RM"]="/bin/rm"
 S["RANLIB"]="ranlib"
 S["SCRIPTSHELL"]="/bin/sh"
 S["WALL"]="/usr/bin/wall"
-S["APCUPSD_MAIL"]="/usr/bin/mail"
+S["APCCTRL_MAIL"]="/usr/bin/mail"
 S["SHUTDOWN"]="/sbin/shutdown"
 S["APCTEST"]="apctest"
 S["SMTP"]="smtp"
@@ -714,11 +714,11 @@ S["build_cpu"]="x86_64"
 S["build"]="x86_64-unknown-linux-gnu"
 S["FALSEPRG"]="/bin/false"
 S["TRUEPRG"]="/bin/true"
-S["DATE"]="2 September 2016"
-S["VERSION"]="0.7.6"
+S["DATE"]="27 September 2016"
+S["VERSION"]="0.8.0"
 S["TOP_DIR"]="/home/wagner/workspace"
-S["topdir"]="/home/wagner/workspace/apcupsd_brazil"
-S["ABSSRCDIR"]="/home/wagner/workspace/apcupsd_brazil"
+S["topdir"]="/home/wagner/workspace/apcctrl"
+S["ABSSRCDIR"]="/home/wagner/workspace/apcctrl"
 S["target_alias"]=""
 S["host_alias"]=""
 S["build_alias"]=""

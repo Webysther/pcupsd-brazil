@@ -40,7 +40,7 @@ apcctrl_mingw()
 apcctrl_svn()
 {
 	echo "svn..."
-	svn checkout http://svn.code.sf.net/p/apcupsd-brazil/svn/tags/${TAG} ${APCCTRL_PATH} &>.out.svn
+	svn checkout http://svn.code.sf.net/p/apcctrl-brazil/svn/tags/${TAG} ${APCCTRL_PATH} &>.out.svn
 	if [[ $? == "0" ]]; then
 		return 0;
 	fi;
@@ -54,11 +54,11 @@ apcctrl_configure()
 	echo "configure..."
 	cd ${APCCTRL_PATH}
 	CONFIG=$(./configure --host=mingw32 \
-	       --prefix=/apcupsd \
-	       --sbindir=/apcupsd/bin \
-	       --sysconfdir=/apcupsd/etc/apcctrl \
-	       --with-pid-dir=/apcupsd/etc/apcctrl \
-	       --mandir=/apcupsd \
+	       --prefix=/apcctrl \
+	       --sbindir=/apcctrl/bin \
+	       --sysconfdir=/apcctrl/etc/apcctrl \
+	       --with-pid-dir=/apcctrl/etc/apcctrl \
+	       --mandir=/apcctrl \
 	       --enable-net \
 	       --disable-apcsmart \
 	       --disable-dumb \
@@ -97,7 +97,7 @@ apcctrl_installer()
 {
 	echo "installer..."
 	cd ${APCCTRL_PATH}/platforms/mingw/
-	make winapcupsd.exe &>.out.installer
+	make winapcctrl.exe &>.out.installer
 	if [[ $? == "0" ]]; then
 		return 0;
 	fi;
@@ -134,12 +134,12 @@ fi;
 
 REMOTE_USER="wagner"
 REMOTE_SERVER="192.168.22.4"
-REMOTE_PATH=/home/wagner/workspace/apcupsd_brazil_tars
+REMOTE_PATH=/home/wagner/workspace/apcctrl_brazil_tars
 
-APCCTRL_PATH="/home/wagner/apcupsd-brazil/apcupsd-brazil-${TAG}"
+APCCTRL_PATH="/home/wagner/apcctrl-brazil/apcctrl-brazil-${TAG}"
 
 PATH_OLD="${PATH}"
-export PATH="/home/wagner/apcupsd-brazil/cross-tools/mingw32/bin:${PATH}"
+export PATH="/home/wagner/apcctrl-brazil/cross-tools/mingw32/bin:${PATH}"
 
 echo -en "APCCTRL_PATH=${APCCTRL_PATH}\n"
 echo -en "PATH=${PATH}\n\n"

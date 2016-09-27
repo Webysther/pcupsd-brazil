@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# shell script to build apcupsd rpm release
+# shell script to build apcctrl rpm release
 # copy this script into a working directory with the src rpm to build and execute
 # 19 Aug 2006 D. Scott Barninger
 
@@ -61,7 +61,7 @@ GAPCMON=1
 
 ############################################################################################
 
-SRPM=${SRPMDIR}apcupsd-$VERSION-$RELEASE.src.rpm
+SRPM=${SRPMDIR}apcctrl-$VERSION-$RELEASE.src.rpm
 
 echo Building packages for "$PLATFORM"...
 sleep 2
@@ -77,18 +77,18 @@ if [ "$GAPCMON" = "0" ]; then
 fi
 
 # delete any debuginfo packages built
-rm -f ${RPMDIR}/apcupsd*debug*
+rm -f ${RPMDIR}/apcctrl*debug*
 
 # copy files to cwd and rename files to final upload names
 
-mv -f ${RPMDIR}/apcupsd-${VERSION}-${RELEASE}.${ARCH}.rpm \
-./apcupsd-${VERSION}-${RELEASE}.${FILENAME}.${ARCH}.rpm
+mv -f ${RPMDIR}/apcctrl-${VERSION}-${RELEASE}.${ARCH}.rpm \
+./apcctrl-${VERSION}-${RELEASE}.${FILENAME}.${ARCH}.rpm
 
-mv -f ${RPMDIR}/apcupsd-multimon-${VERSION}-${RELEASE}.${ARCH}.rpm \
-./apcupsd-multimon-${VERSION}-${RELEASE}.${FILENAME}.${ARCH}.rpm
+mv -f ${RPMDIR}/apcctrl-multimon-${VERSION}-${RELEASE}.${ARCH}.rpm \
+./apcctrl-multimon-${VERSION}-${RELEASE}.${FILENAME}.${ARCH}.rpm
 
-mv -f ${RPMDIR}/apcupsd-gapcmon-${VERSION}-${RELEASE}.${ARCH}.rpm \
-./apcupsd-gapcmon-${VERSION}-${RELEASE}.${FILENAME}.${ARCH}.rpm
+mv -f ${RPMDIR}/apcctrl-gapcmon-${VERSION}-${RELEASE}.${ARCH}.rpm \
+./apcctrl-gapcmon-${VERSION}-${RELEASE}.${FILENAME}.${ARCH}.rpm
 
 # now sign the packages
 if [ "$SIGN" = "1" ]; then

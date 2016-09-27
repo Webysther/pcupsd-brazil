@@ -10,7 +10,7 @@
 # NOTE: Assumes Linux-2.6.x kernel with CPUFREQ 
 # support for your chipset. 
 SYSADMIN=root
-APCUPSD_MAIL="/bin/mail"
+APCCTRL_MAIL="/bin/mail"
 
 # Iterate over all CPUs, enabling the userspace governor
 # and programming the current clock speed to the maximum.
@@ -37,6 +37,6 @@ MSG="$HOSTNAME Power has returned"
    done
    echo " "
    /sbin/apcaccess status
-) | $APCUPSD_MAIL -s "$MSG" $SYSADMIN
+) | $APCCTRL_MAIL -s "$MSG" $SYSADMIN
 exit 0
 

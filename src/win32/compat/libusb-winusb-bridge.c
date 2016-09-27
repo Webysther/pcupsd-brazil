@@ -2,7 +2,7 @@
  * libusb-winusb-bridge.c
  *
  * Simple backend for libusb using MS WinUsb. Only the basic functions
- * necessary for apcupsd are implemented, although the others could be added
+ * necessary for apcctrl are implemented, although the others could be added
  * fairly easily.
  */
 
@@ -70,9 +70,9 @@ DLL_DECLARE(WINAPI, BOOL, WinUsb_AbortPipe,
 DLL_DECLARE(WINAPI, BOOL, WinUsb_FlushPipe,
             (WINUSB_INTERFACE_HANDLE, UCHAR));
 
-// GUID for Apcupsd-owned UPSes, as specified in our INF file
+// GUID for apcctrl-owned UPSes, as specified in our INF file
 // Binary equivalent of {8c534620-f7e6-11de-8a39-0800200c9a66}
-GUID APCUPSD_DEVICE_GUID =
+GUID APCCTRL_DEVICE_GUID =
 { 
    0x8c534620,
    0xf7e6,
@@ -146,7 +146,7 @@ int usb_find_devices(void)
 {
    // Get the set of device interfaces that have been matched by our INF
    HDEVINFO deviceInfo = SetupDiGetClassDevs(
-      &APCUPSD_DEVICE_GUID, NULL, NULL, DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
+      &APCCTRL_DEVICE_GUID, NULL, NULL, DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
    if (!deviceInfo)
    {
       return 0;
@@ -161,7 +161,7 @@ int usb_find_devices(void)
       SP_DEVICE_INTERFACE_DATA interfaceData;
       interfaceData.cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
       if (!SetupDiEnumDeviceInterfaces(
-            deviceInfo, NULL, &APCUPSD_DEVICE_GUID, devidx++, &interfaceData))
+            deviceInfo, NULL, &APCCTRL_DEVICE_GUID, devidx++, &interfaceData))
       {
          break;
       }

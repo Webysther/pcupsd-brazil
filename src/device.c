@@ -25,7 +25,7 @@
  */
 
 /*    
- * This is a sort of helper routine between apcupsd core and the drivers.
+ * This is a sort of helper routine between apcctrl core and the drivers.
  * The raw calls into the drivers are through function pointers in the 
  * ups device structure, and are #defined to the following:
  *

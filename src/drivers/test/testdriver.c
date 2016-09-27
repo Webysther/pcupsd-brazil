@@ -1,7 +1,7 @@
 /*
  * testdriver.c
  *
- * Interface for apcupsd to the Test driver.
+ * Interface for apcctrl to the Test driver.
  */
 
 /*
@@ -92,7 +92,7 @@ bool TestUpsDriver::get_capabilities()
  * Read UPS info that remains unchanged -- e.g. transfer
  * voltages, shutdown delay, ...
  *
- * This routine is called once when apcupsd is starting
+ * This routine is called once when apcctrl is starting
  */
 bool TestUpsDriver::read_static_data()
 {
@@ -154,7 +154,7 @@ bool TestUpsDriver::read_volatile_data()
 
    write_lock(_ups);
 
-   /* UPS_STATUS -- this is the most important status for apcupsd */
+   /* UPS_STATUS -- this is the most important status for apcctrl */
 
    /* No APC Status value, well, fabricate one */
    _ups->Status = 0;

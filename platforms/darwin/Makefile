@@ -9,60 +9,60 @@ all-uninstall: uninstall-darwin
 install-darwin:
 	$(call DISTINST,Darwin Mac OS X)
 	$(call MKDIR,/Library/LaunchDaemons)
-	$(call INSTDATA,644,org.apcupsd.apcupsd.plist,/Library/LaunchDaemons)
-	-$(V)chown root:wheel $(DESTDIR)/Library/LaunchDaemons/org.apcupsd.apcupsd.plist
-	$(call INSTDATA,755,apcupsd-uninstall,/sbin)
-	$(call INSTDATA,755,apcupsd-start,/sbin)
+	$(call INSTDATA,644,org.apcctrl.apcctrl.plist,/Library/LaunchDaemons)
+	-$(V)chown root:wheel $(DESTDIR)/Library/LaunchDaemons/org.apcctrl.apcctrl.plist
+	$(call INSTDATA,755,apcctrl-uninstall,/sbin)
+	$(call INSTDATA,755,apcctrl-start,/sbin)
 	@echo "================================================="
 	@echo " "
-	@echo "apcupsd script installation for MacOS X (Darwin) complete." 
+	@echo "apcctrl script installation for MacOS X (Darwin) complete." 
 	@echo " "
 	@echo "You should now edit $(DESTDIR)/$(sysconfdir)/apcctrl.conf to correspond"
-	@echo "to your setup then start the apcupsd daemon with:"
+	@echo "to your setup then start the apcctrl daemon with:"
 	@echo " "
-	@echo "   sudo launchctl load /Library/LaunchDaemons/org.apcupsd.apcupsd.plist"
+	@echo "   sudo launchctl load /Library/LaunchDaemons/org.apcctrl.apcctrl.plist"
 	@echo " "
 	@echo "Thereafter when you reboot, it will be stopped and started"
 	@echo "automatically."
 	@echo " "
-	@if [ -f $(DESTDIR)/$(sysconfdir)/apcupsd ] ; then \
-		echo "WARNING: Old startup script $(DESTDIR)/$(sysconfdir)/apcupsd was renamed to"; \
-		echo "         $(DESTDIR)/$(sysconfdir)/apcupsd.obsolete. Be sure to remove any";   \
+	@if [ -f $(DESTDIR)/$(sysconfdir)/apcctrl ] ; then \
+		echo "WARNING: Old startup script $(DESTDIR)/$(sysconfdir)/apcctrl was renamed to"; \
+		echo "         $(DESTDIR)/$(sysconfdir)/apcctrl.obsolete. Be sure to remove any";   \
 		echo "         references to that script that you may have manually";    \
-		echo "         added to the system init scripts. Apcupsd startup is";    \
+		echo "         added to the system init scripts. apcctrl startup is";    \
 		echo "         now managed via SystemStarter, making the old script";    \
 		echo "         obsolete.";                                               \
 		echo " ";                                                                \
-		mv $(DESTDIR)/$(sysconfdir)/apcupsd $(DESTDIR)/$(sysconfdir)/apcupsd.obsolete;                 \
+		mv $(DESTDIR)/$(sysconfdir)/apcctrl $(DESTDIR)/$(sysconfdir)/apcctrl.obsolete;                 \
 	fi
 	@echo "================================================="
 
 install-usb:
-	$(call MKDIR,/System/Library/Extensions/ApcupsdDummy.kext/Contents)
-	-$(V)chown root:wheel $(DESTDIR)/System/Library/Extensions/ApcupsdDummy.kext
-	-$(V)chown root:wheel $(DESTDIR)/System/Library/Extensions/ApcupsdDummy.kext/Contents
-	-$(V)chmod 755 $(DESTDIR)/System/Library/Extensions/ApcupsdDummy.kext
-	-$(V)chmod 755 $(DESTDIR)/System/Library/Extensions/ApcupsdDummy.kext/Contents
-	$(call INSTDATA,644,Info.plist,/System/Library/Extensions/ApcupsdDummy.kext/Contents)
-	-$(V)chown root:wheel $(DESTDIR)/System/Library/Extensions/ApcupsdDummy.kext/Contents/Info.plist
+	$(call MKDIR,/System/Library/Extensions/apcctrlDummy.kext/Contents)
+	-$(V)chown root:wheel $(DESTDIR)/System/Library/Extensions/apcctrlDummy.kext
+	-$(V)chown root:wheel $(DESTDIR)/System/Library/Extensions/apcctrlDummy.kext/Contents
+	-$(V)chmod 755 $(DESTDIR)/System/Library/Extensions/apcctrlDummy.kext
+	-$(V)chmod 755 $(DESTDIR)/System/Library/Extensions/apcctrlDummy.kext/Contents
+	$(call INSTDATA,644,Info.plist,/System/Library/Extensions/apcctrlDummy.kext/Contents)
+	-$(V)chown root:wheel $(DESTDIR)/System/Library/Extensions/apcctrlDummy.kext/Contents/Info.plist
 	$(call UNINST,/System/Library/Extensions.mkext)
 	$(call UNINST,/System/Library/Extensions.kextcache)
 	@echo "================================================="
 	@echo " "
 	@echo "Driver installation complete." 
-	@echo "You must REBOOT before running apcupsd."
+	@echo "You must REBOOT before running apcctrl."
 	@echo " "
 	@echo "================================================="
 
 uninstall-darwin:
 	$(call DISTUNINST,Darwin Mac OS X)
-	-$(V)launchctl remove org.apcupsd.apcupsd
-	-$(call UNINST,/System/Library/Extensions/ApcupsdDummy.kext)
+	-$(V)launchctl remove org.apcctrl.apcctrl
+	-$(call UNINST,/System/Library/Extensions/apcctrlDummy.kext)
 	-$(call UNINST,/System/Library/Extensions.mkext)
 	-$(call UNINST,/System/Library/Extensions.kextcache)
-	-$(call UNINST,/sbin/apcupsd-uninstall)
-	-$(call UNINST,/sbin/apcupsd-start)
-	-$(call UNINST,/Library/LaunchDaemons/org.apcupsd.apcupsd.plist)
+	-$(call UNINST,/sbin/apcctrl-uninstall)
+	-$(call UNINST,/sbin/apcctrl-start)
+	-$(call UNINST,/Library/LaunchDaemons/org.apcctrl.apcctrl.plist)
 	@echo "================================================="
 	@echo " "
 	@echo "Please REBOOT to complete uninstall." 
@@ -70,61 +70,61 @@ uninstall-darwin:
 	@echo "================================================="
 
 # Root of package build sandbox
-PKGROOT=/tmp/apcupsd-pkg
+PKGROOT=/tmp/apcctrl-pkg
 
 #
 # Identity preferences for signing keys, set via Keychain Access utility or on
 # command line using 'security set-identity-preference'
 #
-# APCUPSD_CODE_SIGNING - Code signing key
-# APCUPSD_PACKAGE_SIGNING - Package signing key
+# APCCTRL_CODE_SIGNING - Code signing key
+# APCCTRL_PACKAGE_SIGNING - Package signing key
 #
 # codesign searches by identity preference automatically
-CODEKEY := APCUPSD_CODE_SIGNING
+CODEKEY := APCCTRL_CODE_SIGNING
 # productsign needs common name string, so look it up
 PKGKEY := $(shell \
-   security get-identity-preference -s APCUPSD_PACKAGE_SIGNING -c \
+   security get-identity-preference -s APCCTRL_PACKAGE_SIGNING -c \
       | grep "common name" | cut -d\" -f2)
 
 # Loose executables to sign
-EXES := sbin/apcupsd sbin/apcaccess sbin/apctest sbin/smtp
+EXES := sbin/apcctrl sbin/apcaccess sbin/apctest sbin/smtp
 
-# Make apcupsd installation package
-apcupsd.pkg:
+# Make apcctrl installation package
+apcctrl.pkg:
 	rm -rf $(PKGROOT)
 	mkdir $(PKGROOT)
-	mkdir $(PKGROOT)/Apcupsd
-	mkdir $(PKGROOT)/Apcupsd.Resources
-	mkdir $(PKGROOT)/Apcupsd.Scripts
-	mkdir $(PKGROOT)/Apcupsd.Root
+	mkdir $(PKGROOT)/apcctrl
+	mkdir $(PKGROOT)/apcctrl.Resources
+	mkdir $(PKGROOT)/apcctrl.Scripts
+	mkdir $(PKGROOT)/apcctrl.Root
 	mkdir $(PKGROOT)/Apcagent.Scripts
-	( cd $(topdir) && DESTDIR=$(PKGROOT)/Apcupsd.Root make install )
-	cp $(topdir)/ReleaseNotes $(PKGROOT)/Apcupsd.Resources
-	cp $(topdir)/COPYING $(PKGROOT)/Apcupsd.Resources
-	cp Welcome.txt $(PKGROOT)/Apcupsd.Resources
-	cp Conclusion.txt $(PKGROOT)/Apcupsd.Resources
-	cp ApcupsdDaemon.preflight $(PKGROOT)/Apcupsd.Scripts/preinstall
-	cp ApcupsdDaemon.postflight $(PKGROOT)/Apcupsd.Scripts/postinstall
+	( cd $(topdir) && DESTDIR=$(PKGROOT)/apcctrl.Root make install )
+	cp $(topdir)/ReleaseNotes $(PKGROOT)/apcctrl.Resources
+	cp $(topdir)/COPYING $(PKGROOT)/apcctrl.Resources
+	cp Welcome.txt $(PKGROOT)/apcctrl.Resources
+	cp Conclusion.txt $(PKGROOT)/apcctrl.Resources
+	cp apcctrlDaemon.preflight $(PKGROOT)/apcctrl.Scripts/preinstall
+	cp apcctrlDaemon.postflight $(PKGROOT)/apcctrl.Scripts/postinstall
 	cp apcagent.postinstall $(PKGROOT)/Apcagent.Scripts/postinstall
-	-chown root:wheel $(PKGROOT)/Apcupsd.Root/Library
-	-chown root:wheel $(PKGROOT)/Apcupsd.Root/Library/LaunchDaemons
-	-chmod 1775 $(PKGROOT)/Apcupsd.Root/Library
-	-chmod 0775 $(PKGROOT)/Apcupsd.Root/Library/LaunchDaemons
-	-codesign --sign $(CODEKEY) --timestamp --verbose --force --prefix com.apcupsd. $(addprefix $(PKGROOT)/Apcupsd.Root/,$(EXES)) && \
-      codesign --verify --verbose $(addprefix $(PKGROOT)/Apcupsd.Root/,$(EXES))
-	-codesign --sign $(CODEKEY) --timestamp --verbose --force $(PKGROOT)/Apcupsd.Root/Applications/apcagent.app && \
-      codesign --verify --verbose $(PKGROOT)/Apcupsd.Root/Applications/apcagent.app
-	pkgbuild --root $(PKGROOT)/Apcupsd.Root/Applications \
-      --identifier com.apcupsd.apcagent --version $(VERSION) \
+	-chown root:wheel $(PKGROOT)/apcctrl.Root/Library
+	-chown root:wheel $(PKGROOT)/apcctrl.Root/Library/LaunchDaemons
+	-chmod 1775 $(PKGROOT)/apcctrl.Root/Library
+	-chmod 0775 $(PKGROOT)/apcctrl.Root/Library/LaunchDaemons
+	-codesign --sign $(CODEKEY) --timestamp --verbose --force --prefix com.apcctrl. $(addprefix $(PKGROOT)/apcctrl.Root/,$(EXES)) && \
+      codesign --verify --verbose $(addprefix $(PKGROOT)/apcctrl.Root/,$(EXES))
+	-codesign --sign $(CODEKEY) --timestamp --verbose --force $(PKGROOT)/apcctrl.Root/Applications/apcagent.app && \
+      codesign --verify --verbose $(PKGROOT)/apcctrl.Root/Applications/apcagent.app
+	pkgbuild --root $(PKGROOT)/apcctrl.Root/Applications \
+      --identifier com.apcctrl.apcagent --version $(VERSION) \
       --install-location /Applications --scripts $(PKGROOT)/Apcagent.Scripts \
       --component-plist component.plist $(PKGROOT)/apcagent.pkg
-	rm -rf $(PKGROOT)/Apcupsd.Root/Applications
-	pkgbuild --root $(PKGROOT)/Apcupsd.Root \
-      --identifier com.apcupsd.apcupsd --version $(VERSION) \
-      --install-location / --scripts $(PKGROOT)/Apcupsd.Scripts \
-      $(PKGROOT)/apcupsd.pkg
-	productbuild --distribution apcupsd.dist --package-path $(PKGROOT) \
-      --resources $(PKGROOT)/Apcupsd.Resources --identifier org.apcupsd.apcupsd \
-      --version $(VERSION) $(PKGROOT)/Apcupsd-$(VERSION).pkg
-	-productsign --timestamp --sign "$(PKGKEY)" $(PKGROOT)/Apcupsd-$(VERSION).pkg $(PKGROOT)/Apcupsd/Apcupsd-$(VERSION).pkg
-	hdiutil create -ov -fs HFS+ -srcfolder $(PKGROOT)/Apcupsd -volname Apcupsd-$(VERSION) Apcupsd-$(VERSION).dmg
+	rm -rf $(PKGROOT)/apcctrl.Root/Applications
+	pkgbuild --root $(PKGROOT)/apcctrl.Root \
+      --identifier com.apcctrl.apcctrl --version $(VERSION) \
+      --install-location / --scripts $(PKGROOT)/apcctrl.Scripts \
+      $(PKGROOT)/apcctrl.pkg
+	productbuild --distribution apcctrl.dist --package-path $(PKGROOT) \
+      --resources $(PKGROOT)/apcctrl.Resources --identifier org.apcctrl.apcctrl \
+      --version $(VERSION) $(PKGROOT)/apcctrl-$(VERSION).pkg
+	-productsign --timestamp --sign "$(PKGKEY)" $(PKGROOT)/apcctrl-$(VERSION).pkg $(PKGROOT)/apcctrl/apcctrl-$(VERSION).pkg
+	hdiutil create -ov -fs HFS+ -srcfolder $(PKGROOT)/apcctrl -volname apcctrl-$(VERSION) apcctrl-$(VERSION).dmg

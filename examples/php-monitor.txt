@@ -5,7 +5,7 @@ To: Gerry Kroll <g.kroll@keldine.ca>
 CC: Kern Sibbald <kern@sibbald.com>,
  gkroll@killerbob.ca,
  Adam Kropelin <adam@kroptech.com>
-Subject: Re: apcupsd
+Subject: Re: apcctrl
 
 And here it is again, with a logic fix and some handling for events I 
 hadn't tested yet. (behaviour when the battery dies completely)
@@ -18,7 +18,7 @@ Gerry Kroll wrote:
 > Kern:
 > Sorry, here's the file again.
 >
-> The attachment is now a ZIP file, apcupsd_rk.zip containing index.php.
+> The attachment is now a ZIP file, apcctrl_rk.zip containing index.php.
 >
 > I hope that's satisfactory.
 >
@@ -46,8 +46,8 @@ Gerry Kroll wrote:
 >>> glad
 >>> that I was able to find it.
 >>>
->>> That said, I've written a php script that parses the apcupsd.events and
->>> apcupsd.status files, and displays the most important information for
+>>> That said, I've written a php script that parses the apcctrl.events and
+>>> apcctrl.status files, and displays the most important information for
 >>> the user. I thought you folks might like to include it with the
 >>> distribution, as it allows for web-based monitoring of the UPS status.
 >>>
@@ -59,5 +59,5 @@ Gerry Kroll wrote:
 >>>   
 >>
 
-Included file is in apcupsd-source/examples/index.php
+Included file is in apcctrl-source/examples/index.php
 

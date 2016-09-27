@@ -19,7 +19,7 @@
 /*
  * If RECONNECT is defined, megaclient will disconnect
  *  and reconnect for every request (iteration), which is the normal
- *  way that apcupsd is currently accessed.
+ *  way that apcctrl is currently accessed.
  *
  * If RECONNECT is not defined, a single connection
  *  is made with multiple requests.
@@ -140,7 +140,7 @@ int main(int argc, char *argv[])
 #else /* HAVE_NISLIB */
 
 int main(int argc, char *argv[]) {
-    printf("Sorry, NIS code is not compiled in apcupsd.\n");
+    printf("Sorry, NIS code is not compiled in apcctrl.\n");
     return 1;
 }
 

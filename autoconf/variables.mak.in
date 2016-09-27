@@ -7,7 +7,7 @@
 
 #
 # package version
-PACKAGE = apcupsd
+PACKAGE = apcctrl
 DISTNAME = @DISTNAME@
 DISTVER = @DISTVER@
 VERSION = @VERSION@

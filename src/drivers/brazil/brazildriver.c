@@ -1,7 +1,7 @@
 /*
  * brasildriver.c
  *
- * Interface for apcupsd to the brazil driver.
+ * Interface for apcctrl to the brazil driver.
  */
 
 /*
@@ -552,7 +552,7 @@ bool BrazilUpsDriver::get_capabilities()
  * Read UPS info that remains unchanged -- e.g. transfer
  * voltages, shutdown delay, ...
  *
- * This routine is called once when apcupsd is starting
+ * This routine is called once when apcctrl is starting
  */
 bool BrazilUpsDriver::read_static_data()
 {

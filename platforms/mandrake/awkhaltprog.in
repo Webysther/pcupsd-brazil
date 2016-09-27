@@ -1,8 +1,8 @@
 #
-# Awk program to insert the necessary apcupsd script in
+# Awk program to insert the necessary apcctrl script in
 # to a halt script.
 #
-# Suff left over from a previous apcupsd, remove it
+# Suff left over from a previous apcctrl, remove it
 /^# See if this is a powerfail situation\./ {
    do {
       getline 
@@ -11,17 +11,17 @@
 }
 # We insert our code just before this line
 /^# Now halt or reboot\./ {
-   print "# See if this is a powerfail situation.				# ***apcupsd***"
-   print "if [ -f @PWRFAILDIR@/powerfail ]; then				# ***apcupsd***"
-   print "   echo								# ***apcupsd***"
-   print "   echo \"APCUPSD will now power off the UPS\"			  # ***apcupsd***"
-   print "   echo								# ***apcupsd***"
-   print "   @sysconfdir@/apccontrol killpower					# ***apcupsd***"
-   print "   echo								# ***apcupsd***"
-   print "   echo \"Please ensure that the UPS has powered off before rebooting\" # ***apcupsd***"
-   print "   echo \"Otherwise, the UPS may cut the power during the reboot!!!\"   # ***apcupsd***"
-   print "   echo								# ***apcupsd***"
-   print "fi									# ***apcupsd***"
+   print "# See if this is a powerfail situation.				# ***apcctrl***"
+   print "if [ -f @PWRFAILDIR@/powerfail ]; then				# ***apcctrl***"
+   print "   echo								# ***apcctrl***"
+   print "   echo \"APCCTRL will now power off the UPS\"			  # ***apcctrl***"
+   print "   echo								# ***apcctrl***"
+   print "   @sysconfdir@/apccontrol killpower					# ***apcctrl***"
+   print "   echo								# ***apcctrl***"
+   print "   echo \"Please ensure that the UPS has powered off before rebooting\" # ***apcctrl***"
+   print "   echo \"Otherwise, the UPS may cut the power during the reboot!!!\"   # ***apcctrl***"
+   print "   echo								# ***apcctrl***"
+   print "fi									# ***apcctrl***"
    print ""
 }
 # everything else is duplicated

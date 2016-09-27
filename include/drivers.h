@@ -79,7 +79,7 @@
  *
  * ups_generic_entry_point()
  *  This is a generic entry point into the drivers for specific driver
- *  functions called from inside the apcupsd core.
+ *  functions called from inside the apcctrl core.
  *  This function always return.
  *  This function must lock the UPSINFO structure.
  *  This function gets a void * that contain data. This pointer can be used

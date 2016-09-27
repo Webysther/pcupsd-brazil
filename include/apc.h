@@ -1,7 +1,7 @@
 /*
  * apc.h
  *
- * Main header file for apcupsd package
+ * Main header file for apcctrl package
  */
 
 /*
@@ -136,7 +136,7 @@
 #include <conio.h>
 #endif
 
-/* Include apcupsd stuff */
+/* Include apcctrl stuff */
 
 #include "version.h"
 #include "defines.h"

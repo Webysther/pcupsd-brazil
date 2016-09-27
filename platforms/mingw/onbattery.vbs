@@ -12,7 +12,7 @@ set oShell = CreateObject("WScript.Shell")
 
 '/// Get APCUPS Status Report ///
 
-set Get_Status = oShell.exec("%comspec% /c c:\Progra~1\apcupsd\bin\apcaccess.exe status")
+set Get_Status = oShell.exec("%comspec% /c c:\Progra~1\apcctrl\bin\apcaccess.exe status")
 UPS_Status = Get_Status.StdOut.readall
 
 '/// Get Time Zone info from local windows registry ///

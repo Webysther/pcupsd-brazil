@@ -48,7 +48,7 @@ int statlen = BIGBUF;
 /* List of variables that can be read by getupsvar()
  * First field is that name given to getupsvar(),
  * Second field is our internal name as produced by the STATUS
- *   output from apcupsd.
+ *   output from apcctrl.
  * Third field, if 0 returns everything to the end of the
  *    line, and if 1 returns only to first space (e.g. integers,
  *    and floating point values.
@@ -240,7 +240,7 @@ int fill_buffer(int sockfd)
 #else /* HAVE_NISLIB */
 
 int main(int argc, char *argv[]) {
-    printf("Sorry, NIS code is not compiled in apcupsd.\n");
+    printf("Sorry, NIS code is not compiled in apcctrl.\n");
     return 1;
 }
 

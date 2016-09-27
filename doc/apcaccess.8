@@ -4,7 +4,7 @@
 .Os apcaccess v3.14.6
 .Sh NAME
 .Nm apcaccess
-.Nd retrieve status information from apcupsd(8)
+.Nd retrieve status information from apcctrl(8)
 .Sh SYNOPSIS
 .Nm 
 [-f <config-file>] [-h <host>[:<port>]] [-p <parameter-name>] [-u] [<command>] [<host>[:<port>]]
@@ -12,7 +12,7 @@
 .Nm
 is a program which prints out the complete status of most American Power 
 Conversion Corp. (APC) UPSes provided you have the
-.Xr apcupsd 8
+.Xr apcctrl 8
 daemon installed, properly configured and running. It can access status
 information from any APC UPS attached to the localhost or attached to 
 any computer on the network which is running apcuspd in NIS mode.
@@ -20,9 +20,9 @@ any computer on the network which is running apcuspd in NIS mode.
 The command line options are:
 .Bl -hang -width "<command>"
 .It -f
-configuration file of apcupsd (default is usually /etc/apcctrl/apcctrl.conf)
+configuration file of apcctrl (default is usually /etc/apcctrl/apcctrl.conf)
 .It -h 
-hostname and port of apcupsd to communicate with.  The default hostname and port are obtained from the configuration file.
+hostname and port of apcctrl to communicate with.  The default hostname and port are obtained from the configuration file.
 .It -p
 Report only the value of the named parameter instead of all parameters and values.
 .It -u
@@ -41,11 +41,11 @@ domain name or IP address.
 An optional port number where a hostname argument has been specified. The 
 default is 3551, the official port number assigned by 
 .Tn IANA 
-for the apcupsd NIS server.  The default hostname and port are obtained from the configuration file.
+for the apcctrl NIS server.  The default hostname and port are obtained from the configuration file.
 .El
 .Pp
 .Nm 
-uses apcupsd's inbuilt Network Information Server (NIS) -- no relation 
+uses apcctrl's inbuilt Network Information Server (NIS) -- no relation 
 to Sun's NIS/YP service -- to obtain the current status information from the 
 UPS on the local or remote computer. It is therefore
 necessary to have the following configuration directives:
@@ -77,9 +77,9 @@ generated for the specified UPS models.
 .It DATE
 : Date and time of last update from UPS
 .It HOSTNAME
-: hostname of computer running apcupsd
+: hostname of computer running apcctrl
 .It VERSION
-: apcupsd version number, date and operating system
+: apcctrl version number, date and operating system
 .It UPSNAME
 : UPS name from configuration file (dumb) or EEPROM (smart)
 .It CABLE
@@ -89,7 +89,7 @@ generated for the specified UPS models.
 .It UPSMODE
 : Mode in which UPS is operating
 .It STARTTIME
-: Date and time apcupsd was started
+: Date and time apcctrl was started
 .It STATUS
 : UPS status.  One or more of the following (space-separated):
 CAL TRIM BOOST ONLINE ONBATT OVERLOAD LOWBATT REPLACEBATT NOBATT SLAVE SLAVEDOWN
@@ -123,9 +123,9 @@ SHUTTING DOWN
 .It MAXTIME
 : Max battery runtime (TIMEOUT) after which system is shutdown
 .It MAXLINEV
-: Maximum input line voltage since apcupsd started
+: Maximum input line voltage since apcctrl started
 .It MINLINEV
-: Min (observed) input line voltage since apcupsd started
+: Min (observed) input line voltage since apcctrl started
 .It OUTPUTV
 : Current UPS output voltage
 .It SENSE
@@ -151,19 +151,19 @@ SHUTTING DOWN
 .It LINEFREQ
 : Current line frequency in Hertz
 .It LASTXFER
-: Reason for last transfer to battery since apcupsd startup
+: Reason for last transfer to battery since apcctrl startup
 .It NUMXFERS
-: Number of transfers to battery since apcupsd startup
+: Number of transfers to battery since apcctrl startup
 .It XONBATT
-: Date, time of last transfer to battery since apcupsd startup
+: Date, time of last transfer to battery since apcctrl startup
 .It TONBATT
 : Seconds currently on battery
 .It CUMONBATT
-: Cumulative seconds on battery since apcupsd startup
+: Cumulative seconds on battery since apcctrl startup
 .It XOFFBAT
-: Date, time of last transfer off battery since apcupsd startup
+: Date, time of last transfer off battery since apcctrl startup
 .It SELFTEST
-: Date and time of last self test since apcupsd startup
+: Date and time of last self test since apcctrl startup
 .It STESTI
 : Self-test interval
 .It STATFLAG
@@ -208,9 +208,9 @@ SHUTTING DOWN
 .It MAXTIME
 : Max battery runtime (TIMEOUT) after which system is shutdown
 .It MAXLINEV
-: Maximum input line voltage since apcupsd startup
+: Maximum input line voltage since apcctrl startup
 .It MINLINEV
-: Minimum input line voltage since apcupsd startup
+: Minimum input line voltage since apcctrl startup
 .It OUTPUTV
 : Current UPS output voltage
 .It BATTV
@@ -255,19 +255,19 @@ SHUTTING DOWN
 .It *LINEFREQ
 : Current line frequency in Hertz
 .It *LASTXFER
-: Reason for last transfer to battery since apcupsd startup
+: Reason for last transfer to battery since apcctrl startup
 .It NUMXFERS
-: Number of transfers to battery since apcupsd startup
+: Number of transfers to battery since apcctrl startup
 .It XONBATT
-: Date, time of last transfer to battery since apcupsd startup
+: Date, time of last transfer to battery since apcctrl startup
 .It TONBATT
 : Seconds currently on battery
 .It CUMONBATT
-: Cumulative seconds on battery since apcupsd startup
+: Cumulative seconds on battery since apcctrl startup
 .It XOFFBAT
-: Date, time of last transfer off battery since apcupsd startup
+: Date, time of last transfer off battery since apcctrl startup
 .It SELFTEST
-: Date and time of last self test since apcupsd startup
+: Date and time of last self test since apcctrl startup
 .It STATFLAG
 : UPS status flag in hex
 .It MANDATE
@@ -301,9 +301,9 @@ SHUTTING DOWN
 .It MAXTIME
 : Max battery runtime (TIMEOUT) after which system is shutdown
 .It MAXLINEV
-: Maximum input line voltage since apcupsd startup
+: Maximum input line voltage since apcctrl startup
 .It MINLINEV
-: Minimum input line voltage since apcupsd startup
+: Minimum input line voltage since apcctrl startup
 .It OUTPUTV
 : UPS output voltage
 .It SENSE
@@ -327,13 +327,13 @@ SHUTTING DOWN
 .It LINEFREQ
 : Current line frequency in Hertz
 .It NUMXFERS
-: Number of transfers to battery since apcupsd startup
+: Number of transfers to battery since apcctrl startup
 .It TONBATT
 : Seconds currently on battery
 .It CUMONBATT
-: Cumulative seconds on battery since apcupsd startup
+: Cumulative seconds on battery since apcctrl startup
 .It XOFFBATT
-: Date, time of last transfer off battery since apcupsd startup
+: Date, time of last transfer off battery since apcctrl startup
 .It STESTI
 : Self-test interval
 .It STATFLAG
@@ -368,13 +368,13 @@ SHUTTING DOWN
 .It MAXTIME
 : Max battery runtime (TIMEOUT) after which system is shutdown
 .It NUMXFERS
-: Number of transfers to battery since apcupsd startup
+: Number of transfers to battery since apcctrl startup
 .It TONBATT
 : Seconds currently on battery
 .It CUMONBATT
-: Cumulative seconds on battery since apcupsd startup
+: Cumulative seconds on battery since apcctrl startup
 .It XOFFBATT
-: Date, time of last transfer off battery since apcupsd startup
+: Date, time of last transfer off battery since apcctrl startup
 .It STATFLAG
 : UPS status flag in hex
 .El
@@ -407,10 +407,10 @@ SHUTTING DOWN
 .Pa /etc/apcctrl/apcctrl.conf
 .Sh SEE ALSO
 .Xr apcctrl.conf 5 , 
-.Xr apcupsd 8 .
+.Xr apcctrl 8 .
 .Pp
-The HTML apcupsd manual installed on your system or available online at
-http://www.apcupsd.org/
+The HTML apcctrl manual installed on your system or available online at
+http://www.apcctrl.org/
 .Sh AUTHORS
 .Ss This page
 .An Trevor Roydhouse

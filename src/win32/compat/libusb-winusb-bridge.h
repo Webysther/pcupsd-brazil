@@ -2,7 +2,7 @@
  * libusb-winusb-bridge.h
  *
  * Simple backend for libusb using MS WinUsb. Only the basic functions
- * necessary for apcupsd are implemented, although the others could be added
+ * necessary for apcctrl are implemented, although the others could be added
  * fairly easily.
  */
 

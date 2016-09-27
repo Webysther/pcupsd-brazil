@@ -85,7 +85,7 @@ static struct CiOidMap CiOidMap[] =
 
 // Seen in the field: ITEMP OID occasionally sent by UPS is bogus. Value
 // appears to come from CI_RUNTIM OID. Confirmed via Wireshark that error is on 
-// UPS Web/SNMP card side. As a workaround in apcupsd we will filter out 
+// UPS Web/SNMP card side. As a workaround in apcctrl we will filter out 
 // obviously bogus ITEMPs.
 //
 // Issue was observed on:

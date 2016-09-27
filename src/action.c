@@ -140,11 +140,11 @@ void generate_event(UPSINFO *ups, int event)
 static void powerfail(int ok)
 {
    /*
-    * If apcupsd terminates here, it will never get a chance to
-    * report the event of returning mains-power. I think apcupsd
+    * If apcctrl terminates here, it will never get a chance to
+    * report the event of returning mains-power. I think apcctrl
     * has no need to force terminate() by itself. It will receive
     * a SIGTERM from init, when system goes down. This signal is
-    * trapped and will trigger apcupsd's terminate() function.
+    * trapped and will trigger apcctrl's terminate() function.
     */
 
    if (ok == 2) {
@@ -152,7 +152,7 @@ static void powerfail(int ok)
       if (terminate_on_powerfail) {
          /*
           * This sends a SIGTERM signal to itself.
-          * The SIGTERM is bound to apcupsd_ or apctest_terminate(),
+          * The SIGTERM is bound to apcctrl_ or apctest_terminate(),
           * depending on which program is running this code, so it will
           * do in anyway the right thing.
           */
@@ -161,7 +161,7 @@ static void powerfail(int ok)
    }
 
    /*
-    * For network slaves, apcupsd needs to terminate here for now.
+    * For network slaves, apcctrl needs to terminate here for now.
     * This is sloppy, but it works. If you are networked, then the
     * master must fall also. This is required so that the UPS
     * can reboot the slaves.
@@ -309,12 +309,12 @@ static const char *testresult_to_string(SelfTestResult res)
  * chance to cleanly shutdown the machine before the UPS is shut down.  To 
  * do this, the card sets the ONBATT and LOWBATT statuses at the same 
  * time, waits several minutes, then cuts power.  PowerChute (presumably) 
- * notices this and shuts the machine down, but unfortunately apcupsd did 
+ * notices this and shuts the machine down, but unfortunately apcctrl did 
  * not.
  *
- * The problem happens because in this situation, apcupsd sets the 
+ * The problem happens because in this situation, apcctrl sets the 
  * UPS_prev_battlow status before testing for it.       In the do_action() 
- * function, apcupsd notices the ONBATT status, and uses the 
+ * function, apcctrl notices the ONBATT status, and uses the 
  * "st_PowerFailure" state to send off an initial power failure event.   
  * After a short delay, do_action() is invoked again. If ONBATT is 
  * still set, the "st_OnBattery" state is used, and the onbattery event 
@@ -328,7 +328,7 @@ static const char *testresult_to_string(SelfTestResult res)
  * UPS_prev_battlow was set the first time through, when the 
  * st_PowerFailure was used, meaning the test for LOWBATT was not 
  * performed.  The second time through in st_OnBattery, UPS_prev_battlow 
- * is already set, meaning apcupsd is assuming that the needed shutdown 
+ * is already set, meaning apcctrl is assuming that the needed shutdown 
  * has already been invoked.
  *
  * The code fix just moves setting of the UPS_prev_battlow status to 
@@ -336,7 +336,7 @@ static const char *testresult_to_string(SelfTestResult res)
  * ignored.  Clearing the UPS_prev_battlow status remains where it is in 
  * the code, and it will always be turned off if LOWBATT is no longer set.
  *
- * After the fix, UPS_prev_battlow is not prematurely set, and apcupsd 
+ * After the fix, UPS_prev_battlow is not prematurely set, and apcctrl 
  * catches the signal from the management card to shut down.  I've had the 
  * code in for over a month, and it's worked fine, both from using the 
  * management card and regular pull-the-plug tests as well.   This was 

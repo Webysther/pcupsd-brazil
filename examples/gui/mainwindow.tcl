@@ -15,7 +15,7 @@ proc CreateMainWindow {} {
 
    .mbar add cascade -label "Help" -underline 0 -menu .mbar.help
    menu .mbar.help
-   .mbar.help add command -label "About Apcupsd" -underline 0 -command {AboutCmd}
+   .mbar.help add command -label "About apcctrl" -underline 0 -command {AboutCmd}
    .mbar.help add command -label "Help" -underline 0 -command {HelpCmd}
 
    frame .sep1 -height 10 -borderwidth 0

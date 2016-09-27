@@ -1,11 +1,11 @@
 ## apcctrl.conf v1.1 ##
 # 
-#  for apcupsd release @VERSION@ (@DATE@) - @DISTNAME@
+#  for apcctrl release @VERSION@ (@DATE@) - @DISTNAME@
 #
-# "apcupsd" POSIX config file
+# "apcctrl" POSIX config file
 
 #
-# Note that the apcupsd daemon must be restarted in order for changes to
+# Note that the apcctrl daemon must be restarted in order for changes to
 # this configuration file to become active.
 #
 
@@ -33,7 +33,7 @@
 #
 UPSCABLE @UPSCABLE@
 
-# To get apcupsd to work, in addition to defining the cable
+# To get apcctrl to work, in addition to defining the cable
 # above, you must also define a UPSTYPE, which corresponds to
 # the type of UPS you have (see the Description for more details).
 # You must also specify a DEVICE, sometimes referred to as a port.
@@ -52,7 +52,7 @@ UPSCABLE @UPSCABLE@
 #                            setting enables autodetection, which is
 #                            the best choice for most installations.
 #
-# net       hostname:port    Network link to a master apcupsd through apcupsd's 
+# net       hostname:port    Network link to a master apcctrl through apcctrl's 
 #                            Network Information Server. This is used if the
 #                            UPS powering your computer is connected to a 
 #                            different computer for monitoring.
@@ -89,24 +89,24 @@ UPSCABLE @UPSCABLE@
 #                            supporting the MODBUS protocol.
 # modbus    <BLANK>          Leave the DEVICE setting blank for MODBUS over USB
 #                            or set to the serial number of the UPS to ensure 
-#                            that apcupsd binds to that particular unit
+#                            that apcctrl binds to that particular unit
 #                            (helpful if you have more than one USB UPS).
 #
 UPSTYPE @UPSTYPE@
 DEVICE @SERIALDEV@
 
 # POLLTIME <int>
-#   Interval (in seconds) at which apcupsd polls the UPS for status. This
+#   Interval (in seconds) at which apcctrl polls the UPS for status. This
 #   setting applies both to directly-attached UPSes (UPSTYPE apcsmart, usb, 
 #   dumb) and networked UPSes (UPSTYPE net, snmp). Lowering this setting
-#   will improve apcupsd's responsiveness to certain events at the cost of
+#   will improve apcctrl's responsiveness to certain events at the cost of
 #   higher CPU utilization. The default of 60 is appropriate for most
 #   situations.
 #POLLTIME 60
 
 # LOCKFILE <path to lockfile>
 #   Path for device lock file. This is the directory into which the lock file
-#   will be written. The directory must already exist; apcupsd will not create
+#   will be written. The directory must already exist; apcctrl will not create
 #   it. The actual name of the lock file is computed from DEVICE.
 #   Not used on Win32.
 LOCKFILE @LOCKDIR@
@@ -117,7 +117,7 @@ SCRIPTDIR @sysconfdir@
 
 # PWRFAILDIR <path to powerfail directory>
 #   Directory in which to write the powerfail flag file. This file
-#   is created when apcupsd initiates a system shutdown and is
+#   is created when apcctrl initiates a system shutdown and is
 #   checked in the OS halt scripts to determine if a killpower
 #   (turning off UPS output power) is required.
 PWRFAILDIR @PWRFAILDIR@
@@ -159,16 +159,16 @@ ONBATTERYDELAY 6
 
 # If during a power failure, the remaining battery percentage
 # (as reported by the UPS) is below or equal to BATTERYLEVEL, 
-# apcupsd will initiate a system shutdown.
+# apcctrl will initiate a system shutdown.
 BATTERYLEVEL 25
 
 # If during a power failure, the remaining runtime in minutes 
 # (as calculated internally by the UPS) is below or equal to MINUTES,
-# apcupsd, will initiate a system shutdown.
+# apcctrl, will initiate a system shutdown.
 MINUTES 10
 
 # If during a power failure, the UPS has run on batteries for TIMEOUT
-# many seconds or longer, apcupsd will initiate a system shutdown.
+# many seconds or longer, apcctrl will initiate a system shutdown.
 # A value of 0 disables this timer.
 #
 #  Note, if you have a Smart UPS, you will most likely want to disable
@@ -194,10 +194,10 @@ ANNOYDELAY 60
 # NOLOGON <string> [ disable | timeout | percent | minutes | always ]
 NOLOGON disable
 
-# If KILLDELAY is non-zero, apcupsd will continue running after a
+# If KILLDELAY is non-zero, apcctrl will continue running after a
 # shutdown has been requested, and after the specified time in
 # seconds attempt to kill the power. This is for use on systems
-# where apcupsd cannot regain control after a shutdown.
+# where apcctrl cannot regain control after a shutdown.
 # KILLDELAY <seconds>  0 disables
 KILLDELAY 0
 
@@ -231,7 +231,7 @@ NISPORT @NISPORT@
 
 # If you want the last few EVENTS to be available over the network
 # by the network information server, you must define an EVENTSFILE.
-EVENTSFILE @LOGDIR@/apcupsd.events
+EVENTSFILE @LOGDIR@/apcctrl.events
 
 # EVENTSFILEMAX <kilobytes>
 #  By default, the size of the EVENTSFILE will be not be allowed to exceed
@@ -259,14 +259,14 @@ UPSCLASS standalone
 UPSMODE disable
 
 #
-# ===== Configuration statements to control apcupsd system logging ========
+# ===== Configuration statements to control apcctrl system logging ========
 #
 
 # Time interval in seconds between writing the STATUS file; 0 disables
 STATTIME 0
 
 # Location of STATUS file (written to only if STATTIME is non-zero)
-STATFILE @LOGDIR@/apcupsd.status
+STATFILE @LOGDIR@/apcctrl.status
 
 # LOGSTATS [ on | off ] on enables, off disables
 # Note! This generates a lot of output, so if         
@@ -281,7 +281,7 @@ DATATIME 0
 
 # FACILITY defines the logging facility (class) for logging to syslog. 
 #          If not specified, it defaults to "daemon". This is useful 
-#          if you want to separate the data logged by apcupsd from other
+#          if you want to separate the data logged by apcctrl from other
 #          programs.
 #FACILITY DAEMON
 
@@ -291,7 +291,7 @@ DATATIME 0
 
 #
 # These statements are used only by apctest when choosing "Set EEPROM with conf
-# file values" from the EEPROM menu. THESE STATEMENTS HAVE NO EFFECT ON APCUPSD.
+# file values" from the EEPROM menu. THESE STATEMENTS HAVE NO EFFECT ON APCCTRL.
 #
 
 # UPS name, max 8 characters 

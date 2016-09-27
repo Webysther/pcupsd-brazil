@@ -11,7 +11,7 @@
 # support for your chipset. Enable appropriate
 # modprobe line below to match your hardware.
 SYSADMIN=root
-APCUPSD_MAIL="/bin/mail"
+APCCTRL_MAIL="/bin/mail"
 
 # Load the appropriate cpufreq module. This is best done
 # in boot scripts, but throw it here to make sure it has
@@ -50,6 +50,6 @@ MSG="$HOSTNAME Power Failure!"
    done
    echo " "
    /sbin/apcaccess status
-) | $APCUPSD_MAIL -s "$MSG" $SYSADMIN
+) | $APCCTRL_MAIL -s "$MSG" $SYSADMIN
 exit 0
 

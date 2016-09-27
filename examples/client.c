@@ -1,7 +1,7 @@
 /*
  * Client test program for apcnetd
  * This program reads from standard input and passes the
- * commands to the apcupsd network information server.
+ * commands to the apcctrl network information server.
  * It then prints to stdout the responses from the server.
  *
  * Build it with: cc -I../include client.c ../src/lib/libapc.a -o client
@@ -110,7 +110,7 @@ void handle_client(FILE *fp, int sockfd, char *cmd)
 #else /* HAVE_NISLIB */
 
 int main(int argc, char *argv[]) {
-    printf("Sorry, NIS code is not compiled in apcupsd.\n");
+    printf("Sorry, NIS code is not compiled in apcctrl.\n");
     return 1;
 }
 

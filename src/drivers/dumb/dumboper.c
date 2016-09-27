@@ -5,9 +5,9 @@
  */
 
 /*
- * Copyright (C) 1999-2001 Riccardo Facchetti <riccardo@apcupsd.org>
+ * Copyright (C) 1999-2001 Riccardo Facchetti <riccardo@apcctrl.org>
  * Copyright (C) 1996-99 Andre M. Hedrick <andre@suse.com>
- * Copyright (C) 1999-2001 Riccardo Facchetti <riccardo@apcupsd.org>
+ * Copyright (C) 1999-2001 Riccardo Facchetti <riccardo@apcctrl.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of version 2 of the GNU General
@@ -164,7 +164,7 @@ bool DumbUpsDriver::read_volatile_data()
 
 /*
  * Code block preserved for posterity in case I ever get a real
- * 940-0023A cable to test. According to schematic in the apcupsd
+ * 940-0023A cable to test. According to schematic in the apcctrl
  * manual, SR is not connected at all. We used to treat it as a
  * battlow indicator, but I have no evidence that it works, and
  * some evidence that it does not.

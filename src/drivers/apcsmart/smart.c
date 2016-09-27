@@ -3,7 +3,7 @@
  *  apcsmart.c -- The decoding of the chatty little beasts.
  *                  THE LOOK-A-LIKE ( UPSlink(tm) Language )
  *
- *  apcupsd.c  -- Simple Daemon to catch power failure signals from a
+ *  apcctrl.c  -- Simple Daemon to catch power failure signals from a
  *                  BackUPS, BackUPS Pro, or SmartUPS (from APCC).
  *               -- Now SmartMode support for SmartUPS and BackUPS Pro.
  *
@@ -450,9 +450,9 @@ bool ApcSmartUpsDriver::read_volatile_data()
        *
        * XXX
        *
-       * If this fails, apcupsd may not be able to detect a status
+       * If this fails, apcctrl may not be able to detect a status
        * change and will have unpredictable behavior. This will be fixed
-       * once we will handle correctly the own apcupsd Status word.
+       * once we will handle correctly the own apcctrl Status word.
        */
       if (status[0] == 'S' && status[1] == 'M' && (retries-- > 0))
          goto again;
@@ -829,7 +829,7 @@ bool ApcSmartUpsDriver::entry_point(int command, void *data)
                /*
                 * Be careful because if we go out of here without
                 * knowing the reason of transfer (i.e. the reason
-                * is "NA", apcupsd will think this is a power failure
+                * is "NA", apcctrl will think this is a power failure
                 * even if it is a self test. Not much of a problem
                 * as this should not happen.
                 * We allow 5 retries for reading reason from UPS before

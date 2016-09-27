@@ -179,7 +179,7 @@ operates.
 Configure options for APC UPS Daemon
 ====================================
 
-The apcupsd have a number of `configure' time options that can be enabled for
+The apcctrl have a number of `configure' time options that can be enabled for
 additional features. These options are:
 
 `--enable-powerflute'
@@ -217,18 +217,18 @@ on your system.
 
 These packages are on the RedHat 9 distribution disks. If these packages
 are installed, the cgi code will use these libraries for generation of png
-images. If these are not installed, the version included with apcupsd will
+images. If these are not installed, the version included with apcctrl will
 be used instead.
 
 Configuring Apache HTTP Server for use with cgi support
 =======================================================
-If you configure apcupsd with the --enable-cgi support you may need to make
+If you configure apcctrl with the --enable-cgi support you may need to make
 configuration changes to the httpd.conf file. The changes you will need to
 make depend on what directory you choose install the cgi files in.
 
 There are five files which are installed in the cgi-bin directory.
 Four of these are .cgi files which are executable images and the fifth file
-is apcupsd.css which is a style sheet used to give a common style to all output.
+is apcctrl.css which is a style sheet used to give a common style to all output.
 
 There are two ways of enabling cgi support for Apache. The first method is
 to add the following line to httpd.conf:
@@ -253,7 +253,7 @@ in your cgi-bin directory:
 	AddHandler cgi-script .cgi .pl
 
 Using the first example, you will have a problem with trying to serve
-the file apcupsd.css. Since this file is installed in the cgi-bin directory,
+the file apcctrl.css. Since this file is installed in the cgi-bin directory,
 Apache will assume it is an executable program and will produce an error
 when trying to serve it. You must use the second method of enabling cgi
 support.
@@ -261,26 +261,26 @@ support.
 If you are using the default Apache configuration file, you  will need
 to remove (or comment out) the first example and replace it with the second.
 
-If you install the apcupsd cgi files in another directory, you will need to
+If you install the apcctrl cgi files in another directory, you will need to
 add the second example to your httpd.conf file and adjust the pathname
 accordingly.
 
-Customization of apcupsd events 
+Customization of apcctrl events 
 ================================
 
 Note, this is somewhat out of date, please check the installed
 apccontrol script for exact details of these events.
 
-When apcupsd detects anomalies from your UPS device, it will make some
+When apcctrl detects anomalies from your UPS device, it will make some
 decisions that usually result in one or more calls to the script located
-in `${sysconf}/apcupsd/apccontrol'.  The apcaction file is a shell script
-that acts on the first argument that `apcupsd' passes to it.  These
+in `${sysconf}/apcctrl/apccontrol'.  The apcaction file is a shell script
+that acts on the first argument that `apcctrl' passes to it.  These
 actions are set up by default to sane behaviour for all possible
-situations apcupsd is likely to detect from the UPS. Nevertheless you
+situations apcctrl is likely to detect from the UPS. Nevertheless you
 can change the apccontrol behaviour for every single action.  To do so
 create a file with the same name as the action, which is passed as the
 first argument (argv[1], or $1 for shell scripts).  Put your script in
-`${sysconf}/apcupsd/' directory.  At present the arguments that apcaction
+`${sysconf}/apcctrl/' directory.  At present the arguments that apcaction
 can recognize are:
 
  Keyword       Default Action
@@ -304,6 +304,6 @@ If for example you want to write your own routine for the `powerout' action,
 you can write your own shell script called `powerout' and put it in the lib
 directory. Doing so will _completely disable_ the `apcaction' default
 behaviour and enable your script. If you want to write your customized scripts
-you are encouraged to edit the `${libdir}/apcupsd/apccontrol' script and at
+you are encouraged to edit the `${libdir}/apcctrl/apccontrol' script and at
 least mimic its behaviour into your own script.
 Writing faulty scripts may cause your system to crash due to power failures.

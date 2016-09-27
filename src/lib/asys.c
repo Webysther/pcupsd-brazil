@@ -1,7 +1,7 @@
 /*
  * asys.c
  *
- * Miscellaneous apcupsd memory and thread safe routines
+ * Miscellaneous apcctrl memory and thread safe routines
  * Generally, these are interfaces to system or standard
  * library routines. 
  *

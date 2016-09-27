@@ -1,7 +1,7 @@
 /*
  * options.c
  *
- * Command line options parsing routine for apcupsd.
+ * Command line options parsing routine for apcctrl.
  */
 
 /*
@@ -67,7 +67,7 @@ extern bool trace;
 
 static void print_usage(char *argv[])
 {
-   printf("usage: apcupsd [options]\n"
+   printf("usage: apcctrl [options]\n"
          "  Options are as follows:\n"
          "  -b,                           don't go into background\n"
          "  -d, --debug <level>           set debug level (>0)\n"
@@ -78,21 +78,21 @@ static void print_usage(char *argv[])
          "  -p, --kill-on-powerfail       hibernate UPS on powerfail\n"
          "  -R,                           put SmartUPS into dumb mode\n"
          "  -t, --term-on-powerfail       terminate when battery power fails\n"
-         "  -T                            send debug to ./apcupsd.trace\n"
+         "  -T                            send debug to ./apcctrl.trace\n"
          "  -V, --version                 display version info\n"
          "  -h, --help                    display this help\n"
          "\n"
-         "  [*] Only one parameter of this kind and apcupsd must not already be running.\n"
+         "  [*] Only one parameter of this kind and apcctrl must not already be running.\n"
          "\n"
          "Copyright (C) 2004-2009 Adam Kropelin\n"
          "Copyright (C) 1999-2005 Kern Sibbald\n"
          "Copyright (C) 1996-1999 Andre Hedrick\n"
          "Copyright (C) 1999-2001 Riccardo Facchetti\n"
-         "apcupsd is free software and comes with ABSOLUTELY NO WARRANTY\n"
+         "apcctrl is free software and comes with ABSOLUTELY NO WARRANTY\n"
          "under the terms of the GNU General Public License\n"
          "\n"
-         "Report bugs to apcupsd Support Center:\n"
-         "  apcupsd-users@lists.sourceforge.net\n");
+         "Report bugs to apcctrl Support Center:\n"
+         "  apcctrl-users@lists.sourceforge.net\n");
 }
 
 int parse_options(int argc, char *argv[])
@@ -199,7 +199,7 @@ int parse_options(int argc, char *argv[])
    Dmsg(200, "Exepath: %s\n", sbindir);
    if (len == 0) {
       /* Failed to get path, so make an assumption */
-      asnprintf(sbindir, sizeof(sbindir), "C:\\apcupsd\\bin\\apcupsd.exe");
+      asnprintf(sbindir, sizeof(sbindir), "C:\\apcctrl\\bin\\apcctrl.exe");
    }
 
    /* Strip trailing filename component */
@@ -216,7 +216,7 @@ int parse_options(int argc, char *argv[])
     */
    if (cfgfile == APCCONF) {
       asnprintf(APCCONF, sizeof(APCCONF),
-         "%s\\..\\etc\\apcupsd%s", sbindir, APCCONF_FILE);
+         "%s\\..\\etc\\apcctrl%s", sbindir, APCCONF_FILE);
    }
 #endif
 

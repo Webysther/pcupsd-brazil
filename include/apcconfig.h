@@ -141,10 +141,10 @@
 /* Define if you have libnetsnmp */
 /* #undef HAVE_NET_SNMP */
 
-/* Define if apcupsd NIS library is being built */
+/* Define if apcctrl NIS library is being built */
 #define HAVE_NISLIB /**/
 
-/* Define if apcupsd NIS server is being built */
+/* Define if apcctrl NIS server is being built */
 #define HAVE_NISSERVER /**/
 
 /* Define if building for OpenBSD */
@@ -296,7 +296,7 @@
 /* Define to 1 if you have the `waitpid' function. */
 #define HAVE_WAITPID 1
 
-/* Name of system on which apcupsd will run */
+/* Name of system on which apcctrl will run */
 #define HOST "debian"
 
 /* Default directory in which log is written */
@@ -341,7 +341,7 @@
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
 
-/* Default directory in which apcupsd config files are stored */
+/* Default directory in which apcctrl config files are stored */
 #define SYSCONFDIR "/etc/apcctrl"
 
 /* Define if you have gdImageGif in libgd */

@@ -1,7 +1,7 @@
 /*
  * InstanceConfig.h
  *
- * Apcupsd monitoring applet for Mac OS X
+ * apcctrl monitoring applet for Mac OS X
  */
 
 /*

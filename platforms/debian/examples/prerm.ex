@@ -1,5 +1,5 @@
 #! /bin/sh
-# prerm script for apcupsd
+# prerm script for apcctrl
 #
 # see: dh_installdeb(1)
 
@@ -17,7 +17,7 @@ set -e
 
 case "$1" in
     remove|upgrade|deconfigure)
-#       install-info --quiet --remove /usr/info/apcupsd.info.gz
+#       install-info --quiet --remove /usr/info/apcctrl.info.gz
         ;;
     failed-upgrade)
         ;;

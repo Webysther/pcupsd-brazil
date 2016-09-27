@@ -1,7 +1,7 @@
 #see if this is a powerfail situation
 if [ -f @PWRFAILDIR@/powerfail ]; then
         echo 
-        echo "APCUPSD will power off the UPS"
+        echo "APCCTRL will power off the UPS"
         echo
         @sysconfdir@/apccontrol killpower
         echo

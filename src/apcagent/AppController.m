@@ -1,7 +1,7 @@
 /*
  * AppController.m
  *
- * Apcupsd monitoring applet for Mac OS X
+ * apcctrl monitoring applet for Mac OS X
  */
 
 /*
@@ -149,7 +149,7 @@
    BOOL doPopup = [config popups];
    [configMutex unlock];
 
-   // Grab updated status info from apcupsd
+   // Grab updated status info from apcctrl
    int battstat;
    astring statstr, upsname;
    statmgr->GetSummary(battstat, statstr, upsname);
@@ -235,7 +235,7 @@
 #if MAC_OS_X_VERSION_MAX_ALLOWED >= 1080
       // Post notification here...
       NSUserNotification *notification = [[NSUserNotification alloc] init];
-      notification.title = @"Apcupsd Event";
+      notification.title = @"apcctrl Event";
       notification.subtitle = 
          [NSString stringWithFormat:@"%s %@",upsname.str(),newStatus];
       NSDate *now = [NSDate dateWithTimeIntervalSinceNow:0];

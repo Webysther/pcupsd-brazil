@@ -1,13 +1,13 @@
 #!/bin/sh -e
-# /usr/lib/emacsen-common/packages/remove/apcupsd
+# /usr/lib/emacsen-common/packages/remove/apcctrl
 
 FLAVOR=$1
-PACKAGE=apcupsd
+PACKAGE=apcctrl
 
 if [ ${FLAVOR} != emacs ]; then
     if test -x /usr/sbin/install-info-altdir; then
         echo remove/${PACKAGE}: removing Info links for ${FLAVOR}
-        install-info-altdir --quiet --remove --dirname=${FLAVOR} /usr/info/apcupsd.info.gz
+        install-info-altdir --quiet --remove --dirname=${FLAVOR} /usr/info/apcctrl.info.gz
     fi
 
     echo remove/${PACKAGE}: purging byte-compiled files for ${FLAVOR}

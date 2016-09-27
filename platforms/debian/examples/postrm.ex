@@ -1,5 +1,5 @@
 #! /bin/sh
-# postrm script for apcupsd
+# postrm script for apcctrl
 #
 # see: dh_installdeb(1)
 

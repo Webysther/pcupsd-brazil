@@ -1,11 +1,11 @@
-The information in this file is for those who wish to build an apcupsd binary 
+The information in this file is for those who wish to build an apcctrl binary 
 package to run on machines other than the machine on which it was built. If you 
-are building apcupsd for use on the same machine as the one you are building it 
+are building apcctrl for use on the same machine as the one you are building it 
 on, you do not have to do any of this. In that case, just install dependent 
 libs such as libgd and libusb binaries from Fink or MacPorts (or build from 
 source) with no special treatment needed.
 
-To build the most compatible apcupsd binary package possible, we must...
+To build the most compatible apcctrl binary package possible, we must...
 
 * Build all dependent libraries static to ensure no extra dylibs are needed on
   the taget machine
@@ -47,7 +47,7 @@ Instructions:
    make
    sudo make install
 
-- Build apcupsd
+- Build apcctrl
 
    CPPFLAGS="-isysroot /Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk -mmacosx-version-min=10.5" \
      LDFLAGS="-L/usr/local/lib -Wl,-syslibroot,/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk -mmacosx-version-min=10.5 -arch i386" \
@@ -56,9 +56,9 @@ Instructions:
      --enable-usb --enable-cgi --enable-snmp --enable-modbus-usb
    make
 
-- Build apcupsd binary package
+- Build apcctrl binary package
 
    cd platforms/darwin
-   sudo make apcupsd.pkg
+   sudo make apcctrl.pkg
 
-The resulting binary package is found in platforms/darwin/Apcupsd-<version>.dmg
+The resulting binary package is found in platforms/darwin/apcctrl-<version>.dmg

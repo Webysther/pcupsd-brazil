@@ -13,23 +13,23 @@ win32_DIR: lib_DIR
 cgi_DIR: $(if $(WIN32),win32_DIR)
 
 common_srcs     := options.c device.c reports.c action.c
-apcupsd_srcs    := apcupsd.c apcnis.c
+apcctrl_srcs    := apcctrl.c apcnis.c
 apcaccess_srcs  := apcaccess.c
 apctest_srcs    := apctest.c
 smtp_srcs       := smtp.c
 
 common_obj      := $(call SRC2OBJ,$(common_srcs))
-apcupsd_obj     := $(call SRC2OBJ,$(apcupsd_srcs)) $(if $(WIN32),$(call SRC2OBJ,win32/winservice.cpp win32/winmain.cpp))
+apcctrl_obj     := $(call SRC2OBJ,$(apcctrl_srcs)) $(if $(WIN32),$(call SRC2OBJ,win32/winservice.cpp win32/winmain.cpp))
 apcaccess_obj   := $(call SRC2OBJ,$(apcaccess_srcs))
 apctest_obj     := $(call SRC2OBJ,$(apctest_srcs))
 smtp_obj        := $(call SRC2OBJ,$(smtp_srcs))
 
-SRCS = $(common_srcs) $(apcupsd_srcs) $(apcaccess_srcs) \
+SRCS = $(common_srcs) $(apcctrl_srcs) $(apcaccess_srcs) \
        $(apctest_srcs) $(smtp_srcs) 
 
-all-targets: apcupsd$(EXE) apcaccess$(EXE) apctest$(EXE) smtp$(EXE) 
+all-targets: apcctrl$(EXE) apcaccess$(EXE) apctest$(EXE) smtp$(EXE) 
 
-apcupsd$(EXE): $(common_obj) $(apcupsd_obj) $(APCDRVLIBS) $(APCLIBS)
+apcctrl$(EXE): $(common_obj) $(apcctrl_obj) $(APCDRVLIBS) $(APCLIBS)
 	$(LINK) $(DRVLIBS) $(BG)
 
 apctest$(EXE): $(common_obj) $(apctest_obj) $(APCDRVLIBS) $(APCLIBS)
@@ -46,13 +46,13 @@ all-uninstall: uninstall-base
 
 install-base:
 	$(call MKDIR,$(sbindir))
-	$(call INSTPROG,700,apcupsd,$(sbindir)/apcupsd$(EXE))
+	$(call INSTPROG,700,apcctrl,$(sbindir)/apcctrl$(EXE))
 	$(call INSTPROG,700,apctest,$(sbindir)/apctest$(EXE))
 	$(call INSTPROG,755,apcaccess,$(sbindir)/apcaccess$(EXE))
 	$(call INSTPROG,755,smtp,$(sbindir)/smtp$(EXE))
 
 uninstall-base:
-	$(call UNINST,$(sbindir)/apcupsd$(EXE))
+	$(call UNINST,$(sbindir)/apcctrl$(EXE))
 	$(call UNINST,$(sbindir)/apctest$(EXE))
 	$(call UNINST,$(sbindir)/apcaccess$(EXE))
 	$(call UNINST,$(sbindir)/smtp$(EXE))

@@ -1,5 +1,5 @@
 #! /bin/sh
-# preinst script for apcupsd
+# preinst script for apcctrl
 #
 # see: dh_installdeb(1)
 
@@ -18,8 +18,8 @@ case "$1" in
 #        if [ "$1" = "upgrade" ]
 #        then
 #            start-stop-daemon --stop --quiet --oknodo  \
-#                --pidfile /var/run/apcupsd.pid  \
-#                --exec /usr/sbin/apcupsd 2>/dev/null || true
+#                --pidfile /var/run/apcctrl.pid  \
+#                --exec /usr/sbin/apcctrl 2>/dev/null || true
 #        fi
     ;;
 

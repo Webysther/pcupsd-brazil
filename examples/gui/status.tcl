@@ -113,7 +113,7 @@ proc DisplayStatus {} {
    grid .main.text.lab30 -row 3 -column 0 -sticky e
    grid .main.text.lab31 -row 3 -column 1 -sticky ew
 
-   label .main.text.lab40 -text "Apcupsd Release:"
+   label .main.text.lab40 -text "apcctrl Release:"
    label .main.text.lab41 -text $Release
    grid .main.text.lab40 -row 4 -column 0 -sticky e
    grid .main.text.lab41 -row 4 -column 1 -sticky ew

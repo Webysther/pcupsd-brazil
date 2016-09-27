@@ -355,7 +355,7 @@ void UsbUpsDriver::usb_process_value(int ci, USB_VALUE* uval)
 
    switch(ci)
    {
-   /* UPS_STATUS -- this is the most important status for apcupsd */
+   /* UPS_STATUS -- this is the most important status for apcctrl */
    case CI_STATUS:
       _ups->Status &= ~0xff;
       _ups->Status |= uval->iValue & 0xff;
@@ -831,7 +831,7 @@ bool UsbUpsDriver::read_volatile_data()
  * Read UPS info that remains unchanged -- e.g. transfer voltages, 
  * shutdown delay, etc.
  *
- * This routine is called once when apcupsd is starting.
+ * This routine is called once when apcctrl is starting.
  */
 bool UsbUpsDriver::read_static_data()
 {
@@ -1150,8 +1150,8 @@ bool UsbUpsDriver::shutdown()
    if (!shutdown) {
       Dmsg(000, "I don't know how to turn off this UPS...sorry.\n"
          "Please report this, along with the output from\n"
-         "running examples/hid-ups, to the apcupsd-users\n"
-         "mailing list (apcupsd-users@lists.sourceforge.net).\n");
+         "running examples/hid-ups, to the apcctrl-users\n"
+         "mailing list (apcctrl-users@lists.sourceforge.net).\n");
    }
 
    /*

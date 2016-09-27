@@ -10,8 +10,8 @@
   <!ENTITY dhsection   "<manvolnum>SECTION</manvolnum>">
   <!ENTITY dhemail     "<email>fgp@phlo.org</email>">
   <!ENTITY dhusername  "root">
-  <!ENTITY dhucpackage "<refentrytitle>APCUPSD</refentrytitle>">
-  <!ENTITY dhpackage   "apcupsd">
+  <!ENTITY dhucpackage "<refentrytitle>APCCTRL</refentrytitle>">
+  <!ENTITY dhpackage   "apcctrl">
 
   <!ENTITY debian      "<productname>Debian GNU/Linux</productname>">
   <!ENTITY gnu         "<acronym>GNU</acronym>">

@@ -1,4 +1,4 @@
-ApcCtrl é um branch do projeto apcupsd 3.14.x. Ele foi criado para dar
+ApcCtrl é um branch do projeto apcctrl 3.14.x. Ele foi criado para dar
 suporte aos nobreaks da APC no Brasil, que são modelos herdados da Microsol.
 Essa aplicação não é oficial da APC Brasil. Foi desenvolvida por terceiros
 e ela opera nos modelos da "GNU GENERAL PUBLIC LICENSE". Todo o código fonte
@@ -25,16 +25,16 @@ Os modelos de nobreak da APC Brasil focados são:
   - STAY 700 (PS700)
 
 A interface com o usuário se dá pelos executáveis:
-  - apcupsd: daemon que gera as ações.
+  - apcctrl: daemon que gera as ações.
   - apctest: ferramenta de teste.
-  - apcaccess: acessa os parâmetros em tempo de execução do apcupsd
+  - apcaccess: acessa os parâmetros em tempo de execução do apcctrl
   - smtp: cliente smtp simples (não é recomendado seu uso)   
 
 Configuração:
   - /etc/apcctrl/apcctrl.conf
   
 Controle de eventos:
-  - /etc/apcctrl/apccontrol: controle de eventos. O daemon apcupsd chama
+  - /etc/apcctrl/apccontrol: controle de eventos. O daemon apcctrl chama
     esse script que pode ser alterado pelo usuário para definir como o
     servidor deve reagir para desligar, hibernar, enviar email, etc.
 

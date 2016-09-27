@@ -4,13 +4,13 @@
 .Os apccontrol v3.14.6
 .Sh NAME
 .Nm apccontrol
-.Nd apcupsd(8) event handler script
+.Nd apcctrl(8) event handler script
 .Sh SYNOPSIS
 .Nm 
 { <event> <ups-name> <connected> <powered> }
 .Sh DESCRIPTION
 When 
-.Xr apcupsd 8
+.Xr apcctrl 8
 detects anomalies from the UPS being monitored, it triggers an event which
 usually results in one or more calls to the 
 .Nm
@@ -18,10 +18,10 @@ shell script.
 Each event causes 
 .Nm
 to take a particular action. These actions default to sane behaviour 
-for all the events that apcupsd is likely to encounter. However, 
+for all the events that apcctrl is likely to encounter. However, 
 you can change the behaviour of every single action.
 .Pp
-When apcupsd detects an event, it calls the 
+When apcctrl detects an event, it calls the 
 .Nm
 script with the following four arguments:
 .Pp
@@ -33,17 +33,17 @@ This is the name of the UPS as specified in the
 .Pa /etc/apcctrl/apcctrl.conf
 configuration file - not the name in the EEPROM of a smart UPS. 
 .It connected
-This is 1 if apcupsd is connected to the UPS via a serial or USB port. 
-In the case of a slave machine where apcupsd is not directly connected 
+This is 1 if apcctrl is connected to the UPS via a serial or USB port. 
+In the case of a slave machine where apcctrl is not directly connected 
 to the UPS, this value will be 0.
 .It powered
-This is 1 if the computer on which apcupsd is running is powered by the UPS 
+This is 1 if the computer on which apcctrl is running is powered by the UPS 
 and 0 if not. This is not currently implemented and always defaults to 0. 
 .El
 .Pp
 Events are sent to the system log and, optionally, to the temporary 
 events file
-.Pa ( /etc/apcctrl/apcupsd.events ) , 
+.Pa ( /etc/apcctrl/apcctrl.events ) , 
 and they also generate a call to 
 .Nm
 which in turn will call any scripts you have placed in the 
@@ -52,7 +52,7 @@ directory.
 .Ss LIST OF EVENTS AND DEFAULT ACTIONS
 .Bl -hang -width "commfailure"
 .It annoyme
-apcupsd generates this event when a shutdown is scheduled, and the time specified by the ANNOYME configuration directive in the 
+apcctrl generates this event when a shutdown is scheduled, and the time specified by the ANNOYME configuration directive in the 
 .Pa /etc/apcctrl/apcctrl.conf
 file has expired.
 .Pp
@@ -60,28 +60,28 @@ Default action -- sends "Power problems please logoff." to
 .Xr wall 1
 and then exits.
 .It battattach
-apcupsd generates this event when it detects that the UPS battery has been 
+apcctrl generates this event when it detects that the UPS battery has been 
 reconnected after a battdetach event. 
 .Pp
 Default action: does nothing.
 .It battdetach
-apcupsd generates this event when it detects that the UPS battery has been 
+apcctrl generates this event when it detects that the UPS battery has been 
 disconnected.
 .Pp
 Default action: does nothing.
 .It changeme
-apcupsd generates this event when it detects that the utility power is on, 
+apcctrl generates this event when it detects that the utility power is on, 
 but the battery is not functioning correctly. This is repeated every 9 hours.
 .Pp
 Default action -- sends "Emergency! UPS batteries have failed Change them NOW" to wall and then exits.
 .It commfailure
-apcupsd generates this event each time it loses communication with the monitored
+apcctrl generates this event each time it loses communication with the monitored
 UPS. This event is not detected on simple signalling UPSes like the
 Back-UPS 650.
 .Pp
 Default action -- sends "Communications with UPS lost." to wall and then exits.
 .It commok
-apcupsd generates this event after a commfailure event when communication 
+apcctrl generates this event after a commfailure event when communication 
 with the UPS is re-established.
 .Pp
 Default action -- sends "Communications with UPS restored." to wall and 
@@ -93,34 +93,34 @@ Default action -- sends "Beginning Reboot Sequence" to wall and then calls
 .Xr shutdown 8
 with the "-r now" command line arguments to reboot the computer.
 .It doshutdown
-apcupsd generates this event to shutdown the computer when the UPS is running 
+apcctrl generates this event to shutdown the computer when the UPS is running 
 on battery power and one of the limits (time, run, load) is reached.
 .Pp
 Default action -- sends "Beginning Shutdown Sequence" to wall and then calls
 .Xr shutdown 8
 with the command line arguments "-h now" to shutdown the computer.
 .It emergency
-apcupsd generates this event when the UPS is on battery power, the battery 
+apcctrl generates this event when the UPS is on battery power, the battery 
 is low and the utility power is on: a sure sign of battery failure! 
 .Pp
 Default action -- sends "Emergency Shutdown. Possible UPS battery failure." 
-to wall. Immediately after this, apcupsd generates a doshutdown event to 
+to wall. Immediately after this, apcctrl generates a doshutdown event to 
 shutdown the system.
 .It failing
-apcupsd generates this event when the UPS is running on batteries and the 
+apcctrl generates this event when the UPS is running on batteries and the 
 UPS sets the low battery signal indicating that battery power is nearly 
-exhausted. After this event, apcupsd will immediately generate a 
+exhausted. After this event, apcctrl will immediately generate a 
 doshutdown event.
 .Pp
 Default action -- sends "UPS battery power exhausted. Doing shutdown." to wall
 and then exits.
 .It killpower
-apcupsd does not normally generate this event. Instead, it is invoked directly
+apcctrl does not normally generate this event. Instead, it is invoked directly
 from the system halt script as 'apccontrol killpower' because the killpower 
 event needs to be performed as late in system shutdown as possible.
 .Pp
 Default action -- sends "UPS now committed to shut down" to wall, waits
-for 10 seconds and then issues the command "apcupsd --killpower" to put
+for 10 seconds and then issues the command "apcctrl --killpower" to put
 the UPS into hibernate mode and shut off power to the connected equipment. 
 In the case of a smart UPS, the UPS will then wait for the expiry of any 
 configured shutdown time delay specified by the SLEEP configuration directive.
@@ -128,14 +128,14 @@ In hibernate mode, the UPS will restore utility power to the connected
 equipment subject to the values specified for the RETURNCHARGE and WAKEUP 
 configuration directives.
 .It loadlimit
-apcupsd generates this event when the battery discharge limit specified by 
+apcctrl generates this event when the battery discharge limit specified by 
 the BATTERYLEVEL configuration directive has been reached.
 .Pp
 Default action -- sends "UPS battery discharge limit reached. Doing shutdown"
-to wall and then exits. After this event, apcupsd will immediately generate a 
+to wall and then exits. After this event, apcctrl will immediately generate a 
 doshutdown event.
 .It mainsback
-apcupsd generates this event when the utility power returns after a powerout 
+apcctrl generates this event when the utility power returns after a powerout 
 event. The doshutdown event may or may not have been generated depending on 
 the parameters you have defined and the length of the power outage. Attempting
 cancellation of a doshutdown event should never be tried as it is very 
@@ -147,40 +147,40 @@ Default action -- if the file
 exists, sends "Continuing with shutdown." to wall and then exits. Otherwise,
 does nothing.
 .It onbattery
-apcupsd generates this event if a power failure has been detected and 
+apcctrl generates this event if a power failure has been detected and 
 the UPS is still on battery power at the expiry of the delay specified 
 by the ONBATTERYDELAY configuration directive. 
 .Pp
 Default action -- sends "Power failure. Running on UPS batteries." to wall 
 and then exits.
 .It offbattery
-apcupsd generates this event when the utility power returns if, and only if,
+apcctrl generates this event when the utility power returns if, and only if,
 the onbattery event has been generated.
 .Pp
 Default -- sends ""Power has returned..." to wall and then exits.
 .It powerout
-apcupsd generates this event as soon as apcupsd detects that the UPS has 
+apcctrl generates this event as soon as apcctrl detects that the UPS has 
 switched to battery power and it is not a self-test.
 .Pp
 Default action -- does nothing.
 .It remotedown
-apcupsd generates this event on a slave machine when it detects either (1)
+apcctrl generates this event on a slave machine when it detects either (1)
 that the master has shutdown, or (2) that an onbattery event has occurred 
 and communication with the master has been lost.
 .Pp
-Default action: sends "Remote Shutdown. Beginning Shutdown Sequence." to wall and exits. Immediately after this, apcupsd generates a doshutdown event to 
+Default action: sends "Remote Shutdown. Beginning Shutdown Sequence." to wall and exits. Immediately after this, apcctrl generates a doshutdown event to 
 shutdown the system.
 .It runlimit
-apcupsd generates this event when the remaining runtime limit specified by the 
+apcctrl generates this event when the remaining runtime limit specified by the 
 MINUTES configuration directive expires while the UPS is on battery power
 as the result of a utility power outage. The remaining runtime is internally 
 calculated by the UPS and monitored by apcuspd.
 .Pp
 Default action -- sends "UPS battery runtime percent reached. Doing shutdown."
-to wall and then exits. After this event, apcupsd will immediately generate
+to wall and then exits. After this event, apcctrl will immediately generate
 a doshutdown event.
 .It timeout
-apcupsd generates this event when the time specified by the TIMEOUT
+apcctrl generates this event when the time specified by the TIMEOUT
 configuration directive expires while the UPS is on battery power as the 
 result of a utility power outage. This configuration directive is not
 normally used with smart UPSes which would instead rely on the more
@@ -188,14 +188,14 @@ reliable remaining runtime (MINUTES) or the battery level (BATTERYLEVEL)
 configuration directives.
 .Pp
 Default action -- send "UPS battery runtime limit exceeded. Doing shutdown."
-to wall and then exits. After this event, apcupsd will immediately generate
+to wall and then exits. After this event, apcctrl will immediately generate
 a doshutdown event.
 .It startselftest
-apcupsd generates this event when it detects the start of a UPS self test.
+apcctrl generates this event when it detects the start of a UPS self test.
 .Pp
 Default action: does nothing.
 .It endselftest
-apcupsd generates this event when it detects the end of a UPS self test.
+apcctrl generates this event when it detects the end of a UPS self test.
 .Pp
 Default action: does nothing.
 .El
@@ -205,7 +205,7 @@ Do
 modify
 .Nm
 directly as it will be overwritten the next time you upgrade to a new release
-of apcupsd. 
+of apcctrl. 
 .Pp
 The recommended way to customise an event action is simply to create an 
 executable program or script file with the same name as the event and put 
@@ -235,18 +235,18 @@ users may be found in
 .Pa /etc/apcctrl 
 after an installation and also in the 
 .Pa platforms/etc 
-directory of the apcupsd source code. 
+directory of the apcctrl source code. 
 .Pp
 .Sh FILES
 .Pa /etc/apcctrl/apccontrol
 .Sh SEE ALSO
 .Xr wall 1 ,
 .Xr apcctrl.conf 5 , 
-.Xr apcupsd 8 ,
+.Xr apcctrl 8 ,
 .Xr shutdown 8 .
 .Pp
-The HTML apcupsd manual installed on your system or available online at
-http://www.apcupsd.org/
+The HTML apcctrl manual installed on your system or available online at
+http://www.apcctrl.org/
 .Sh AUTHORS
 .Ss This page
 .An Trevor Roydhouse

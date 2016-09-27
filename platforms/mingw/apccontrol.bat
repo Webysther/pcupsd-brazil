@@ -16,7 +16,7 @@ SET sbindir=%sbindir:"=%
 IF "%sbindir%" == "" FOR %%A IN (%5) DO SET sbindir=%%A
 
 rem Paths to important executables
-SET APCUPSD="%sbindir%\apcupsd"
+SET APCCTRL="%sbindir%\apcctrl"
 SET SHUTDOWN="%sbindir%\shutdown"
 SET BACKGROUND="%sbindir%\background"
 
@@ -38,7 +38,7 @@ rem   perl, C program, etc.
 rem
 rem You can customize any command by creating an executable file (may be a
 rem   script or a compiled program) and naming it the same as the %1 parameter
-rem   passed by apcupsd to this script. We will accept files with any extension
+rem   passed by apcctrl to this script. We will accept files with any extension
 rem   included in PATHEXT (*.exe, *.bat, *.cmd, etc).
 rem
 rem After executing your script, apccontrol continues with the default action.
@@ -50,7 +50,7 @@ rem   in the downshutdown) case and your command errors or stalls, it will
 rem   prevent your machine from being shutdown, so test, test, test to
 rem   make sure it works correctly.
 rem
-rem The apccontrol.bat file will be replaced every time apcupsd is installed,
+rem The apccontrol.bat file will be replaced every time apcctrl is installed,
 rem   so do NOT make event modifications in this file. Instead, override the
 rem   event actions using event scripts as described above.
 rem
@@ -97,7 +97,7 @@ echo.
 echo Usage: %0 command
 echo.
 echo Warning: this script is intended to be launched by
-echo apcupsd and should never be launched by users.
+echo apcctrl and should never be launched by users.
 GOTO :done
 
 :commfailure
@@ -153,10 +153,10 @@ rem  Note that Win32 lacks a portable way to delay for a
 rem    given time, so we use the trick of pinging a
 rem    non-existent IP address with a given timeout.
 rem
-rem   %APCUPSD% /kill
+rem   %APCCTRL% /kill
 rem   ping -n 1 -w 5000 10.255.255.254 > NUL
-rem   %POPUP% "Doing %APCUPSD% --killpower"
-rem   %APCUPSD% --killpower
+rem   %POPUP% "Doing %APCCTRL% --killpower"
+rem   %APCCTRL% --killpower
 rem   ping -n 1 -w 12000 10.255.255.254 > NUL
 rem
    %SHUTDOWN% -h now

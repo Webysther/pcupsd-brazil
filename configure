@@ -583,7 +583,7 @@ PACKAGE_BUGREPORT=
 PACKAGE_URL=
 
 ac_unique_file="Developers"
-ac_default_prefix=/opt/apcupsd
+ac_default_prefix=/opt/apcctrl
 ac_default_prefix=/usr
 # Factoring default headers for most tests.
 ac_includes_default="\
@@ -693,7 +693,7 @@ RM
 RANLIB
 SCRIPTSHELL
 WALL
-APCUPSD_MAIL
+APCCTRL_MAIL
 SHUTDOWN
 APCTEST
 SMTP
@@ -1479,7 +1479,7 @@ Optional Features:
 
   --enable-modbus         Compile MODBUS driver code (default)
   --disable-modbus        No MODBUS driver
-  --enable-gapcmon        Build GTK/GUI front-end to apcupsd (default=no)
+  --enable-gapcmon        Build GTK/GUI front-end to apcctrl (default=no)
   --enable-apcagent       Build menubar app for Mac OS X (default=no)
   --enable-install-distdir
                           Install distribution
@@ -2753,10 +2753,10 @@ if test $HAVE_UNAME=yes -a x`uname -s` = xSunOS
 then
 
    if test x$sysconfdir = x'${prefix}/etc' ; then
-      sysconfdir='/etc/opt/apcupsd'
+      sysconfdir='/etc/opt/apcctrl'
    fi
    if test x$sbindir = x'${exec_prefix}/sbin' ; then
-      sbindir='/etc/opt/apcupsd/sbin'
+      sbindir='/etc/opt/apcctrl/sbin'
    fi
 
       CPPFLAGS="${CPPFLAGS} -I/usr/sfw/include"
@@ -4233,12 +4233,12 @@ do
 set dummy $ac_prog; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_APCUPSD_MAIL+:} false; then :
+if ${ac_cv_path_APCCTRL_MAIL+:} false; then :
   $as_echo_n "(cached) " >&6
 else
-  case $APCUPSD_MAIL in
+  case $APCCTRL_MAIL in
   [\\/]* | ?:[\\/]*)
-  ac_cv_path_APCUPSD_MAIL="$APCUPSD_MAIL" # Let the user override the test with a path.
+  ac_cv_path_APCCTRL_MAIL="$APCCTRL_MAIL" # Let the user override the test with a path.
   ;;
   *)
   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
@@ -4248,7 +4248,7 @@ do
   test -z "$as_dir" && as_dir=.
     for ac_exec_ext in '' $ac_executable_extensions; do
   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_APCUPSD_MAIL="$as_dir/$ac_word$ac_exec_ext"
+    ac_cv_path_APCCTRL_MAIL="$as_dir/$ac_word$ac_exec_ext"
     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -4259,25 +4259,25 @@ IFS=$as_save_IFS
   ;;
 esac
 fi
-APCUPSD_MAIL=$ac_cv_path_APCUPSD_MAIL
-if test -n "$APCUPSD_MAIL"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $APCUPSD_MAIL" >&5
-$as_echo "$APCUPSD_MAIL" >&6; }
+APCCTRL_MAIL=$ac_cv_path_APCCTRL_MAIL
+if test -n "$APCCTRL_MAIL"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $APCCTRL_MAIL" >&5
+$as_echo "$APCCTRL_MAIL" >&6; }
 else
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
 fi
 
 
-  test -n "$APCUPSD_MAIL" && break
+  test -n "$APCCTRL_MAIL" && break
 done
-test -n "$APCUPSD_MAIL" || APCUPSD_MAIL="no"
+test -n "$APCCTRL_MAIL" || APCCTRL_MAIL="no"
 
-if test "$APCUPSD_MAIL" = "no"
+if test "$APCCTRL_MAIL" = "no"
 then
    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: mail program not found !" >&5
 $as_echo "$as_me: WARNING: mail program not found !" >&2;}
-   APCUPSD_MAIL=mail
+   APCCTRL_MAIL=mail
 fi
 
 for ac_prog in wall
@@ -7688,7 +7688,7 @@ fi
         if test "${SYS_GD_FOUND}" = "no"
         then
            as_fn_error $? "Your system lacks the GD library which is needed for
-                         compiling the apcupsd CGI programs. Please install
+                         compiling the apcctrl CGI programs. Please install
                          libgd and re-run the ./configure script.
                          Alternatively you can disable the CGI support." "$LINENO" 5
         fi
@@ -7708,7 +7708,7 @@ else
    as_fn_error $? "Found system GD library but no header file.
                                  Please find the file gd.h in your system
                                  include directories and report its location
-                                 to apcupsd-users@lists.sourceforge.net" "$LINENO" 5
+                                 to apcctrl-users@lists.sourceforge.net" "$LINENO" 5
 fi
 
 
@@ -9003,7 +9003,7 @@ do
    fi
 done
 
-# Find the default directory to put the apcupsd.events and apcupsd.status files
+# Find the default directory to put the apcctrl.events and apcctrl.status files
 for LOGDIR in "/var/log" "/etc/apcctrl"
 do
    if test -d $LOGDIR
@@ -9042,7 +9042,7 @@ alpha)
    LOCKDIR=/var/spool/locks
    LOGDIR=/etc/apcctrl
    DFILES="\
-      platforms/alpha/apcupsd \
+      platforms/alpha/apcctrl \
       platforms/alpha/awkhaltprog"
    ;;
 bsdi)
@@ -9051,7 +9051,7 @@ bsdi)
 debian)
    DISTVER=`cat /etc/debian_version`
    DFILES="\
-      platforms/debian/apcupsd \
+      platforms/debian/apcctrl \
       platforms/debian/ups-monitor"
    ;;
 freebsd)
@@ -9064,13 +9064,13 @@ freebsd)
    PTHREAD_LFLAGS=""
    LDFLAGS="$LDFLAGS -pthread"
    DFILES="\
-      platforms/freebsd/apcupsd \
+      platforms/freebsd/apcctrl \
       platforms/freebsd/apccontrol"
    ;;
 gentoo)
    DISTVER=`awk '/version / {print $5}' < /etc/gentoo-release`
    DFILES="\
-      platforms/gentoo/apcupsd \
+      platforms/gentoo/apcctrl \
       platforms/gentoo/halt"
    ;;
 hpux)
@@ -9078,7 +9078,7 @@ hpux)
    SERIALDEV=/dev/tty0p0
    PTHREAD_CFLAGS="-D_XOPEN_SOURCE_EXTENDED -D_REENTRANT"
    DFILES="\
-      platforms/hpux/apcupsd \
+      platforms/hpux/apcctrl \
       platforms/hpux/halt"
    ;;
 netbsd)
@@ -9088,7 +9088,7 @@ netbsd)
    PTHREAD_LFLAGS=""
    LDFLAGS="$LDFLAGS -pthread"
    DFILES="\
-      platforms/netbsd/apcupsd"
+      platforms/netbsd/apcctrl"
    ;;
 openbsd)
    DISTVER=`uname -a |awk '{print $3}'`
@@ -9098,14 +9098,14 @@ openbsd)
    PTHREAD_LFLAGS=""
    LDFLAGS="$LDFLAGS -pthread"
    DFILES="\
-      platforms/openbsd/apcupsd \
+      platforms/openbsd/apcctrl \
       platforms/openbsd/apccontrol"
   ;;
 mandrake)
    DISTVER=`cat /etc/mandrake-release | grep release | cut -f 5 -d ' '`
    DFILES="\
-      platforms/mandrake/apcupsd \
-      platforms/mandrake/apcupsd.spec \
+      platforms/mandrake/apcctrl \
+      platforms/mandrake/apcctrl.spec \
       platforms/mandrake/awkhaltprog"
    ;;
 redhat)
@@ -9120,8 +9120,8 @@ redhat)
       DISTVER=`cat /etc/redhat-release | grep release | cut -f 5 -d ' '`
    fi
    DFILES="\
-      platforms/redhat/apcupsd \
-      platforms/redhat/apcupsd.spec \
+      platforms/redhat/apcctrl \
+      platforms/redhat/apcctrl.spec \
       platforms/redhat/awkhaltprog"
    ;;
 yellowdog)
@@ -9131,21 +9131,21 @@ yellowdog)
        DISTVER=`cat /etc/yellowdog-release | grep release | cut -f 5 -d ' '`
    fi
    DFILES="\
-      platforms/yellowdog/apcupsd \
-      platforms/yellowdog/apcupsd.spec \
+      platforms/yellowdog/apcctrl \
+      platforms/yellowdog/apcctrl.spec \
       platforms/yellowdog/awkhaltprog"
    ;;
 engarde)
    DISTVER=`cat /etc/engarde-release | grep ersion | cut -f 5 -d ' '`
    DFILES="\
-      platforms/engarde/apcupsd \
-      platforms/engarde/apcupsd.spec \
+      platforms/engarde/apcctrl \
+      platforms/engarde/apcctrl.spec \
       platforms/engarde/awkhaltprog"
    ;;
 slackware)
    DISTVER=`cat /etc/slackware-version`
    DFILES="\
-      platforms/slackware/apcupsd \
+      platforms/slackware/apcctrl \
       platforms/slackware/rc6.patch"
    ;;
 sun)
@@ -9155,24 +9155,24 @@ sun)
    PIDDIR=/var/run
    LOCKDIR=/var/spool/locks
    LOGDIR=${sysconfdir}
-   APCUPSD_MAIL=/usr/bin/mailx
+   APCCTRL_MAIL=/usr/bin/mailx
    PTHREAD_CFLAGS="-D_POSIX_PTHREAD_SEMANTICS"
    DFILES="\
-      platforms/sun/apcupsd \
+      platforms/sun/apcctrl \
       platforms/sun/rc0.solaris \
       platforms/sun/apccontrol"
    ;;
 suse)
    DISTVER=`cat /etc/SuSE-release |grep VERSION| cut -f 3 -d ' '`
    DFILES="\
-      platforms/suse/apcupsd \
+      platforms/suse/apcctrl \
       platforms/suse/awkhaltprog"
    ;;
 suse5)
    DISTNAME=suse
    DISTVER=5.x
    DFILES="\
-      platforms/suse/apcupsd \
+      platforms/suse/apcctrl \
       platforms/suse/halt-setup.sh \
       platforms/suse/halt"
    ;;
@@ -9191,7 +9191,7 @@ qnx)
    DISTVER=`uname -r`
    SERIALDEV=/dev/ser1
    DFILES="\
-      platforms/qnx/apcupsd \
+      platforms/qnx/apcctrl \
       platforms/qnx/apccontrol"
    ;;
 mingw)
@@ -9204,7 +9204,7 @@ mingw)
 unknown)
    DISTVER=unknown
    DFILES="\
-      platforms/unknown/apcupsd \
+      platforms/unknown/apcctrl \
       platforms/unknown/halt"
   ;;
 *)
@@ -10675,7 +10675,7 @@ echo "
 Configuration on `date`:
 
   Host:                       $host -- ${DISTNAME} ${DISTVER}
-  Apcupsd version:            ${VERSION} (${DATE})
+  apcctrl version:            ${VERSION} (${DATE})
   Source code location:       ${srcdir}
   Install binaries:           ${sbindir}
   Install config files:       ${sysconfdir}
@@ -10727,11 +10727,11 @@ if test $? = 0 ; then
    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING:
       WARNING! You have /usr/ucb on your path. We STRONGLY recommend
          that you remove it and rerun configure. Otherwise
-         apcupsd may be unable to shutdown your system.
+         apcctrl may be unable to shutdown your system.
    " >&5
 $as_echo "$as_me: WARNING:
       WARNING! You have /usr/ucb on your path. We STRONGLY recommend
          that you remove it and rerun configure. Otherwise
-         apcupsd may be unable to shutdown your system.
+         apcctrl may be unable to shutdown your system.
    " >&2;};
 fi

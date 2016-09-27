@@ -1,6 +1,6 @@
 From: "Adam Kropelin" <adam@kroptech.com>
 To: "Kern Sibbald" <kern@sibbald.com>
-Cc: "Apcupsd-users" <apcupsd-users@lists.sourceforge.net>
+Cc: "apcctrl-users" <apcctrl-users@lists.sourceforge.net>
 Subject: Reading a usbsnoop trace
 Date: Mon, 23 Aug 2004 21:51:50 -0400
 
@@ -71,8 +71,8 @@ since it makes comparison and trend-spotting harder.
 
 The URBs can be of different transfer types and often the request and 
 response are not the same type. I'm going to vastly over-simplify and talk 
-about what we care about for apcupsd. Generally speaking, all the 
-interesting data for apcupsd is in one of two pairs. Either 
+about what we care about for apcctrl. Generally speaking, all the 
+interesting data for apcctrl is in one of two pairs. Either 
 URB_FUNCTION_CLASS_INTERFACE (request) -> URB_FUNCTION_CONTROL_TRANSFER 
 (response) or URB_FUNCTION_BULK_OR_INTERRUPT_TRANSFER (both request & 
 response) URBs. The CONTROL_TRANSFERs are when a specific data item is read 

@@ -1,9 +1,9 @@
 
 
-Configuration on Tue Sep 27 16:31:57 BRT 2016:
+Configuration on Tue Sep 27 17:15:13 BRT 2016:
 
   Host:                       x86_64-unknown-linux-gnu -- debian 8.4
-  Apcupsd version:            0.7.6 (2 September 2016)
+  apcctrl version:            0.8.0 (27 September 2016)
   Source code location:       .
   Install binaries:           /sbin
   Install config files:       /etc/apcctrl

@@ -188,8 +188,8 @@ static const PAIRS table[] = {
     * not used any more for obsoleted options: we are only interested in
     * printing the message.
     * There is a new meaning for offset field, too. If TRUE will bail out,
-    * if FALSE it will continue to run apcupsd. This way we can bail out
-    * if an obsolete option is too important to continue running apcupsd.
+    * if FALSE it will continue to run apcctrl. This way we can bail out
+    * if an obsolete option is too important to continue running apcctrl.
     */
    {"CONTROL",    obsolete, TRUE,  (GENINFO *)"CONTROL config directive is obsolete"   },
    {"NETACCESS",  obsolete, TRUE,  (GENINFO *)"NETACCESS config directive is obsolete" },
@@ -377,7 +377,7 @@ static int match_facility(UPSINFO *ups, int offset,
          /* if it changed, close log file and reopen it */
          if (ups->sysfac != oldfac) {
             closelog();
-            openlog("apcupsd", LOG_CONS | LOG_PID, ups->sysfac);
+            openlog("apcctrl", LOG_CONS | LOG_PID, ups->sysfac);
          }
          return SUCCESS;
       }
@@ -725,8 +725,8 @@ jump_into_the_loop:
    }
 
    /*
-    * apcupsd _must_ have a lock file, mainly for security reasons.
-    * If apcupsd is running and a lock is not there the admin could
+    * apcctrl _must_ have a lock file, mainly for security reasons.
+    * If apcctrl is running and a lock is not there the admin could
     * mistakenly open a serial device with minicom for using it as a
     * modem or other device. Think about the implications of sending
     * extraneous characters to the UPS: a wrong char and the machine

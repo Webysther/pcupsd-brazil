@@ -9,7 +9,7 @@ all-uninstall: uninstall-slackware
 install-slackware:
 	$(call DISTINST,Slackware)
 	$(call MKDIR,/etc/rc.d)
-	$(call INSTPROG,744,apcupsd,/etc/rc.d/rc.apcupsd)
+	$(call INSTPROG,744,apcctrl,/etc/rc.d/rc.apcctrl)
 	$(call MKDIR,$(LOCKDIR))
 	$(VV)-rcfile=/etc/rc.d/rc.6; \
 	grep -q $(sysconfdir)/apccontrol $$rcfile; \
@@ -23,9 +23,9 @@ install-slackware:
       fi; \
    fi
 	@( echo ''; \
-	echo "The apcupsd boot script has been installed to"; \
-	echo "/etc/rc.d/rc.apcupsd and the halt script /etc/rc.d/rc.6 has"; \
-	echo "been patched.  You must still call /etc/rc.d/rc.apcupsd"; \
+	echo "The apcctrl boot script has been installed to"; \
+	echo "/etc/rc.d/rc.apcctrl and the halt script /etc/rc.d/rc.6 has"; \
+	echo "been patched.  You must still call /etc/rc.d/rc.apcctrl"; \
 	echo "during the boot process after you have tested your"; \
 	echo "installation.  One way to do this is from the"; \
 	echo "/etc/rc.d/rc.local file."; \
@@ -34,7 +34,7 @@ install-slackware:
 
 uninstall-slackware:
 	$(call DISTUNINST,Slackware)
-	-$(call UNINST,/etc/rc.d/rc.apcupsd)
+	-$(call UNINST,/etc/rc.d/rc.apcctrl)
 	$(VV)-rcfile=/etc/rc.d/rc.6; \
 	grep -q $(sysconfdir)/apccontrol $$rcfile; \
 	if [ $$? -eq 0 ]; then \

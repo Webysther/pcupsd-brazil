@@ -6,8 +6,8 @@
  * Part of this code is derived from the Prentice Hall book
  * "Unix Network Programming" by W. Richard Stevens
  *
- * Developers, please note: do not include apcupsd headers
- * or other apcupsd internal information in this file
+ * Developers, please note: do not include apcctrl headers
+ * or other apcctrl internal information in this file
  * as it is used by independent client programs such as the cgi
  * programs.
  */
@@ -126,7 +126,7 @@ static int write_nbytes(sock_t fd, const char *ptr, int nbytes)
        * If another process is still using the inherited fds, there will
        * soon be trouble.
        *
-       * apcupsd is bitten by this issue after fork()ing a child process to
+       * apcctrl is bitten by this issue after fork()ing a child process to
        * run apccontrol.
        *
        * This seemingly-pointless fcntl() call causes the pthreads

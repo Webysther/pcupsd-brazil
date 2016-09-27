@@ -1,10 +1,10 @@
 /***************************************************************************/
-/*                     ChangeLog of Apcupsd 3.14.x                         */
+/*                     ChangeLog of apcctrl 3.14.x                         */
 /*                                                                         */
 /*               Adam Kropelin <adam@kroptech.com>                         */
 /*                                                                         */
-/*               http://www.apcupsd.com/                                   */
-/*               http://sourceforge.net/projects/apcupsd                   */
+/*               http://www.apcctrl.com/                                   */
+/*               http://sourceforge.net/projects/apcctrl                   */
 /***************************************************************************/
 
 ------------------------------------------------------------------------
@@ -25,7 +25,7 @@ Prep for 3.14.13 release
 ------------------------------------------------------------------------
 r2311 | adk0212 | 2015-01-29 09:13:25 -0500 (Thu, 29 Jan 2015) | 5 lines
 
-Place apcupsd lock file in /var/lock instead of /var/lock/subsys on Slackware
+Place apcctrl lock file in /var/lock instead of /var/lock/subsys on Slackware
 Slackware convention is to use /var/lock; /var/lock/subsys appears to be a Red Hat thing
 Reported by Sebastian Arcus <s.arcus@open-t.co.uk>
 Patch by Jonathan Woithe <jwoithe@atrad.com.au>
@@ -33,7 +33,7 @@ Patch by Jonathan Woithe <jwoithe@atrad.com.au>
 ------------------------------------------------------------------------
 r2310 | adk0212 | 2015-01-20 12:38:53 -0500 (Tue, 20 Jan 2015) | 3 lines
 
-Add notes indicating that apcupsd must be restarted for config file changes to become active.
+Add notes indicating that apcctrl must be restarted for config file changes to become active.
 Although it might be considered "obvious", this wasn't actually written down anywhere that I could find.
 
 ------------------------------------------------------------------------
@@ -105,8 +105,8 @@ Update supported USB VID/PID combinations in code and platform-specific drivers
 ------------------------------------------------------------------------
 r2296 | adk0212 | 2015-01-12 11:56:25 -0500 (Mon, 12 Jan 2015) | 3 lines
 
-Remove ancient unmaintained apcupsd.8 manpage from Debian platform directory.
-The current manpage set for apcupsd is in doc/ and should be used by all platforms.
+Remove ancient unmaintained apcctrl.8 manpage from Debian platform directory.
+The current manpage set for apcctrl is in doc/ and should be used by all platforms.
 
 ------------------------------------------------------------------------
 r2295 | adk0212 | 2015-01-07 22:06:44 -0500 (Wed, 07 Jan 2015) | 2 lines
@@ -750,7 +750,7 @@ r2175 | adk0212 | 2014-10-20 23:40:33 -0400 (Mon, 20 Oct 2014) | 8 lines
 
 Make another attempt to fix startup/shutdown log level issues.
 LOG_INFO is the obvious level to use, but as trev@sentry.org pointed out in a fix
-a few years back, LOG_INFO is reserved for apcupsd data logging and is not allowed
+a few years back, LOG_INFO is reserved for apcctrl data logging and is not allowed
 thru the normal event log (syslog) mechanism. LOG_WARN will make it thru but is
 too high a level, especially on Windows. Using LOG_NOTICE should work; it's lower
 than WARN (and, importantly, maps to INFORMATION type on Windows) but it is higher
@@ -759,13 +759,13 @@ than INFO and therefore will make it thru to syslog.
 ------------------------------------------------------------------------
 r2174 | adk0212 | 2014-10-20 23:13:50 -0400 (Mon, 20 Oct 2014) | 3 lines
 
-Fix log level of apcupsd startup message: should be INFO not WARN
+Fix log level of apcctrl startup message: should be INFO not WARN
 Reported by marvin@cbr125world.com
 
 ------------------------------------------------------------------------
 r2173 | adk0212 | 2014-10-17 23:14:48 -0400 (Fri, 17 Oct 2014) | 2 lines
 
-Update manual with license info for apcupsd itself as well as libusbhid
+Update manual with license info for apcctrl itself as well as libusbhid
 
 ------------------------------------------------------------------------
 r2172 | adk0212 | 2014-10-17 21:22:05 -0400 (Fri, 17 Oct 2014) | 2 lines
@@ -785,7 +785,7 @@ Cleanup
 ------------------------------------------------------------------------
 r2169 | adk0212 | 2014-10-17 18:21:21 -0400 (Fri, 17 Oct 2014) | 2 lines
 
-On Linux, attempt to automatically attach USB UPSes to the kernel usbhid/hiddev driver in case they have been detached from it (typically due to running the apcupsd 'generic' USB driver)
+On Linux, attempt to automatically attach USB UPSes to the kernel usbhid/hiddev driver in case they have been detached from it (typically due to running the apcctrl 'generic' USB driver)
 
 ------------------------------------------------------------------------
 r2168 | adk0212 | 2014-10-16 22:28:17 -0400 (Thu, 16 Oct 2014) | 2 lines
@@ -825,7 +825,7 @@ Update AN176
 ------------------------------------------------------------------------
 r2161 | adk0212 | 2014-10-14 17:10:25 -0400 (Tue, 14 Oct 2014) | 3 lines
 
-Add SYSADMIN and APCUPSD_MAIL setting to apccontrol scripts that were missing it
+Add SYSADMIN and APCCTRL_MAIL setting to apccontrol scripts that were missing it
 h/t Quick Fox <quickfox@abv.bg>
 
 ------------------------------------------------------------------------
@@ -906,7 +906,7 @@ Missed the temp == 0 case
 r2147 | adk0212 | 2014-04-09 12:09:58 -0400 (Wed, 09 Apr 2014) | 4 lines
 
 Filter out bogus ITEMP readings from SNMP
-Error is on APC side, we will work around in apcupsd
+Error is on APC side, we will work around in apcctrl
 Reported by Sergey <a_s_y@sama.ru>
 
 ------------------------------------------------------------------------
@@ -1033,7 +1033,7 @@ Remove reference to CHARGING as possible STATUS output
 r2122 | adk0212 | 2014-03-28 22:51:54 -0400 (Fri, 28 Mar 2014) | 3 lines
 
 Remove value normalization from apcaccess and eliminate -u dependency on -p (again)
-apcupsd will no longer zero-pad values so normalization is unnecessary
+apcctrl will no longer zero-pad values so normalization is unnecessary
 
 ------------------------------------------------------------------------
 r2121 | adk0212 | 2014-03-28 22:51:02 -0400 (Fri, 28 Mar 2014) | 3 lines
@@ -1148,7 +1148,7 @@ Update udev info in manual with tips from Timothe Litt <litt@acm.org>
 ------------------------------------------------------------------------
 r2102 | adk0212 | 2014-03-22 12:55:26 -0400 (Sat, 22 Mar 2014) | 3 lines
 
-Add UPS name to subject line of event emails and allow one-stop override of SYSADMIN and APCUPSD_MAIL via config file in SCRIPTDIR
+Add UPS name to subject line of event emails and allow one-stop override of SYSADMIN and APCCTRL_MAIL via config file in SCRIPTDIR
 Contributed by Timothe Litt <litt@acm.org>
 
 ------------------------------------------------------------------------
@@ -1383,7 +1383,7 @@ Final prep for 3.14.11
 ------------------------------------------------------------------------
 r2058 | adk0212 | 2014-01-29 17:56:36 -0500 (Wed, 29 Jan 2014) | 2 lines
 
-Add apcupsd.cat signature file to USB driver installation
+Add apcctrl.cat signature file to USB driver installation
 
 ------------------------------------------------------------------------
 r2057 | adk0212 | 2014-01-29 17:54:21 -0500 (Wed, 29 Jan 2014) | 2 lines
@@ -1541,8 +1541,8 @@ Add missing debug for REG2
 r2029 | adk0212 | 2012-01-26 21:23:44 -0500 (Thu, 26 Jan 2012) | 4 lines
 
 Apply some Mandrake patches, thanks to David Walser <luigiwalser@yahoo.com>
-- http://svn.mandriva.com/svn/packages/cooker/apcupsd/current/SOURCES/apcupsd-3.10.16-staleusb.patch
-- http://svn.mandriva.com/svn/packages/cooker/apcupsd/current/SOURCES/apcupsd-3.14.4-mdv_conf.diff
+- http://svn.mandriva.com/svn/packages/cooker/apcctrl/current/SOURCES/apcctrl-3.10.16-staleusb.patch
+- http://svn.mandriva.com/svn/packages/cooker/apcctrl/current/SOURCES/apcctrl-3.14.4-mdv_conf.diff
 
 ------------------------------------------------------------------------
 r2028 | adk0212 | 2011-12-09 10:23:33 -0500 (Fri, 09 Dec 2011) | 2 lines
@@ -1648,7 +1648,7 @@ Add VID/PID for HP T1500 G3 UPS which is a rebadged APC unit
 r2011 | adk0212 | 2011-10-12 09:00:15 -0400 (Wed, 12 Oct 2011) | 6 lines
 
 Remove vendor check from BSD and Generic USB drivers. HP OEMed some UPSes
-from APC so they are compatible with apcupsd in spite of carrying an HP
+from APC so they are compatible with apcctrl in spite of carrying an HP
 vendor id. We might as well try to talk to anything a user connects. We
 will still fail if the required UPS application collection is not found
 and that is a better indicator of potential compatiblity.
@@ -1720,7 +1720,7 @@ r1999 | adk0212 | 2011-08-12 19:01:38 -0400 (Fri, 12 Aug 2011) | 6 lines
 
 Ignore transitions to battery because of calibration. This can happen if
 user initiates calibration in apctest, then exits apctest and starts
-apcupsd before the calibration has completed. In this case we do not want
+apcctrl before the calibration has completed. In this case we do not want
 to shut down the machine, so treat onbattery+cal as not on battery at all.
 Reported by Sergey <a_s_y@sama.ru>.
 
@@ -1802,7 +1802,7 @@ r1984 | adk0212 | 2010-09-17 08:44:51 -0400 (Fri, 17 Sep 2010) | 6 lines
 Change back so we no longer wait for threads to exit. This is necessary
 because pthread_cancel on OS X does not interrupt blocking calls, even
 those defined as cancellation points by SuSv3. Argh. Someday we need to
-fix apcupsd thread shutdown correctly, but for now this is no worse than
+fix apcctrl thread shutdown correctly, but for now this is no worse than
 before.
 
 ------------------------------------------------------------------------
@@ -2064,7 +2064,7 @@ Remove unused variable shm_OK
 r1937 | adk0212 | 2010-05-16 18:09:43 -0400 (Sun, 16 May 2010) | 4 lines
 
 When logging events, convert LOG_CRIT to a WARNING on Win32 rather than an
-ERROR since apcupsd uses it for power events which aren't really daemon
+ERROR since apcctrl uses it for power events which aren't really daemon
 errors. LOG_ERR is still converted to ERROR for use in true error cases.
 
 ------------------------------------------------------------------------
@@ -2096,7 +2096,7 @@ overwriting of subsequent variables.
 I: Statement might be overflowing a buffer in strncat. Common mistake:
    BAD: strncat(buffer,charptr,sizeof(buffer)) is wrong, it takes the left over size as 3rd argument
    GOOD: strncat(buffer,charptr,sizeof(buffer)-strlen(buffer)-1)
-E: apcupsd bufferoverflowstrncat reports.c:110
+E: apcctrl bufferoverflowstrncat reports.c:110
 Reported by Stanislav Brabec <sbrabec@suse.cz>
 
 ------------------------------------------------------------------------
@@ -2279,7 +2279,7 @@ r1900 | adk0212 | 2010-01-08 19:23:27 -0500 (Fri, 08 Jan 2010) | 5 lines
 
 Update detail text while waiting for apps to exit so user knows why we're
 sitting here for a few seconds. Also skip apctray exit wait if we've
-installed the main apcupsd package since that means we've already ensured
+installed the main apcctrl package since that means we've already ensured
 apctray is not running.
 
 ------------------------------------------------------------------------
@@ -2346,7 +2346,7 @@ Enable building the NSIS System plugin.
 ------------------------------------------------------------------------
 r1888 | adk0212 | 2010-01-03 10:29:16 -0500 (Sun, 03 Jan 2010) | 3 lines
 
-WinUsb-based INF file customized for APCUPSD and driver coinstallers from
+WinUsb-based INF file customized for APCCTRL and driver coinstallers from
 Win7 DDK.
 
 ------------------------------------------------------------------------
@@ -2385,7 +2385,7 @@ Update to nsis-2.46 and w32api-3.14
 r1882 | adk0212 | 2010-01-02 13:42:07 -0500 (Sat, 02 Jan 2010) | 5 lines
 
 Update installer to use /kill switch to shutdown apps again. This will
-provide more reliable shutdowns, especially on Vista/Win7 where apcupsd
+provide more reliable shutdowns, especially on Vista/Win7 where apcctrl
 service is running in another session and therefore is inaccessible by the
 window message mechanism. Remove old window message based shutdown logic.
 
@@ -2777,7 +2777,7 @@ r1811 | adk0212 | 2009-10-11 12:15:04 -0400 (Sun, 11 Oct 2009) | 4 lines
 
 Rework network error handling so Update() only retries on soft errors, not
 hard errors. This helps minimize the length of time a given monitor will
-ignore UI events when it is unable to connect to an apcupsd.
+ignore UI events when it is unable to connect to an apcctrl.
 
 ------------------------------------------------------------------------
 r1810 | adk0212 | 2009-10-11 12:12:59 -0400 (Sun, 11 Oct 2009) | 2 lines
@@ -3048,7 +3048,7 @@ Add support for building Objective-C files (*.m)
 ------------------------------------------------------------------------
 r1762 | adk0212 | 2009-09-20 15:39:24 -0400 (Sun, 20 Sep 2009) | 2 lines
 
-Forgot -arch flags for apcupsd build
+Forgot -arch flags for apcctrl build
 
 ------------------------------------------------------------------------
 r1761 | adk0212 | 2009-09-13 18:08:58 -0400 (Sun, 13 Sep 2009) | 2 lines
@@ -3071,7 +3071,7 @@ r1758 | adk0212 | 2009-09-13 17:05:42 -0400 (Sun, 13 Sep 2009) | 5 lines
 Disable PackageMaker's "suggested permissions" in favor of using our own
 explicit permissions. Tweak perms on /Library to keep PackageMaker happy.
 Remove permission fixups from preflight/postflight scripts. Copy the
-apcupsd-uninstall script to /sbin during install.
+apcctrl-uninstall script to /sbin during install.
 
 ------------------------------------------------------------------------
 r1757 | adk0212 | 2009-09-13 17:02:31 -0400 (Sun, 13 Sep 2009) | 2 lines
@@ -3081,7 +3081,7 @@ Add uninstall script.
 ------------------------------------------------------------------------
 r1756 | adk0212 | 2009-09-13 09:29:11 -0400 (Sun, 13 Sep 2009) | 3 lines
 
-Work around PackageMaker bug that gets ApcupsdDummy.kext directory
+Work around PackageMaker bug that gets apcctrlDummy.kext directory
 permissions wrong.
 
 ------------------------------------------------------------------------
@@ -3533,7 +3533,7 @@ Revert accidental changes.
 ------------------------------------------------------------------------
 r1666 | adk0212 | 2009-04-26 19:12:25 -0400 (Sun, 26 Apr 2009) | 4 lines
 
-First pass at converting apcupsd user manual to reStructuredText.
+First pass at converting apcctrl user manual to reStructuredText.
 Initial conversion via Pandoc, then lots of hand editing. It's in
 pretty good shape now. Need to fix up external files.
 
@@ -3542,7 +3542,7 @@ r1665 | adk0212 | 2009-04-25 11:04:25 -0400 (Sat, 25 Apr 2009) | 9 lines
 
 Make startup success message appear in logs again.
 From Trevor Roydhouse <trev@sentry.org>:
-apcupsd stopped printing startup success messages at some
+apcctrl stopped printing startup success messages at some
 point. Looking through the code it is because it was decided that the
 LOG_INFO facility level should only be used for data file logging and
 so it filters out other uses. Unfortunately the startup message is
@@ -3613,7 +3613,7 @@ Fix some deadlocks in the case of a comm failure when smart_poll() is
 called without holding the UPS lock. Contributed by Keith Campbell
 <campbell@econnectix.com>:
 
-On one of our machines, apcupsd 3.14.5 (using a smart serial cable)
+On one of our machines, apcctrl 3.14.5 (using a smart serial cable)
 would occasionally not finish starting up.  Running strace revealed
 that it was stuck in deadlock on a futex() system call.
 
@@ -3706,7 +3706,7 @@ r1641 | adk0212 | 2008-09-10 18:34:05 -0400 (Wed, 10 Sep 2008) | 5 lines
 
 Do not create pid file in apctest. There is little reason for it since
 apctest is a command-line tool, not a daemon. Plus nothing ever deletes
-the file so it interferes with apcupsd operation.
+the file so it interferes with apcctrl operation.
 Reported by Eddie Atherton <stunnel@attglobal.net>
 
 ------------------------------------------------------------------------
@@ -3893,7 +3893,7 @@ other sessions.
 ------------------------------------------------------------------------
 r1602 | adk0212 | 2008-06-19 18:23:50 -0400 (Thu, 19 Jun 2008) | 3 lines
 
-Support shutting down apcupsd instances running in other sessions (such
+Support shutting down apcctrl instances running in other sessions (such
 as terminal services or remote desktop sessions).
 
 ------------------------------------------------------------------------
@@ -3960,9 +3960,9 @@ unconditionally.
 r1591 | adk0212 | 2008-06-01 17:57:56 -0400 (Sun, 01 Jun 2008) | 7 lines
 
 Fix first install failure on redhat and suse. We were unconditionally
-running 'chkconfig --del apcupsd' which failed if apcupsd was not already
-installed. Now we check 'chkconfig --list apcupsd' first to see if
-chkconfig believes apcupsd is installed. Make same fix in uninstall. Also
+running 'chkconfig --del apcctrl' which failed if apcctrl was not already
+installed. Now we check 'chkconfig --list apcctrl' first to see if
+chkconfig believes apcctrl is installed. Make same fix in uninstall. Also
 change most uninstall steps to allow failure. This facilitates the best-
 effort uninstall of an aborted or otherwise botched install.
 
@@ -4783,9 +4783,9 @@ r1413 | adk0212 | 2007-06-17 12:14:39 -0400 (Sun, 17 Jun 2007) | 10 lines
 Completely rewrite balloon tip handling. Balloon tips are posted
 automatically when the status text changes. This eliminates the need for
 the clunky "Receive local notifications" setting and allows us to post
-balloons for state changes on remote Apcupsd instances. Introduce the
+balloons for state changes on remote apcctrl instances. Introduce the
 BalloonMgr to work around Windows one-balloon-at-a-time limitation. When
-monitoring multiple Apcupsd instances it will be common to need to post
+monitoring multiple apcctrl instances it will be common to need to post
 multiple balloon tips at once. The BalloonMgr handles posting the tips
 one at a time and timing the active balloon out early if new ones are
 waiting. This way all balloons will be shown, one after another.
@@ -4844,7 +4844,7 @@ Update web site for 3.14.2-beta1 release.
 ------------------------------------------------------------------------
 r1401 | adk0212 | 2007-06-10 10:13:19 -0400 (Sun, 10 Jun 2007) | 2 lines
 
-Final updates for apcupsd-3.14.2-win32beta1 release.
+Final updates for apcctrl-3.14.2-win32beta1 release.
 
 ------------------------------------------------------------------------
 r1400 | adk0212 | 2007-06-10 09:34:26 -0400 (Sun, 10 Jun 2007) | 2 lines
@@ -4871,7 +4871,7 @@ More changes for better multiple monitor support.
 ------------------------------------------------------------------------
 r1396 | adk0212 | 2007-06-09 15:47:08 -0400 (Sat, 09 Jun 2007) | 4 lines
 
-Major rework to support monitoring multiple apcupsds with a single apctray
+Major rework to support monitoring multiple apcctrls with a single apctray
 instantiation. Includes basic management of monitoring instances. More
 fancy stuff to come.
 
@@ -4932,7 +4932,7 @@ that we should stop cluttering the main win32 source dir.
 ------------------------------------------------------------------------
 r1385 | adk0212 | 2007-06-06 18:29:10 -0400 (Wed, 06 Jun 2007) | 2 lines
 
-Add back in the finish page with ReleaseNotes and apcupsd.org link.
+Add back in the finish page with ReleaseNotes and apcctrl.org link.
 
 ------------------------------------------------------------------------
 r1384 | adk0212 | 2007-06-06 18:28:46 -0400 (Wed, 06 Jun 2007) | 2 lines
@@ -4955,21 +4955,21 @@ up.
 r1381 | adk0212 | 2007-06-05 18:43:24 -0400 (Tue, 05 Jun 2007) | 3 lines
 
 Many more installer updates. Move static text to page .ini files. Add code
-to handle polite start/stop of apcupsd and apctray.
+to handle polite start/stop of apcctrl and apctray.
 
 ------------------------------------------------------------------------
 r1380 | adk0212 | 2007-06-05 18:39:37 -0400 (Tue, 05 Jun 2007) | 4 lines
 
-Maintain a registry flag to indicate if apcupsd is installed as a service.
+Maintain a registry flag to indicate if apcctrl is installed as a service.
 This used to be done by the installer, but would get out of sync if the
-user ran 'apcupsd /install' by hand.
+user ran 'apcctrl /install' by hand.
 
 ------------------------------------------------------------------------
 r1379 | adk0212 | 2007-06-05 18:34:29 -0400 (Tue, 05 Jun 2007) | 4 lines
 
-Maintain a registry flag to indicate if apcupsd is installed as a service.
+Maintain a registry flag to indicate if apcctrl is installed as a service.
 This used to be done by the installer, but would get out of sync if the
-user ran 'apcupsd /install' by hand.
+user ran 'apcctrl /install' by hand.
 
 ------------------------------------------------------------------------
 r1378 | adk0212 | 2007-06-05 18:33:06 -0400 (Tue, 05 Jun 2007) | 4 lines
@@ -4986,7 +4986,7 @@ Add custom page for installing Apctray and configuring its parameters.
 ------------------------------------------------------------------------
 r1376 | adk0212 | 2007-06-03 13:05:20 -0400 (Sun, 03 Jun 2007) | 3 lines
 
-Add custom page for installing apcupsd as a service and optionally
+Add custom page for installing apcctrl as a service and optionally
 starting it instead of using popup dialogs during file install.
 
 ------------------------------------------------------------------------
@@ -5102,14 +5102,14 @@ r1356 | adk0212 | 2007-05-31 20:11:52 -0400 (Thu, 31 May 2007) | 7 lines
 First step of major win32 service and tray icon code refactor/rewrite.
 This is part of the changes necessary for tray icon support on Vista.
 Clean up winservice and winmain. Eliminate lots of unused code.
-Simplify code where possible. Remove tray icon code from apcupsd itself.
+Simplify code where possible. Remove tray icon code from apcctrl itself.
 Add apctray.cpp for standalone tray icon module designed to gather status
 via NIS.
 
 ------------------------------------------------------------------------
 r1355 | adk0212 | 2007-05-31 20:11:26 -0400 (Thu, 31 May 2007) | 2 lines
 
-Remove OpenGL and DirectX libraries, as they are not needed for Apcupsd.
+Remove OpenGL and DirectX libraries, as they are not needed for apcctrl.
 
 ------------------------------------------------------------------------
 r1353 | fleetworks | 2007-05-28 07:03:11 -0400 (Mon, 28 May 2007) | 2 lines

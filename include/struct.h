@@ -1,7 +1,7 @@
 /*
  * struct.h
  *
- * Common apcupsd structures.
+ * Common apcctrl structures.
  */
 
 /*
@@ -247,7 +247,7 @@ class UPSINFO {
    time_t SelfTest;                /* start time of self test */
    time_t LastSelfTest;            /* time of last self test */
    time_t poll_time;               /* last time UPS polled -- fillUPS() */
-   time_t start_time;              /* time apcupsd started */
+   time_t start_time;              /* time apcctrl started */
    time_t last_onbatt_time;        /* last time on batteries */
    time_t last_offbatt_time;       /* last time off batteries */
    time_t last_time_on_line;

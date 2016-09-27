@@ -26,7 +26,7 @@ static const uint16_t VENDOR_HP        = 0x03F0;
 // Table of supported USB idVendor/idProduct tuples
 //
 // When updating this table, also update platforms including:
-//    * platforms/mingw/winusb/apcupsd.inf
+//    * platforms/mingw/winusb/apcctrl.inf
 //    * platforms/darwin/Info.plist
 //    * platforms/sun/Makefile
 //
@@ -57,7 +57,7 @@ static const struct
    {VENDOR_APC,         0xffff}, // Early prototype units of AP9620 
    {VENDOR_APC,         0x0005}, // An SMX750 appears to use PID 5
 
-   // The HP T1500 G3 has been shown to work well with apcupsd.
+   // The HP T1500 G3 has been shown to work well with apcctrl.
    // Not sure if it is an APC clone or just "very compatible".
    {VENDOR_HP,          0x1FE3},
 

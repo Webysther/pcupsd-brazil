@@ -23,8 +23,8 @@
  */
 
 /*
- * Thanks go to APC/Schneider for providing the Apcupsd team with early access
- * to MODBUS protocol information to facilitate an Apcupsd driver.
+ * Thanks go to APC/Schneider for providing the apcctrl team with early access
+ * to MODBUS protocol information to facilitate an apcctrl driver.
  *
  * APC/Schneider has published the following relevant application notes:
  *
@@ -546,7 +546,7 @@ bool ModbusUpsDriver::UpdateCis(bool dynamic)
  * Read UPS info that remains unchanged -- e.g. transfer
  * voltages, shutdown delay, ...
  *
- * This routine is called once when apcupsd is starting
+ * This routine is called once when apcctrl is starting
  */
 bool ModbusUpsDriver::read_static_data()
 {

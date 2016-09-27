@@ -11,7 +11,7 @@ umount -a
 
 #Powerfail situation, kill power
 if [ -f /etc/powerfail ]; then
-    echo "APCUPSD to the Rescue!"
+    echo "APCCTRL to the Rescue!"
     echo
     /sbin/apccontrol killpower
     echo

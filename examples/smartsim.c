@@ -6,13 +6,13 @@
  * This is a basic SmartUPS protocol simulator. It answers
  * queries from the host (i.e., apcuspd) and allows you to toggle
  * flags such as onbattery and adjust readouts such as timeleft.
- * This can be very useful for exercising apcupsd with a series
+ * This can be very useful for exercising apcctrl with a series
  * of events that would otherwise require draining your UPS battery
  * repeatedly.
  *
  * Point smartsim at a serial port (/dev/ttyS0 is the default) and
  * connect that port via a null modem cable to another serial port
- * on which you are running apcupsd configured for the apcsmart
+ * on which you are running apcctrl configured for the apcsmart
  * driver.
  *
  * smartsim responds to the Smart protocol commands listed in the

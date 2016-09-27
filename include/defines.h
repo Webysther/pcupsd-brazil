@@ -1,7 +1,7 @@
 /*
  * defines.h
  *
- * Public definitions used throughout apcupsd
+ * Public definitions used throughout apcctrl
  */
 
 /*
@@ -42,7 +42,7 @@
 # define NOLOGIN_FILE            "/nologin"
 #endif
 
-#define APCPID                  PIDDIR "/apcupsd.pid"
+#define APCPID                  PIDDIR "/apcctrl.pid"
 
 /*
  * These two are not to be touched: we can not be sure how the user will
@@ -79,7 +79,7 @@
 #define UPS_battlow       0x00000040
 #define UPS_replacebatt   0x00000080
 
-/* Extended bit values added by apcupsd */
+/* Extended bit values added by apcctrl */
 #define UPS_commlost      0x00000100    /* Communications with UPS lost */
 #define UPS_shutdown      0x00000200    /* Shutdown in progress */
 #define UPS_slave         0x00000400    /* Set if this is a slave */
@@ -322,7 +322,7 @@ enum {
 #define TIMER_DUMB              5  /* for Dumb (ioctl) UPSes -- keep short */
 
 /* Make the size of these strings the next multiple of 4 */
-#define APC_MAGIC               "apcupsd-linux-6.0"
+#define APC_MAGIC               "apcctrl-linux-6.0"
 #define APC_MAGIC_SIZE          4 * ((sizeof(APC_MAGIC) + 3) / 4)
 
 #define ACCESS_MAGIC            "apcaccess-linux-4.0"

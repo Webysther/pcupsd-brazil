@@ -253,7 +253,7 @@ endef
 ifeq ($(DESTDIR),)
 define CHKCFG
     $(if $(wildcard $(2)),@$(ECHO) "  CKCFG" $(1):$(2))
-    $(if $(wildcard $(2)),$(V)$(CHKCONFIG) --$(1) apcupsd)
+    $(if $(wildcard $(2)),$(V)$(CHKCONFIG) --$(1) apcctrl)
 endef
 endif
 

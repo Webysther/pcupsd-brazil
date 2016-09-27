@@ -10,7 +10,7 @@ proc DisplaySplash {} {
       set y0 [expr ($ymax-[winfo reqheight .splash])/2]
       wm geometry .splash "+$x0+$y0"
    }
-   image create photo .splash.image -file "apcupsd_logo.gif"
+   image create photo .splash.image -file "apcctrl_logo.gif"
    label .splash.label -image .splash.image
    pack  .splash.label
    update

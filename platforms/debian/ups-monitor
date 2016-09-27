@@ -11,7 +11,7 @@
 #              in /etc/apcctrl/apcctrl.conf 
 ### END INIT INFO
 
-# apcupsd halt script
+# apcctrl halt script
 # by Martin Mitchell <martin@debian.org>
 # modifications by Gordon Morehouse <spambox@evernex.com> April 2001
 # modifications by Wagner Popov <wpopov@gmail.com> December 2015
@@ -23,7 +23,7 @@ case "$1" in
 poweroff | killpower)
         if [ -f /etc/apcctrl/powerfail ]; then
             echo ""
-            echo -n "apcupsd: Ordering UPS to kill power... "
+            echo -n "apcctrl: Ordering UPS to kill power... "
             /etc/apcctrl/apccontrol killpower
             echo "done."	
             echo ""

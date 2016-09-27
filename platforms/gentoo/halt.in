@@ -4,7 +4,7 @@
 #
 # Version:      @(#)halt  2.75  19-May-1998  miquels@cistron.nl
 #               modified by Holger Brueckner <darks@gentoo.org>
-#               for apcupsd 28-June-2001
+#               for apcctrl 28-June-2001
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 APCCONTROL="@sysconfdir@/apccontrol killpower" 
@@ -13,7 +13,7 @@ APCCONTROL="@sysconfdir@/apccontrol killpower"
 
 # See if this is a powerfail situation.
 if [ -f @PWRFAILDIR@/powerfail ]; then
-  echo "APCUPSD to the Rescue!"
+  echo "APCCTRL to the Rescue!"
   echo
   $APCCONTROL
   echo

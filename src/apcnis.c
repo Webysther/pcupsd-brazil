@@ -1,7 +1,7 @@
 /*
  * apcnis.c
  *
- * Network server for apcupsd.
+ * Network server for apcctrl.
  */
 
 /*
@@ -230,7 +230,7 @@ void *handle_client_request(void *arg)
    char line[MAXSTRING];
    const char errmsg[] = "Invalid command\n";
    const char notavail[] = "Not available\n";
-   const char notrun[] = "Apcupsd internal error\n";
+   const char notrun[] = "apcctrl internal error\n";
    int nsockfd = ((struct s_arg *)arg)->newsockfd;
    UPSINFO *ups = ((struct s_arg *)arg)->ups;
    free(arg);

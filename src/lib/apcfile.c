@@ -27,9 +27,9 @@
 
 /* 
  * If this is a Windows machine, we do NOT create a pid file.
- * We prevent multiple copies of apcupsd from running by 
+ * We prevent multiple copies of apcctrl from running by 
  * ensuring that there is only one system tray entry for
- * apcupsd.
+ * apcctrl.
  */
 
 /*

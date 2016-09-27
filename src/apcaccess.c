@@ -1,7 +1,7 @@
 /*
  * apcaccess.c
  *
- * Text based IPC management tool for apcupsd package.
+ * Text based IPC management tool for apcctrl package.
  */
 
 /*
@@ -41,7 +41,7 @@ const char *const units[] = {
 /* Behavior modifying flags */
 #define NO_UNITS 0x1
 
-/* Get and print status from apcupsd NIS server */
+/* Get and print status from apcctrl NIS server */
 static int do_pthreads_status(const char *host, int port, const char *par, int flags)
 {
    sock_t sockfd;
@@ -50,7 +50,7 @@ static int do_pthreads_status(const char *host, int port, const char *par, int f
    char *line;
 
    if ((sockfd = net_open(host, NULL, port)) == INVALID_SOCKET) {
-      fprintf(stderr, "Error contacting apcupsd @ %s:%d: %s\n",
+      fprintf(stderr, "Error contacting apcctrl @ %s:%d: %s\n",
          host, port, strerror(-sockfd));
       return 1;
    }
@@ -99,7 +99,7 @@ static int do_pthreads_status(const char *host, int port, const char *par, int f
    }
 
    if (n < 0) {
-      fprintf(stderr, "Error reading status from apcupsd @ %s:%d: %s\n",
+      fprintf(stderr, "Error reading status from apcctrl @ %s:%d: %s\n",
          host, port, strerror(-n));
       net_close(sockfd);
       return 1;

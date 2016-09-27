@@ -7,10 +7,10 @@
 
 #
 # package version
-PACKAGE = apcupsd
+PACKAGE = apcctrl
 DISTNAME = debian
 DISTVER = 8.4
-VERSION = 0.7.6
+VERSION = 0.8.0
 
 #
 # programs needed by compilation
@@ -30,7 +30,7 @@ INSTALL = /usr/bin/install -c
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_SCRIPT = ${INSTALL}
-MKINSTALLDIRS = /home/wagner/workspace/apcupsd_brazil/autoconf/mkinstalldirs
+MKINSTALLDIRS = /home/wagner/workspace/apcctrl/autoconf/mkinstalldirs
 CHKCONFIG = /sbin/chkconfig
 RST2HTML := /usr/bin/rst2html
 RST2PDF := /usr/bin/rst2pdf
@@ -42,7 +42,7 @@ sysconfdir = /etc/apcctrl
 cgibin = /etc/apcctrl
 VPATH = /usr/lib:/usr/local/lib
 srcdir = .
-abstopdir = /home/wagner/workspace/apcupsd_brazil
+abstopdir = /home/wagner/workspace/apcctrl
 sbindir = /sbin
 piddir = /var/run
 mandir=${prefix}/share/man

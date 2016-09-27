@@ -69,8 +69,8 @@ extern int go_background;
 /* In apcopt.c */
 extern int parse_options(int argc, char *argv[]);
 
-/* In apcupsd.c */
-extern void apcupsd_terminate(int sig);
+/* In apcctrl.c */
+extern void apcctrl_terminate(int sig);
 extern void clear_files(void);
 
 /* In apcdevice.c */

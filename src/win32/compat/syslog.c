@@ -56,7 +56,7 @@ void syslog(int type, const char *fmt, ...)
    }
 
    // Use event logging to log the error
-   heventsrc = RegisterEventSource(NULL, "Apcupsd");
+   heventsrc = RegisterEventSource(NULL, "apcctrl");
 
    if (heventsrc != NULL) {
       ReportEvent(

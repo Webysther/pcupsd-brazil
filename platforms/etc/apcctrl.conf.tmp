@@ -7,7 +7,7 @@ UPSNAME
 UPSCABLE simple
 
 # UPSTYPE <driver>
-#   O projeto apcupsd possui uma série de drivers para os vários modelos de nobreak.
+#   O projeto apcctrl possui uma série de drivers para os vários modelos de nobreak.
 #   No nosso caso, todos devem utilizar o driver brazil.
 UPSTYPE brazil
 
@@ -71,5 +71,5 @@ NISIP 0.0.0.0
 NISPORT 3551
 
 # Log
-EVENTSFILE /var/log/apcupsd.events
+EVENTSFILE /var/log/apcctrl.events
 EVENTSFILEMAX 10

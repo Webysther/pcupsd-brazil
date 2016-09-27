@@ -185,7 +185,7 @@ bool SnmpLiteUpsDriver::Open()
    {
       // Failure to enable trap catching is not fatal. Probably just means
       // SNMP trap port is already in use by snmptrapd or another instance
-      // of apcupsd. Warn user and continue.
+      // of apcctrl. Warn user and continue.
       log_event(_ups, LOG_WARNING, "snmplite Failed to enable traps");
       _traps = false;
    }

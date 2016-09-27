@@ -1,12 +1,12 @@
 apcctrl.conf(5) 	    BSD File Formats Manual	       apcctrl.conf(5)
 
 NAME
-     apcctrl.conf — apcupsd(8) configuration file
+     apcctrl.conf — apcctrl(8) configuration file
 
 DESCRIPTION
-     apcctrl.conf is the configuration file for the apcupsd(8) program.  The
+     apcctrl.conf is the configuration file for the apcctrl(8) program.  The
      file is a plain ASCII text file which comprises a number of configuration
-     directives which control how the apcupsd program behaves when controlling
+     directives which control how the apcctrl program behaves when controlling
      most American Power Conversion Corp (APC) UPSes.  The configuration file
      is also used for the apctest(8) program when bulk programming the EEPROM
      in a Smart-UPS model.
@@ -15,7 +15,7 @@ DESCRIPTION
      configuration file to suit your particular configuration and operating
      requirements.
 
-     Note that the apcupsd daemon must be restarted in order for changes to
+     Note that the apcctrl daemon must be restarted in order for changes to
      the configuration file to become active.
 
      The configuration file directives are explained in the subsections below.
@@ -41,7 +41,7 @@ DESCRIPTION
 
 	      The name of the device used for communication between the UPS
 	      and the computer. For a USB UPS, you should leave the DEVICE
-	      directive blank and apcupsd will figure out where the device is
+	      directive blank and apcctrl will figure out where the device is
 	      located.
 
 	      ·   apcsmart : /dev/tty** (serial connection)
@@ -54,7 +54,7 @@ DESCRIPTION
 	      ·   modbus : /dev/tty** (serial connection)
 	      ·   modbus : leave blank (USB connection)
 
-	      If you have problems, please see the apcupsd manual for more
+	      If you have problems, please see the apcctrl manual for more
 	      detailed information and comprehensive troubleshooting advice.
 
      POLLTIME <seconds>
@@ -69,46 +69,46 @@ DESCRIPTION
 
      LOCKFILE <path>
 
-	      apcupsd creates a lockfile for the serial or USB port in the
+	      apcctrl creates a lockfile for the serial or USB port in the
 	      specified directory.  It must be changed when running more than
-	      one copy of apcupsd on the same computer to control multiple
+	      one copy of apcctrl on the same computer to control multiple
 	      UPSes.
 
      SCRIPTDIR <path>
 
 	      Directory in which apccontrol and event scripts are located.
 	      Defaults to /usr/local/etc/apcctrl.  It must be changed when
-	      running more than one copy of apcupsd on the same computer to
+	      running more than one copy of apcctrl on the same computer to
 	      control multiple UPSes.
 
      PWRFAILDIR <path>
 
-	      Directory in which apcupsd writes the powerfail flag file cre‐
-	      ated when apcupsd initiates a system shutdown. The directory is
+	      Directory in which apcctrl writes the powerfail flag file cre‐
+	      ated when apcctrl initiates a system shutdown. The directory is
 	      checked in halt scripts to determine if turning off the UPS out‐
 	      put power is required.  Defaults to /var/run.  It must be
-	      changed when running more than one copy of apcupsd on the same
+	      changed when running more than one copy of apcctrl on the same
 	      computer to control multiple UPSes.
 
      NOLOGINDIR <path>
 
-	      Directory in which apcupsd writes the nologin file which tells
+	      Directory in which apcctrl writes the nologin file which tells
 	      the OS to disallow new logins. Defaults to /var/run.  It must be
-	      changed when running more than one copy of apcupsd on the same
+	      changed when running more than one copy of apcctrl on the same
 	      computer to control multiple UPSes.
 
    NIS CONFIGURATION DIRECTIVES
      NETSERVER [ on | off ]
 
 	      Turns the network information server (NIS) on or off. When on,
-	      apcupsd serves status and event information over the network.
+	      apcctrl serves status and event information over the network.
 	      This information is also used by the web-based CGI monitoring
 	      programs. The default is set to on.
 
      NISIP <IP address>
 
 	      Specifies the IP address of the network interface on which
-	      apcupsd will listen for incoming connections. The default value
+	      apcctrl will listen for incoming connections. The default value
 	      is 0.0.0.0 which means the NIS will listen for connections on
 	      all network interfaces. If the computer has more than one inter‐
 	      face, you can specify the IP of a single interface to limit con‐
@@ -119,19 +119,19 @@ DESCRIPTION
      NISPORT <port>
 
 	      Specifies the port to be used by the NIS daemon. The default is
-	      3551 which has been received from IANA as the official apcupsd
+	      3551 which has been received from IANA as the official apcctrl
 	      networking port.	It must be changed when running more than one
-	      copy of apcupsd on the same computer to control multiple UPSes.
+	      copy of apcctrl on the same computer to control multiple UPSes.
 
      EVENTSFILE <filename>
 
 	      If you want NIS to provide the last 10 events via the network,
-	      you must specify a file where apcupsd will save these events.
-	      The default is: /var/log/apcupsd.events.	apcupsd will save at
+	      you must specify a file where apcctrl will save these events.
+	      The default is: /var/log/apcctrl.events.	apcctrl will save at
 	      most the last 50 events to this file. When more than 50 events
-	      are saved and a network request for the events arrives, apcupsd
+	      are saved and a network request for the events arrives, apcctrl
 	      will truncate the file to the most recent 10 events.  It must be
-	      changed when running more than one copy of apcupsd on the same
+	      changed when running more than one copy of apcctrl on the same
 	      computer to control multiple UPSes.
 
    LOGGING CONFIGURATION DIRECTIVES
@@ -139,15 +139,15 @@ DESCRIPTION
 
 	      Specifies the time interval between writes to the status file.
 	      If set to zero, the status file will not be written. The status
-	      file will disappear in a future  apcupsd version as its func‐
+	      file will disappear in a future  apcctrl version as its func‐
 	      tionality has been replaced by the Network Information Server
 	      and the apcaccess(8) program.
 
      STATFILE <file>
 
 	      Specifies the file to be used when writing the status informa‐
-	      tion.  The default is /etc/apcctrl/apcupsd.status.  It must be
-	      changed when running more than one copy of apcupsd on the same
+	      tion.  The default is /etc/apcctrl/apcctrl.status.  It must be
+	      changed when running more than one copy of apcctrl on the same
 	      computer to control multiple UPSes.
 
      LOGSTATS [ on | off ]
@@ -165,7 +165,7 @@ DESCRIPTION
 
 	      Change the system logging (syslog) facility. The default is dae‐
 	      mon.  This parameter can be useful if you wish to direct the
-	      apcupsd system logging information to other than your system
+	      apcctrl system logging information to other than your system
 	      default files.  See syslog.conf(5) for details of other possible
 	      facilities and general system logging configuration.
 
@@ -173,34 +173,34 @@ DESCRIPTION
      ONBATTERYDELAY <seconds>
 
 	      The number of seconds from when a power failure is detected
-	      until apcupsd reacts with an onbattery event.
+	      until apcctrl reacts with an onbattery event.
 
      BATTERYLEVEL <percentage>
 
-	      apcupsd will shutdown the system during a power failure when the
+	      apcctrl will shutdown the system during a power failure when the
 	      remaining battery charge falls below the specified percentage.
 	      The default is 5.
 
      MINUTES <minutes>
 
-	      apcupsd will shutdown the system during a power failure when the
+	      apcctrl will shutdown the system during a power failure when the
 	      remaining runtime on batteries as internally calculated by the
 	      UPS falls below the specified minutes. The default is 3.
 
      TIMEOUT <seconds>
 
-	      After a power failure occurs, apcupsd will shutdown the system
+	      After a power failure occurs, apcctrl will shutdown the system
 	      after the specified number of seconds have expired.  For a
 	      Smart-UPS, this should normally be set to zero so that the shut‐
 	      down time will be determined by the battery level or remaining
 	      runtime (see above). This command is, however, useful for a
 	      Back-UPS or other simple signalling UPS which does not report
 	      battery level or the remaining runtime. It is also useful for
-	      testing apcupsd because you can force a rapid shutdown by set‐
+	      testing apcctrl because you can force a rapid shutdown by set‐
 	      ting a small value (eg 60) and turning off the power to the UPS.
 
 	      TIMEOUT, BATTERYLEVEL, and MINUTES can all be set without prob‐
-	      lems.  apcupsd will initiate a shutdown when the first of these
+	      lems.  apcctrl will initiate a shutdown when the first of these
 	      conditions becomes valid.
 
      ANNOY <seconds>
@@ -221,21 +221,21 @@ DESCRIPTION
 
      NOLOGON [ disable | timeout | percent | minutes | always ]
 
-	      Specifies when apcupsd should create the nologon file to prevent
+	      Specifies when apcctrl should create the nologon file to prevent
 	      users from logging on to the system.
 
-	      "disable" prevents apcupsd from creating the nologin file.
+	      "disable" prevents apcctrl from creating the nologin file.
 
-	      "timeout" specifies a specific wait time before apcupsd creates
+	      "timeout" specifies a specific wait time before apcctrl creates
 	      the nologin file.
 
 	      "percent" specifies the percentage of battery charge remaining
-	      before apcupsd creates the nologin file.
+	      before apcctrl creates the nologin file.
 
-	      "minutes" specifies the battery runtime remaining before apcupsd
+	      "minutes" specifies the battery runtime remaining before apcctrl
 	      creates the nologin file.
 
-	      "always" specifies that apcupsd should create the nologin file
+	      "always" specifies that apcctrl should create the nologin file
 	      immediately after a power failure occurs.
 
 	      This directive is important for allowing systems with BIG UPSes
@@ -246,12 +246,12 @@ DESCRIPTION
 
      KILLDELAY <seconds>
 
-	      Specifies the number of seconds for which apcupsd will continue
+	      Specifies the number of seconds for which apcctrl will continue
 	      running after a shutdown has been requested. After the specified
-	      time, apcupsd will attempt to put the UPS into hibernate mode
+	      time, apcctrl will attempt to put the UPS into hibernate mode
 	      and kill the power to the computer. This is for use on operating
-	      systems where apcupsd cannot regain control after a shutdown (eg
-	      FreeBSD) to issue an apcupsd --killpower command. Setting the
+	      systems where apcctrl cannot regain control after a shutdown (eg
+	      FreeBSD) to issue an apcctrl --killpower command. Setting the
 	      delay to 0 disables it.
 
    SHARE-UPS CONFIGURATION DIRECTIVES
@@ -278,7 +278,7 @@ DESCRIPTION
 	      fully tested in every new release.
 
    APCTEST EEPROM CONFIGURATION DIRECTIVES
-     These directives have no effect on the operation of apcupsd(8) but are
+     These directives have no effect on the operation of apcctrl(8) but are
      reserved for use by apctest(8) when bulk programming the values of the
      UPS EEPROM configuration variables in a Smart-UPS model.
 
@@ -388,10 +388,10 @@ EXAMPLES
 	  UPSCLASS standalone
 	  UPSMODE disable
 
-     Notice no device name is specified.  apcupsd(8) will try all the well
+     Notice no device name is specified.  apcctrl(8) will try all the well
      known USB ports. Only specify a specific USB device name if you know what
      you are doing. For detailed information on setting up a USB UPS, refer to
-     the "USB Configuration" section of the apcupsd manual.
+     the "USB Configuration" section of the apcctrl manual.
 
    Minimal Serial Configuration for a Smart UPS
 	  UPSCABLE smart
@@ -415,7 +415,7 @@ EXAMPLES
      If your cable does not have low battery detection (eg such cables include
      the APC 940-0020B and 940-0023A), you will also need to define the TIME‐
      OUT <seconds> configuration directive to set the number of seconds on
-     battery during a power failure after which apcupsd will do a system shut‐
+     battery during a power failure after which apcctrl will do a system shut‐
      down.
 
      Normally there would be more configuration directives to completely cus‐
@@ -425,10 +425,10 @@ FILES
      /etc/apcctrl/apcctrl.conf default configuration file
 
 SEE ALSO
-     syslog.conf(5), apcupsd(8), apctest(8).
+     syslog.conf(5), apcctrl(8), apctest(8).
 
-     The HTML apcupsd manual installed on your system or available online at
-     http://www.apcupsd.org/
+     The HTML apcctrl manual installed on your system or available online at
+     http://www.apcctrl.org/
 
 AUTHORS
      Trevor Roydhouse (current)

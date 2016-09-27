@@ -1,9 +1,9 @@
 /*
  * apctest.c
  *
- * A cable tester program for apcupsd.
+ * A cable tester program for apcctrl.
  *
- * Hacked from apcupsd.c by Kern Sibbald, Sept 2000
+ * Hacked from apcctrl.c by Kern Sibbald, Sept 2000
  */
 
 /*
@@ -293,7 +293,7 @@ int main(int argc, char *argv[])
 
 	pmsg("\n\n");
 	ptime();
-	pmsg("apctest " APCUPSD_RELEASE " (" ADATE ") " APCUPSD_HOST "\n");
+	pmsg("apctest " APCCTRL_RELEASE " (" ADATE ") " APCCTRL_HOST "\n");
 
 	pmsg("Checking configuration ...\n");
 	check_for_config(ups, cfgfile);
@@ -313,7 +313,7 @@ int main(int argc, char *argv[])
 
 	if (create_lockfile(ups) == LCKERROR) {
 		Error_abort("Unable to create UPS lock file.\n"
-				"  If apcupsd or apctest is already running,\n"
+				"  If apcctrl or apctest is already running,\n"
 				"  please stop it and run this program again.\n");
 	}
 
@@ -321,7 +321,7 @@ int main(int argc, char *argv[])
 	if (!setup_device(ups))
 	{
 		Error_abort("Unable to open UPS device.\n"
-				"  If apcupsd or apctest is already running,\n"
+				"  If apcctrl or apctest is already running,\n"
 				"  please stop it and run this program again.\n");
 	}
 
@@ -418,7 +418,7 @@ static void do_dumb_testing(void)
 	int quit = FALSE;
 	char *cmd;
 
-	pmsg("Hello, this is the apcupsd Cable Test program.\n\n"
+	pmsg("Hello, this is the apcctrl Cable Test program.\n\n"
 			"We are beginning testing for dumb UPSes, which\n"
 			"use signaling rather than commands.\n"
 			"Most tests enter a loop polling every second for 10 seconds.\n");
@@ -734,7 +734,7 @@ static void do_smart_testing(void)
 	char *cmd;
 	int quit = FALSE;
 
-	pmsg("Hello, this is the apcupsd Cable Test program.\n"
+	pmsg("Hello, this is the apcctrl Cable Test program.\n"
 			"This part of apctest is for testing Smart UPSes.\n"
 			"Please select the function you want to perform.\n");
 
@@ -1300,7 +1300,7 @@ static void smart_test1(void)
 #endif
 
 	pmsg("I am going to run through the series of queries of the UPS\n"
-			"that are used in initializing apcupsd.\n\n");
+			"that are used in initializing apcctrl.\n\n");
 
 	pmsg("Simulating UPSlinkCheck ...\n");
 	tcflush(ups->fd, TCIOFLUSH);
@@ -1378,7 +1378,7 @@ static void smart_test1(void)
 	*o = 0;
 
 	pmsg("Command characters are: %s\n", parts);
-	pmsg("\nNow running through apcupsd get_UPS capabilities().\n"
+	pmsg("\nNow running through apcctrl get_UPS capabilities().\n"
 			"NA  indicates that the feature is Not Available\n\n");
 
 	pmsg("UPS Status: %s\n", smart_poll(ups->UPS_Cmd[CI_STATUS], ups));
@@ -1483,7 +1483,7 @@ static void do_usb_testing(void)
 	char *cmd;
 	int quit = FALSE;
 
-	pmsg("Hello, this is the apcupsd Cable Test program.\n"
+	pmsg("Hello, this is the apcctrl Cable Test program.\n"
 			"This part of apctest is for testing USB UPSes.\n");
 
 	pmsg("\nGetting UPS capabilities...");
@@ -2292,7 +2292,7 @@ static int ncmd = 0;
 static UPSINFO eeprom_ups;
 
 /*
- * Table of the UPS command, the apcupsd configuration directive,
+ * Table of the UPS command, the apcctrl configuration directive,
  * and an explanation of what the command sets in the EPROM.
  */
 static struct {
@@ -2455,7 +2455,7 @@ static void do_modbus_testing(void)
 	char *cmd;
 	int quit = FALSE;
 
-	pmsg("Hello, this is the apcupsd Cable Test program.\n"
+	pmsg("Hello, this is the apcctrl Cable Test program.\n"
 			"This part of apctest is for testing MODBUS UPSes.\n");
 
 	pmsg("\nGetting UPS capabilities...");
@@ -3344,7 +3344,7 @@ static void do_brazil_testing(void)
 	char *cmd;
 	int quit = FALSE;
 
-	pmsg("Hello, this is the apcupsd Cable Test program.\n"
+	pmsg("Hello, this is the apcctrl Cable Test program.\n"
 			"This part of apctest is for testing APC-Microsol Brazil.\n"
 			"Please select the function you want to perform.\n");
 
