@@ -80,11 +80,11 @@ Function DisableBackButton
 	EnableWindow $R1 0
 FunctionEnd
 
-; Post-process apcupsd.conf.in by replacing @FOO@ tokens
+; Post-process apcctrl.conf.in by replacing @FOO@ tokens
 ; with proper values.
 Function PostProcConfig
-  FileOpen $0 "$INSTDIR\etc\apcupsd\apcupsd.conf.in" "r"
-  FileOpen $1 "$INSTDIR\etc\apcupsd\apcupsd.conf.new" "w"
+  FileOpen $0 "$INSTDIR\etc\apcupsd\apcctrl.conf.in" "r"
+  FileOpen $1 "$INSTDIR\etc\apcupsd\apcctrl.conf.new" "w"
 
   ClearErrors
   FileRead $0 $2
@@ -102,7 +102,7 @@ Function PostProcConfig
   FileClose $0
   FileClose $1
 
-  Delete "$INSTDIR\etc\apcupsd\apcupsd.conf.in"
+  Delete "$INSTDIR\etc\apcupsd\apcctrl.conf.in"
 FunctionEnd
 
 Function ShowReadme
@@ -129,8 +129,8 @@ Function EditApcupsdConfEnter
   !insertmacro MUI_INSTALLOPTIONS_READ $R0 "EditApcupsdConf.ini" "Field 1" "HWND"
   SendMessage $R0 ${WM_SETTEXT} 0 \
       "All types of connections require editing the client configuration file, \
-       apcupsd.conf.$\r$\r\
-       Please edit $INSTDIR\etc\apcupsd\apcupsd.conf to fit your installation. \
+       apcctrl.conf.$\r$\r\
+       Please edit $INSTDIR\etc\apcupsd\apcctrl.conf to fit your installation. \
        When you click the Next button, Wordpad will open to allow you to do this.$\r$\r\
        Be sure to save your changes before closing Wordpad and before continuing \
        with the installation."
@@ -140,10 +140,10 @@ Function EditApcupsdConfEnter
 FunctionEnd
 
 Function EditApcupsdConfExit
-  ; Launch wordpad to edit apcupsd.conf if checkbox is checked
+  ; Launch wordpad to edit apcctrl.conf if checkbox is checked
   !insertmacro MUI_INSTALLOPTIONS_READ $R1 "EditApcupsdConf.ini" "Field 2" "State"
   ${If} $R1 == 1
-    ExecWait 'notepad "$INSTDIR\etc\apcupsd\apcupsd.conf"'
+    ExecWait 'notepad "$INSTDIR\etc\apcupsd\apcctrl.conf"'
   ${EndIf}
 FunctionEnd
 
@@ -162,7 +162,7 @@ Function InstallServiceExit
   ; Create Start Menu Directory
   CreateDirectory "$SMPROGRAMS\ApcCtrl"
   ; Create start menu link for configuring apcupsd
-  CreateShortCut "$SMPROGRAMS\ApcCtrl\Edit Configuration File.lnk" "notepad" "$INSTDIR\etc\apcupsd\apcupsd.conf" "$SYSDIR\shell32.dll" ${CONFIG_ICON_INDEX}
+  CreateShortCut "$SMPROGRAMS\ApcCtrl\Edit Configuration File.lnk" "notepad" "$INSTDIR\etc\apcupsd\apcctrl.conf" "$SYSDIR\shell32.dll" ${CONFIG_ICON_INDEX}
 
   ; If installed as a service already, remove it
   ReadRegDWORD $R0 HKLM "Software\Apcupsd" "InstalledService"
@@ -242,7 +242,7 @@ Section "-Startup"
   SetShellVarContext all
 
   ; Check for existing config file
-  ${If} ${FileExists} "$INSTDIR\etc\apcupsd\apcupsd.conf"
+  ${If} ${FileExists} "$INSTDIR\etc\apcupsd\apcctrl.conf"
     StrCpy $ExistingConfig 1
   ${Else}
     StrCpy $ExistingConfig 0
@@ -335,17 +335,17 @@ Section "Apcupsd Service" SecService
   
   SetOutPath "$INSTDIR\etc\apcupsd"
   File ${TOPDIR}\platforms\mingw\apccontrol.bat
-  File ${TOPDIR}\platforms\mingw\apcupsd.conf.in
+  File ${TOPDIR}\platforms\mingw\apcctrl.conf.in
   File /oname=onbattery.vbs.example ${TOPDIR}\platforms\mingw\onbattery.vbs
   File /oname=offbattery.vbs.example ${TOPDIR}\platforms\mingw\offbattery.vbs
   File /oname=commfailure.vbs.example ${TOPDIR}\platforms\mingw\commfailure.vbs
 
-  ; Post-process apcupsd.conf.in into apcupsd.conf.new
+  ; Post-process apcctrl.conf.in into apcctrl.conf.new
   Call PostProcConfig
 
-  ; Rename apcupsd.conf.new to apcupsd.conf if it does not already exist
-  ${Unless} ${FileExists} "$INSTDIR\etc\apcupsd\apcupsd.conf"
-    Rename apcupsd.conf.new apcupsd.conf
+  ; Rename apcctrl.conf.new to apcctrl.conf if it does not already exist
+  ${Unless} ${FileExists} "$INSTDIR\etc\apcupsd\apcctrl.conf"
+    Rename apcctrl.conf.new apcctrl.conf
   ${EndUnless}
 SectionEnd
 
@@ -437,7 +437,7 @@ Section "Documentation" SecDoc
   CreateShortCut "$SMPROGRAMS\ApcCtrl\Documentation\apcaccess Reference.lnk"     "$INSTDIR\doc\apcaccess.man.txt"    "" "$SYSDIR\shell32.dll" ${HELP_ICON_INDEX}
   CreateShortCut "$SMPROGRAMS\ApcCtrl\Documentation\apctest Reference.lnk"       "$INSTDIR\doc\apctest.man.txt"      "" "$SYSDIR\shell32.dll" ${HELP_ICON_INDEX}
   CreateShortCut "$SMPROGRAMS\ApcCtrl\Documentation\apccontrol Reference.lnk"    "$INSTDIR\doc\apccontrol.man.txt"   "" "$SYSDIR\shell32.dll" ${HELP_ICON_INDEX}
-  CreateShortCut "$SMPROGRAMS\ApcCtrl\Documentation\Configuration Reference.lnk" "$INSTDIR\doc\apcupsd.conf.man.txt" "" "$SYSDIR\shell32.dll" ${HELP_ICON_INDEX}
+  CreateShortCut "$SMPROGRAMS\ApcCtrl\Documentation\Configuration Reference.lnk" "$INSTDIR\doc\apcctrl.conf.man.txt" "" "$SYSDIR\shell32.dll" ${HELP_ICON_INDEX}
 SectionEnd
 
 !define UNINSTREG "Software\Microsoft\Windows\CurrentVersion\Uninstall\Apcupsd"
@@ -597,7 +597,7 @@ Section "Uninstall"
   Delete /REBOOTOK "$INSTDIR\ReleaseNotes*"
   Delete /REBOOTOK "$INSTDIR\Uninstall.exe"
   Delete /REBOOTOK "$INSTDIR\etc\apcupsd\apccontrol.bat"
-  Delete /REBOOTOK "$INSTDIR\etc\apcupsd\apcupsd.conf.new"
+  Delete /REBOOTOK "$INSTDIR\etc\apcupsd\apcctrl.conf.new"
   Delete /REBOOTOK "$INSTDIR\etc\apcupsd\hosts.conf.new"
   Delete /REBOOTOK "$INSTDIR\etc\apcupsd\onbattery.vbs.example"
   Delete /REBOOTOK "$INSTDIR\etc\apcupsd\offbattery.vbs.example"
@@ -611,10 +611,10 @@ Section "Uninstall"
   Delete /REBOOTOK "$INSTDIR\etc\apcupsd\apcupsd.css"
 
   ; Delete conf if user approves
-  ${If} ${FileExists} "$INSTDIR\etc\apcupsd\apcupsd.conf"
+  ${If} ${FileExists} "$INSTDIR\etc\apcupsd\apcctrl.conf"
   ${OrIf} ${FileExists} "$INSTDIR\etc\apcupsd\apcupsd.events"
     ${If} ${Cmd} 'MessageBox MB_YESNO|MB_ICONQUESTION "Would you like to delete the current configuration and events files?" /SD IDYES IDYES'
-      Delete /REBOOTOK "$INSTDIR\etc\apcupsd\apcupsd.conf"
+      Delete /REBOOTOK "$INSTDIR\etc\apcupsd\apcctrl.conf"
       Delete /REBOOTOK "$INSTDIR\etc\apcupsd\apcupsd.events"
       Delete /REBOOTOK "$INSTDIR\etc\apcupsd\hosts.conf"
     ${EndIf}

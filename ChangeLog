@@ -116,12 +116,12 @@ Fix handling of return value from USBDEVFS_CONNECT
 ------------------------------------------------------------------------
 r2294 | adk0212 | 2015-01-07 21:31:27 -0500 (Wed, 07 Jan 2015) | 2 lines
 
-Add MODBUS/USB info to apcupsd.conf comments
+Add MODBUS/USB info to apcctrl.conf comments
 
 ------------------------------------------------------------------------
 r2293 | adk0212 | 2015-01-07 21:25:06 -0500 (Wed, 07 Jan 2015) | 2 lines
 
-Add MODBUS USB setting info to apcupsd.conf(5) man page
+Add MODBUS USB setting info to apcctrl.conf(5) man page
 
 ------------------------------------------------------------------------
 r2292 | adk0212 | 2015-01-07 20:54:03 -0500 (Wed, 07 Jan 2015) | 2 lines
@@ -735,7 +735,7 @@ CID17183 Array compared against 0
 ------------------------------------------------------------------------
 r2177 | adk0212 | 2014-10-21 00:10:53 -0400 (Tue, 21 Oct 2014) | 3 lines
 
-Fix apcaccess failure when apcupsd.conf does not supply NISIP.
+Fix apcaccess failure when apcctrl.conf does not supply NISIP.
 Reported by David Walser <luigiwalser@yahoo.com>
 
 ------------------------------------------------------------------------
@@ -1084,7 +1084,7 @@ From Timothe Litt <litt@acm.org>, modified a little
 ------------------------------------------------------------------------
 r2113 | adk0212 | 2014-03-28 13:42:07 -0400 (Fri, 28 Mar 2014) | 2 lines
 
-Fix apcupsd.conf NISIP overriding command line -h in apcaccess
+Fix apcctrl.conf NISIP overriding command line -h in apcaccess
 
 ------------------------------------------------------------------------
 r2112 | adk0212 | 2014-03-28 13:08:29 -0400 (Fri, 28 Mar 2014) | 3 lines
@@ -1102,7 +1102,7 @@ Regularize names of units to use same capitalization
 ------------------------------------------------------------------------
 r2110 | adk0212 | 2014-03-27 22:36:41 -0400 (Thu, 27 Mar 2014) | 4 lines
 
-Add support for pattern matching and apcupsd.conf parsing in apcaccess
+Add support for pattern matching and apcctrl.conf parsing in apcaccess
 Also some code cleanup. 
 Idea and most of the code courtesty of Timothe Litt <litt@acm.org>
 
@@ -1779,7 +1779,7 @@ Prep for 3.14.9 release
 ------------------------------------------------------------------------
 r1988 | adk0212 | 2011-05-19 18:55:25 -0400 (Thu, 19 May 2011) | 2 lines
 
-Add support for changing PCNET port in apcupsd.conf
+Add support for changing PCNET port in apcctrl.conf
 
 ------------------------------------------------------------------------
 r1987 | adk0212 | 2011-05-15 19:07:31 -0400 (Sun, 15 May 2011) | 2 lines
@@ -3455,7 +3455,7 @@ from NUT site.
 r1680 | adk0212 | 2009-05-02 19:46:59 -0400 (Sat, 02 May 2009) | 3 lines
 
 Add EEPROM configuration directives. Text stolen shamelessly from Trevor's
-apcupsd.conf(5).
+apcctrl.conf(5).
 
 ------------------------------------------------------------------------
 r1679 | adk0212 | 2009-05-02 19:30:07 -0400 (Sat, 02 May 2009) | 2 lines
@@ -4992,7 +4992,7 @@ starting it instead of using popup dialogs during file install.
 ------------------------------------------------------------------------
 r1375 | adk0212 | 2007-06-03 13:04:28 -0400 (Sun, 03 Jun 2007) | 2 lines
 
-Add definition for edit apcupsd.conf custom page.
+Add definition for edit apcctrl.conf custom page.
 
 ------------------------------------------------------------------------
 r1374 | adk0212 | 2007-06-03 12:38:26 -0400 (Sun, 03 Jun 2007) | 2 lines
@@ -5008,7 +5008,7 @@ Add /quiet switch to winmain to suppress /install and /remove dialogs.
 ------------------------------------------------------------------------
 r1372 | adk0212 | 2007-06-03 11:35:21 -0400 (Sun, 03 Jun 2007) | 3 lines
 
-Add custom installer page for editing apcupsd.conf instead of using a
+Add custom installer page for editing apcctrl.conf instead of using a
 popup during file installation.
 
 ------------------------------------------------------------------------

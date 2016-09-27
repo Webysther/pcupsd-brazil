@@ -101,10 +101,10 @@ ls -l k:/home/kern/apcupsd/winapcupsd-$VERSION.exe
 ./configure \
   --prefix=/apcupsd \
   --sbindir=/apcupsd/bin \
-  --sysconfdir=/apcupsd/etc/apcupsd \
-  --with-pid-dir=/apcupsd/etc/apcupsd \
+  --sysconfdir=/apcupsd/etc/apcctrl \
+  --with-pid-dir=/apcupsd/etc/apcctrl \
   --mandir=/apcupsd \
-  --with-cgi-bin=/apcupsd/etc/apcupsd/cgi \
+  --with-cgi-bin=/apcupsd/etc/apcctrl/cgi \
   --enable-master-slave \
   --enable-net \
   --enable-apcsmart \

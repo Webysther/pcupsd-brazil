@@ -24,7 +24,7 @@ install-suse:
 	@echo "================================================="
 	@echo "apcupsd script installation for SuSE $(DISTVER) complete." 
 	@echo " "
-	@echo "You should now edit  /etc/apcupsd/apcupsd.conf  to correspond"
+	@echo "You should now edit  /etc/apcctrl/apcctrl.conf  to correspond"
 	@echo "to your setup then start the apcupsd daemon with:"
 	@echo " "
 	@echo "/etc/rc.d/apcupsd start"

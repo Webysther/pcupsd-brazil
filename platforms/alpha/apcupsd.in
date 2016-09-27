@@ -14,7 +14,7 @@ case "$1" in
        rm -f @PWRFAILDIR@/powerfail
        rm -f @nologdir@/nologin
        echo -n "Starting UPS monitoring:" 
-       @sbindir@/apcupsd -f @sysconfdir@/apcupsd.conf || return=$failed
+       @sbindir@/apcupsd -f @sysconfdir@/apcctrl.conf || return=$failed
        echo "$return"
        ;;
     stop)

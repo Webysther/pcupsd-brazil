@@ -492,7 +492,7 @@ void do_action(UPSINFO *ups)
          }
       } else {                     /* not shutdown yet */
          /*
-          * Did MaxTimeOnBattery Expire?  (TIMEOUT in apcupsd.conf)
+          * Did MaxTimeOnBattery Expire?  (TIMEOUT in apcctrl.conf)
           * Normal Power down during Power Failure: Shutdown immediately.
           */
          if ((ups->maxtime > 0) && ((now - ups->last_time_on_line) > ups->maxtime)) {

@@ -119,10 +119,10 @@ dnl  non Sun defaults (i.e. all other platforms
 dnl -------------------------------------------
    AC_PREFIX_DEFAULT(/usr)
 dnl
-dnl If the user has not set -sysconfdir, we set our default as /etc/apcupsd
+dnl If the user has not set -sysconfdir, we set our default as /etc/apcctrl
 dnl
    if test x$sysconfdir = x'${prefix}/etc' ; then
-      sysconfdir='/etc/apcupsd'
+      sysconfdir='/etc/apcctrl'
    fi
 
 dnl
@@ -808,7 +808,7 @@ if test "$needlibusb" = "true" ; then
 fi
 
 dnl Force NIS to enabled since libnis is required by apcaccess.
-dnl Users may still disable NIS at runtime in apcupsd.conf.
+dnl Users may still disable NIS at runtime in apcctrl.conf.
 AC_DEFINE(HAVE_NISSERVER,, [Define if apcupsd NIS server is being built])
 AC_DEFINE(HAVE_NISLIB,, [Define if apcupsd NIS library is being built])
 NISSRV_ENABLED=yes
@@ -821,9 +821,9 @@ AC_ARG_WITH(nisip,
 AC_SUBST(NISIP)
 
 
-CGIBIN="/etc/apcupsd"
+CGIBIN="/etc/apcctrl"
 AC_ARG_WITH(cgi-bin,
-   [AC_HELP_STRING([--with-cgi-bin=DIR], [Specify cgi-bin directory (default=/etc/apcupsd)])],
+   [AC_HELP_STRING([--with-cgi-bin=DIR], [Specify cgi-bin directory (default=/etc/apcctrl)])],
    [CGIBIN="$withval";])
 
 dnl
@@ -1127,7 +1127,7 @@ UPSCABLE=simple
 nologdir=/etc
 
 # Find the default directory to put the root-mode PID file in
-for PIDDIR in "/var/run" "/etc/apcupsd"
+for PIDDIR in "/var/run" "/etc/apcctrl"
 do
    if test -d $PIDDIR 
    then
@@ -1136,7 +1136,7 @@ do
 done
 
 # Find the default directory to put the apcupsd.events and apcupsd.status files
-for LOGDIR in "/var/log" "/etc/apcupsd"
+for LOGDIR in "/var/log" "/etc/apcctrl"
 do
    if test -d $LOGDIR 
    then
@@ -1145,7 +1145,7 @@ do
 done
 
 # set the default serial port lock director
-for LOCKDIR in "/var/lock" "/var/spool/locks" "/etc/apcupsd"
+for LOCKDIR in "/var/lock" "/var/spool/locks" "/etc/apcctrl"
 do
    if test -d $LOCKDIR
    then
@@ -1172,7 +1172,7 @@ alpha)
    DISTVER=`uname -r`
    SERIALDEV=/dev/tty01
    LOCKDIR=/var/spool/locks
-   LOGDIR=/etc/apcupsd
+   LOGDIR=/etc/apcctrl
    DFILES="\
       platforms/alpha/apcupsd \
       platforms/alpha/awkhaltprog"
@@ -1445,7 +1445,7 @@ GENERATE_FILES="\
    platforms/etc/commok \
    platforms/etc/offbattery \
    platforms/etc/onbattery \
-   platforms/etc/apcupsd.conf \
+   platforms/etc/apcctrl.conf \
    examples/safe.apccontrol \
    $DFILES"
 

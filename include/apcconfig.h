@@ -21,7 +21,7 @@
 #define HAVE_ARPA_NAMESER_H 1
 
 /* Define if building APC-Microsol Brazil driver */
-#define HAVE_BRAZIL_DRIVER /**/
+#define HAVE_BRAZIL_DRIVER 1
 
 /* Define if building for BSDi */
 /* #undef HAVE_BSDI_OS */
@@ -330,7 +330,7 @@
 #define PIDDIR "/var/run"
 
 /* Default directory in which powerfail flag file is written */
-#define PWRFAILDIR "/etc/apcupsd"
+#define PWRFAILDIR "/etc/apcctrl"
 
 /* Define as the return type of signal handlers (`int' or `void'). */
 #define RETSIGTYPE void
@@ -342,7 +342,7 @@
 #define STDC_HEADERS 1
 
 /* Default directory in which apcupsd config files are stored */
-#define SYSCONFDIR "/etc/apcupsd"
+#define SYSCONFDIR "/etc/apcctrl"
 
 /* Define if you have gdImageGif in libgd */
 /* #undef SYS_IMGFMT_GIF */

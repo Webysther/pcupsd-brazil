@@ -710,7 +710,7 @@ iron!</li>
 section of the manual and follow those directions. If you are
 installing from an RPM or some other form of binary package, this
 step will probably consist of executing a single command.</li>
-<li>Tweak your /etc/apcupsd/apcupsd.conf file as necessary. Often it
+<li>Tweak your /etc/apcctrl/apcctrl.conf file as necessary. Often it
 will not be.</li>
 <li>Change the BIOS settings (see <a class="reference internal" href="#arranging-for-reboot-on-power-up">Arranging for Reboot on
 Power-Up</a>) on your computer
@@ -812,7 +812,7 @@ unmaintained, or broken.</td></tr>
 <p>apcupsd supports nearly every APC brand UPS model in existence and enough
 different cable types to connect to all of them.</p>
 <p>The <tt class="docutils literal">UPSTYPE &lt;keyword&gt;</tt> field is the value you will put in
-your /etc/apcupsd/apcupsd.conf file to tell apcupsd what type of UPS
+your /etc/apcctrl/apcctrl.conf file to tell apcupsd what type of UPS
 you have. We'll describe the possible values here, because they're
 a good way to explain your UPS's single most important interface
 property: the kind of protocol it uses to talk with its
@@ -1488,7 +1488,7 @@ fresh install '<tt class="docutils literal">rpm <span class="pre">-ihv</span></t
 /etc/rc.d/init.d/halt was properly updated and contains new script
 lines flagged with <tt class="docutils literal"><span class="pre">***APCUPSD***</span></tt>.</p>
 <p>Since there is no standard location for cgi-bin, the rpm will place
-the binary CGI programs in the directory /etc/apcupsd/cgi. To
+the binary CGI programs in the directory /etc/apcctrl/cgi. To
 actually use them, you must copy or move them to your actual
 cgi-bin directory, which on many systems is located in
 /home/httpd/cgi-bin.</p>
@@ -1529,7 +1529,7 @@ will look like '<tt class="docutils literal"><span class="pre">system-dependent-
 <li>uninstall any old apcupsd This is important since the default
 install locations may have changed.</li>
 <li>'<tt class="docutils literal">make install</tt>' or '<tt class="docutils literal">gmake install</tt>'</li>
-<li>edit your /etc/apcupsd/apcupsd.conf file if necessary</li>
+<li>edit your /etc/apcctrl/apcctrl.conf file if necessary</li>
 <li>ensure that your halt script is properly updated</li>
 <li>Start the new apcupsd with: '<tt class="docutils literal"><span class="pre">system-dependent-path/apcupsd</span>
 start</tt>'</li>
@@ -1545,10 +1545,10 @@ correctly detected your operating system. If not, redo the
 <tt class="docutils literal">configure</tt> with the appropriate options until your configuration is
 correct.</p>
 <p>Please note that a number of the <tt class="docutils literal">configure</tt> options preset
-apcupsd.conf directive values in an attempt to automatically adapt
+apcctrl.conf directive values in an attempt to automatically adapt
 apcupsd as best possible to your system. You can change the values
-in apcupsd.conf at a later time without redoing the configuration
-process by simply editing the apcupsd.conf file.</p>
+in apcctrl.conf at a later time without redoing the configuration
+process by simply editing the apcctrl.conf file.</p>
 <p>Other configuration options can be used to set up the installation
 of HTML documentation and optional modules, notably the CGI
 interface that enables the UPS state to be queried via the Web. You
@@ -1567,11 +1567,11 @@ CFLAGS=&quot;-g -O2&quot; LDFLAGS=&quot;-g&quot; ./configure \
   --sbindir=/sbin \
   --with-cgi-bin=/var/www/cgi-bin \
   --enable-cgi \
-  --with-log-dir=/etc/apcupsd
+  --with-log-dir=/etc/apcctrl
 </pre>
 <p>By default, '<tt class="docutils literal">make install</tt>' will install the executable files in
 /sbin, the manuals in /usr/man, and the configuration and script
-files in /etc/apcupsd. In addition, if your system is recognized,
+files in /etc/apcctrl. In addition, if your system is recognized,
 certain files such as the startup script and the system halt script
 will be placed in appropriate system directories (usually
 subdirectories of /etc/rc.d).</p>
@@ -1587,8 +1587,8 @@ with a $ indicate what you type):</p>
 $ which apcupsd
 /sbin/apcupsd
 $ whereis apcupsd
-apcupsd: /sbin/apcupsd /etc/apcupsd /etc/apcupsd.conf
-/etc/apcupsd.status /usr/man/man8/apcupsd.8.gz
+apcupsd: /sbin/apcupsd /etc/apcctrl /etc/apcctrl.conf
+/etc/apcctrl.status /usr/man/man8/apcupsd.8.gz
 /usr/man/man8/apcupsd.8
 </pre>
 <p>If you find an apcupsd in /usr/sbin, /usr/local/sbin, /usr/lib, or
@@ -1617,11 +1617,11 @@ mount | awk '/ext2/ { print $3 }' | while read line; do
 done
 
 # See if this is a powerfail situation.                               # ***apcupsd***
-if [ -f /etc/apcupsd/powerfail ]; then                                # ***apcupsd***
+if [ -f /etc/apcctrl/powerfail ]; then                                # ***apcupsd***
    echo                                                               # ***apcupsd***
    echo &quot;APCUPSD will now power off the UPS&quot;                          # ***apcupsd***
    echo                                                               # ***apcupsd***
-   /etc/apcupsd/apccontrol killpower                                  # ***apcupsd***
+   /etc/apcctrl/apccontrol killpower                                  # ***apcupsd***
    echo                                                               # ***apcupsd***
    echo &quot;Please ensure that the UPS has powered off before rebooting&quot; # ***apcupsd***
    echo &quot;Otherwise, the UPS may cut the power during the reboot!!!&quot;   # ***apcupsd***
@@ -1704,7 +1704,7 @@ option is not necessary for the proper execution of apcupsd.</td></tr>
 </tr>
 <tr><td>&nbsp;</td><td>The with-cgi-bin
 configuration option allows you to define the directory where the
-CGI programs will be installed. The default is /etc/apcupsd, which
+CGI programs will be installed. The default is /etc/apcctrl, which
 is probably not what you want.</td></tr>
 <tr><td class="option-group" colspan="2">
 <kbd><span class="option">--enable-apcsmart</span></kbd></td>
@@ -1791,8 +1791,8 @@ dependent but usually /var/run.</td></tr>
 </tr>
 <tr><td>&nbsp;</td><td>This option allows you
 to specify where apcupsd will create the EVENTS and STATUS log
-files. The default is /etc/apcupsd. This option simply sets the
-default of the appropriate path in the apcupsd.conf file, which can
+files. The default is /etc/apcctrl. This option simply sets the
+default of the appropriate path in the apcctrl.conf file, which can
 be changed at any later time.</td></tr>
 <tr><td class="option-group" colspan="2">
 <kbd><span class="option">--with-lock-dir=<var>path</var></span></kbd></td>
@@ -1800,7 +1800,7 @@ be changed at any later time.</td></tr>
 <tr><td>&nbsp;</td><td>This option allows
 you to specify where apcupsd will create the serial port lock file.
 The default is system-dependent but usually /var/lock. This option
-simply sets the appropriate path in the apcupsd.conf file, which
+simply sets the appropriate path in the apcctrl.conf file, which
 can be changed at any later time.</td></tr>
 <tr><td class="option-group" colspan="2">
 <kbd><span class="option">--with-pwrfail-dir=<var>path</var></span></kbd></td>
@@ -1816,7 +1816,7 @@ usually /etc.</td></tr>
 option allows you to specify where apcupsd will look for the serial
 device that talks to the UPS. The default is system dependent, but
 often /dev/ttyS0. This option simply sets the appropriate device
-name in the apcupsd.conf file, which can be changed at any later
+name in the apcctrl.conf file, which can be changed at any later
 time.</td></tr>
 <tr><td class="option-group" colspan="2">
 <kbd><span class="option">--with-nis-port=<var>port</var></span></kbd></td>
@@ -1826,7 +1826,7 @@ you to specify what port apcupsd will use for the Network
 Information Server (the CGI programs). The default is system
 dependent but usually 3551 because that port has been officially
 assigned to apcupsd by the IANA. This option simply sets the
-appropriate port in the apcupsd.conf file, which can be changed at
+appropriate port in the apcctrl.conf file, which can be changed at
 any later time.</td></tr>
 <tr><td class="option-group" colspan="2">
 <kbd><span class="option">--with-nisip=<var>ip-address</var></span></kbd></td>
@@ -1842,7 +1842,7 @@ is a valid IP address.</td></tr>
 <tr><td>&nbsp;</td><td>This option allows
 you to specify what port apcupsd will use for Master and Slave
 communications. The default is system dependent but usually 6666.
-This option simply sets the appropriate port in the apcupsd.conf
+This option simply sets the appropriate port in the apcctrl.conf
 file, which can be changed at any later time.</td></tr>
 <tr><td class="option-group" colspan="2">
 <kbd><span class="option">--with-upstype=<var>type</var></span></kbd></td>
@@ -1850,7 +1850,7 @@ file, which can be changed at any later time.</td></tr>
 <tr><td>&nbsp;</td><td>This option allows you
 to specify the type of UPS that will be connected to your computer.
 The default is: smartups. This option simply sets the appropriate
-UPS type in the apcupsd.conf file, which can be changed at any
+UPS type in the apcctrl.conf file, which can be changed at any
 later time.</td></tr>
 <tr><td class="option-group" colspan="2">
 <kbd><span class="option">--with-upscable=<var>cable</var></span></kbd></td>
@@ -1858,7 +1858,7 @@ later time.</td></tr>
 <tr><td>&nbsp;</td><td>This option allows
 you to specify what cable you are using to connect to the UPS. The
 default is: smart. This option simply sets the appropriate UPS
-cable in the apcupsd.conf file, which can be changed at any later
+cable in the apcctrl.conf file, which can be changed at any later
 time.</td></tr>
 <tr><td class="option-group" colspan="2">
 <kbd><span class="option">--disable-install-distdir</span></kbd></td>
@@ -2097,11 +2097,11 @@ echo 'The system is down.'
 <p>We need to insert the following lines just before the last 'echo':</p>
 <pre class="literal-block">
 #see if this is a powerfail situation
-if [ -f /etc/apcupsd/powerfail ]; then
+if [ -f /etc/apcctrl/powerfail ]; then
         echo
         echo &quot;APCUPSD will power off the UPS&quot;
         echo
-        /etc/apcupsd/apccontrol killpower
+        /etc/apcctrl/apccontrol killpower
         echo
         echo &quot;Please ensure that the UPS has powered off before rebooting&quot;
         echo &quot;Otherwise, the UPS may cut the power during the reboot!!!&quot;
@@ -2120,7 +2120,7 @@ maintainers, and we will attempt to figure out what you should do.
 If you mess up this file, the system will not shut down cleanly,
 and you could lose data. Don't take the chance.</p>
 <p>You will then need to make the normal changes to the
-/etc/apcupsd/apcupsd.conf file. This file contains the
+/etc/apcctrl/apcctrl.conf file. This file contains the
 configuration settings for the package. It is important that you
 set the values to match your UPS model and cable type, and the
 serial port that you have attached the UPS to. People have used
@@ -2155,7 +2155,7 @@ option and there seems to be no way to suppress the serial port
 probing during boot.</p>
 <p>At this point, you should have a complete installation. The daemon
 will load automatically at the next boot. Watch for any error
-messages during boot, and check the event logs in /etc/apcupsd. If
+messages during boot, and check the event logs in /etc/apcctrl. If
 everything looks OK, you can try testing the package by removing
 power from the UPS. NOTE! if you have a voltage-signalling UPS,
 please run the first power tests with your computer plugged into
@@ -2193,7 +2193,7 @@ installer package.</p>
 <h3><a class="toc-backref" href="#id103">Checking Your Configuration File</a></h3>
 <p>Once you have installed apcupsd,
 either from a binary package or by building from source, your next
-step should be to inspect your <tt class="docutils literal">/etc/apcupsd/apcupsd.conf</tt> file to
+step should be to inspect your <tt class="docutils literal">/etc/apcctrl/apcctrl.conf</tt> file to
 make sure it is valid.</p>
 <p>You can read the complete reference on configuration directives
 (<a class="reference internal" href="#configuration-directive-reference">Configuration Directive Reference</a>), but if you are
@@ -2307,10 +2307,10 @@ that apcupsd is running properly.</p>
 <h2><a class="toc-backref" href="#id106">Configuration Examples</a></h2>
 <div class="section" id="a-simple-usb-configuration">
 <h3><a class="toc-backref" href="#id107">A Simple USB Configuration</a></h3>
-<p>If you have a USB UPS, the essential elements of your apcupsd.conf file
+<p>If you have a USB UPS, the essential elements of your apcctrl.conf file
 should look like the following:</p>
 <pre class="literal-block">
-## apcupsd.conf v1.1 ##
+## apcctrl.conf v1.1 ##
 UPSCABLE usb
 UPSTYPE usb
 DEVICE
@@ -2335,7 +2335,7 @@ using the serial cable supplied by APC, or you build a CUSTOM SMART cable
 outlined in the cables chapter, a very simple configuration file
 would look like the following:</p>
 <pre class="literal-block">
-## apcupsd.conf v1.1 ##
+## apcctrl.conf v1.1 ##
 UPSCABLE smart
 UPSTYPE apcsmart
 DEVICE /dev/ttyS0
@@ -2358,13 +2358,13 @@ plastic at one end of the cable. If you specify the wrong cable, it
 is very likely that at the first power failure, your computer will
 be immediately shutdown. This is an unfortunate consequence of the
 dumb signaling mode. To avoid this, first replace
-/etc/apcupsd/apccontrol with safe.apccontrol found in the
+/etc/apcctrl/apccontrol with safe.apccontrol found in the
 examples directory, then test until everything works correctly.
 Once you have the correct cable, be sure to remember to reinstall
 the correct apccontrol file and test that your computer is
 correctly shutdown during a power failure.</p>
 <pre class="literal-block">
-## apcupsd.conf v1.1 ##
+## apcctrl.conf v1.1 ##
 UPSCABLE (number of cable you have)
 UPSTYPE dumb
 DEVICE /dev/ttyS0
@@ -2409,7 +2409,7 @@ a NIS server using <tt class="docutils literal">DEVICE</tt>. The client apcupsd 
 the NIS server specified in <tt class="docutils literal">DEVICE</tt> every <tt class="docutils literal">POLLTIME</tt> seconds
 (formerly <tt class="docutils literal">NETTIME</tt>).</p>
 <pre class="literal-block">
-## apcupsd.conf v1.1 ##
+## apcctrl.conf v1.1 ##
 UPSCABLE ether
 UPSTYPE net
 LOCKFILE /var/lock
@@ -2473,9 +2473,9 @@ family of network smartslot modules. Note that the older AP9606
 modules do <strong>not</strong> support PCNET.</p>
 <p>To enable PCNET support, configure with the <tt class="docutils literal"><span class="pre">--enable-pcnet</span></tt>
 flag. This is typically enabled by default.</p>
-<p>The required apcupsd.conf settings are straightforward:</p>
+<p>The required apcctrl.conf settings are straightforward:</p>
 <pre class="literal-block">
-## apcupsd.conf v1.1 ##
+## apcctrl.conf v1.1 ##
 UPSCABLE ether
 UPSTYPE pcnet
 LOCKFILE /var/lock
@@ -2521,11 +2521,11 @@ models. APC/Schneider tech support is your best point of contact for determining
 if a certain model will support MODBUS. That said, APC knowledge base article
 FA164737 indicates MODBUS support is available for the majority of the SMC,
 SMT, and SMX model lines.</p>
-<p>The required apcupsd.conf settings for MODBUS are straightforward.</p>
+<p>The required apcctrl.conf settings for MODBUS are straightforward.</p>
 <p>For MODBUS serial RS232:</p>
 <blockquote>
 <pre class="literal-block">
-## apcupsd.conf v1.1 ##
+## apcctrl.conf v1.1 ##
 UPSCABLE smart
 UPSTYPE modbus
 DEVICE /dev/ttyS0
@@ -2543,7 +2543,7 @@ formally tested at this time.</p>
 <p>For MODBUS USB:</p>
 <blockquote>
 <pre class="literal-block">
-## apcupsd.conf v1.1 ##
+## apcctrl.conf v1.1 ##
 UPSCABLE usb
 UPSTYPE modbus
 DEVICE
@@ -2578,9 +2578,9 @@ ps fax
 <p>or the equivalent for your system. You should see something similar
 to the following output.</p>
 <pre class="literal-block">
-632 ?        S      0:00 /sbin/apcupsd -f /etc/apcupsd/apcupsd.conf
-841 ?        S      0:00  \_ /sbin/apcupsd -f /etc/apcupsd/apcupsd.conf
-842 ?        S      0:00      \_ /sbin/apcupsd -f /etc/apcupsd/apcupsd.conf
+632 ?        S      0:00 /sbin/apcupsd -f /etc/apcctrl/apcctrl.conf
+841 ?        S      0:00  \_ /sbin/apcupsd -f /etc/apcctrl/apcctrl.conf
+842 ?        S      0:00      \_ /sbin/apcupsd -f /etc/apcctrl/apcctrl.conf
 </pre>
 <p>This indicates that apcupsd is up and running and has started the
 two standard threads in addition to the main thread.</p>
@@ -2605,7 +2605,7 @@ tail /var/log/messages
 Dec 5 17:01:05 matou apcupsd[5917]: apcupsd 3.7.2 startup succeeded
 </pre>
 <p>These messages should also appear in the temporary file
-(<tt class="docutils literal">/etc/apcupsd/apcupsd.events</tt>) if you are using the default
+(<tt class="docutils literal">/etc/apcctrl/apcupsd.events</tt>) if you are using the default
 configuration file. If you have installed the RPM, they will
 probably be in <tt class="docutils literal">/var/log/apcupsd.events</tt>.</p>
 </div>
@@ -2619,7 +2619,7 @@ for <tt class="docutils literal">apcaccess</tt> to work. This is done by setting
 NETSERVER on
 NISPORT 3551
 </pre>
-<p>in your <tt class="docutils literal">apcupsd.conf</tt> file.</p>
+<p>in your <tt class="docutils literal">apcctrl.conf</tt> file.</p>
 <p>To run the apcaccess test, use the following command:</p>
 <pre class="literal-block">
 apcaccess status
@@ -2713,7 +2713,7 @@ and ES UPSes to have no Voltage information. This is an annoying bug,
 but not serious. On the other hand, some of those UPSes now have no
 battery charge information <tt class="docutils literal">BCHARGE</tt>. If <tt class="docutils literal">BCHARGE</tt> is zero in your
 listing and you are running a Smart or a USB UPS, then you will
-have to set the <tt class="docutils literal">BATTERYLEVEL</tt> directive in your apcupsd.conf file to
+have to set the <tt class="docutils literal">BATTERYLEVEL</tt> directive in your apcctrl.conf file to
 -1.</p>
 <p>If you see a message to the effect of:</p>
 <pre class="literal-block">
@@ -2722,7 +2722,7 @@ tcp_open: cannot connect to server localhost on port 3551.
 </pre>
 <p>It means that you have probably not enabled the Network Information
 Server in your configuration file for <tt class="docutils literal">apcaccess</tt> to work. This is
-done by setting <tt class="docutils literal">NETSERVER</tt> and <tt class="docutils literal">NISPORT</tt> in your apcupsd.conf file
+done by setting <tt class="docutils literal">NETSERVER</tt> and <tt class="docutils literal">NISPORT</tt> in your apcctrl.conf file
 as shown above.</p>
 </div>
 <div class="section" id="communications-test">
@@ -2746,7 +2746,7 @@ serial port communications was lost:</p>
 Warning communications lost with UPS lost.
 </pre>
 <p>At the same time, it sends the same message to the system log and
-to the temporary EVENTS file (<tt class="docutils literal">/etc/apcupsd/apcupsd.events</tt>).</p>
+to the temporary EVENTS file (<tt class="docutils literal">/etc/apcctrl/apcupsd.events</tt>).</p>
 <p>Plug the serial port plug back into your computer, and within about
 12 seconds, apcupsd should reestablish communications and broadcast
 and log the following message:</p>
@@ -2759,14 +2759,14 @@ or there is a problem with apccontrol. If you are running a window
 manager such as GNOME and don't have a console window open, you may
 not receive the <tt class="docutils literal">wall</tt> messages. However, you should find them in
 your system log file (normally <tt class="docutils literal">/var/log/messages</tt>) and in the
-temporary EVENTS file, <tt class="docutils literal">/etc/apcupsd/apcupsd.events</tt>. For example, to
+temporary EVENTS file, <tt class="docutils literal">/etc/apcctrl/apcupsd.events</tt>. For example, to
 observe these events in the temporary EVENTS file, you might do a</p>
 <pre class="literal-block">
-tail -f /etc/apcupsd/apcupsd.events
+tail -f /etc/apcctrl/apcupsd.events
 </pre>
 <p>Note, if you have installed from the RPM, the proper events file
 may be <tt class="docutils literal">/var/log/apcupsd.events</tt>. You can find the actual filename by
-checking your apcupsd.conf file before running the test.</p>
+checking your apcctrl.conf file before running the test.</p>
 <p>If you do not observe these messages, you should correct this
 problem before proceeding with additional tests.</p>
 </div>
@@ -2778,7 +2778,7 @@ apccontrol. This test is appropriate for all models of UPSes (smart
 or dumb).</p>
 <p>To avoid the possibility that apcupsd might shut down your system,
 locate where apccontrol resides on your system (normally,
-/etc/apcupsd/apccontrol. Move this script to another location e.g.
+/etc/apcctrl/apccontrol. Move this script to another location e.g.
 apccontrol.save and replace it with the script found in
 examples/safe.apccontrol. When that is done, ensure that your UPS
 battery is fully charged and that you have at least 5 minutes of
@@ -2823,7 +2823,7 @@ are:</p>
 <ul class="simple">
 <li>apcupsd doesn't recognize the power failure because the
 configuration directives are not correct. E.g. wrong cable.</li>
-<li>The file <tt class="docutils literal">/etc/apcupsd/apccontrol</tt> doesn't exist or is not marked
+<li>The file <tt class="docutils literal">/etc/apcctrl/apccontrol</tt> doesn't exist or is not marked
 as executable.</li>
 </ul>
 </div>
@@ -2831,7 +2831,7 @@ as executable.</li>
 <h3><a class="toc-backref" href="#id120">System Shutdown Test</a></h3>
 <p>This is an intermediate
 test that you can do, for all UPS models before doing the Full
-Power Down Test. First modify the <tt class="docutils literal">/etc/apcupsd/apccontrol</tt> file so
+Power Down Test. First modify the <tt class="docutils literal">/etc/apcctrl/apccontrol</tt> file so
 that in the <tt class="docutils literal">killpower</tt> case, the line that re-executes apcupsd
 with the <tt class="docutils literal"><span class="pre">--killpower</span></tt> option is commented out. The original
 line probably looks something like:</p>
@@ -2846,7 +2846,7 @@ ${APCUPSD} --killpower
 the batteries are exhausted (see the next section for more
 details), the system should be fully shutdown.</p>
 <p>After performing this test, please be sure to restore
-<tt class="docutils literal">/etc/apcupsd/apccontrol</tt> to its previous state.</p>
+<tt class="docutils literal">/etc/apcctrl/apccontrol</tt> to its previous state.</p>
 </div>
 <div class="section" id="full-power-down-test">
 <h3><a class="toc-backref" href="#id121">Full Power Down Test</a></h3>
@@ -2905,7 +2905,7 @@ but mostly self-explanatory.</p>
 communicate with the UPS at a time and if apcupsd is running, apctest will fail
 to contact the UPS.</p>
 <p>Run apctest by invoking it with no arguments.</p>
-<p>It will read your installed apcupsd.conf configuration (so it knows
+<p>It will read your installed apcctrl.conf configuration (so it knows
 where to find the UPS) and then it will present you with the
 following output:</p>
 <pre class="literal-block">
@@ -2996,7 +2996,7 @@ the default, you set:</p>
 NETSERVER on
 NISPORT 3551
 </pre>
-<p>in your <tt class="docutils literal">apcupsd.conf</tt> file.</p>
+<p>in your <tt class="docutils literal">apcctrl.conf</tt> file.</p>
 <p>The full form of the apcaccess command is:</p>
 <pre class="literal-block">
 apcaccess status localhost:3551
@@ -3083,7 +3083,7 @@ information.</p>
 <h3><a class="toc-backref" href="#id125">Apcupsd Notification and Events</a></h3>
 <p>When a major event is
 generated within apcupsd, control is passed to the script
-apccontrol normally found in /etc/apcupsd/apccontrol. The event
+apccontrol normally found in /etc/apcctrl/apccontrol. The event
 name, and a number of other important parameters are passed to the
 script.</p>
 <p>The major function of the apccontrol script is to perform a
@@ -3105,7 +3105,7 @@ upsimage.cgi). To have them properly installed, you must run the
 '<tt class="docutils literal">./configure</tt>' command with <tt class="docutils literal"><span class="pre">--enable-cgi</span></tt> and you should
 specify an installation directory with <tt class="docutils literal"><span class="pre">--with-cgi-bin=</span></tt> or
 load them manually. The default directory for installation of the
-CGI programs is <tt class="docutils literal">/etc/apcupsd</tt>, which is not really where you want
+CGI programs is <tt class="docutils literal">/etc/apcctrl</tt>, which is not really where you want
 them if you are going to use them. Normally, they should go in the
 cgi-bin of your Web server.</p>
 <p>Once built and loaded, they will give you the status of your UPS or
@@ -3118,9 +3118,9 @@ is used by <tt class="docutils literal">upsstats.cgi</tt> to produce the bar cha
 <h4><a class="toc-backref" href="#id127">Setting up and Testing the CGI Programs</a></h4>
 <p>Before using multimon and the other CGI programs, first ensure that
 apcupsd is configured to run the Network Information Server. This
-is done by setting <tt class="docutils literal">NETSERVER on</tt> in /etc/apcupsd/apcupsd.conf.
+is done by setting <tt class="docutils literal">NETSERVER on</tt> in /etc/apcctrl/apcctrl.conf.
 This switch is on by default.</p>
-<p>Next you must edit the hosts file /etc/apcupsd/hosts.conf and at
+<p>Next you must edit the hosts file /etc/apcctrl/hosts.conf and at
 the end, add the name of the hosts you want to monitor and a label
 string for them. For example:</p>
 <pre class="literal-block">
@@ -3144,7 +3144,7 @@ MONITOR deuter  &quot;Disk server&quot;
 MONITOR polymatou:7001 &quot;APC USB UPS&quot;
 </pre>
 <p>where the USB copy of apcupsd has been configured to use port 7001 by
-modifying apcupsd.conf. Note, the default NIS port is 3551 on most
+modifying apcctrl.conf. Note, the default NIS port is 3551 on most
 platforms.</p>
 <p>To test multimon.cgi, you can execute it as non-root directly from
 the source cgi build directory. To do so, enter at a shell prompt:</p>
@@ -3178,11 +3178,11 @@ Content-type: text/html
 ...
 </pre>
 <p>If you do not get similar output, check the permissions of the
-/etc/apcupsd directory and of those of /etc/apcupsd/hosts.conf to
+/etc/apcctrl directory and of those of /etc/apcctrl/hosts.conf to
 ensure that your web server can access it. At many sites, the Apache
 server is not running as root, so you must be
-careful to ensure that that /etc/apcupsd/hosts.conf and
-/etc/apcupsd/multimon.conf are world readable.</p>
+careful to ensure that that /etc/apcctrl/hosts.conf and
+/etc/apcctrl/multimon.conf are world readable.</p>
 <p>To invoke multimon in your Web browser, enter:</p>
 <p><tt class="docutils literal"><span class="pre">http://your-site/cgi-bin/multimon.cgi</span></tt></p>
 <p>You should get something similar to the screen shot shown below.</p>
@@ -3222,8 +3222,8 @@ multimon.cgi as displayed in your Web browser might look like the
 following:</p>
 <div align="center" class="align-center"><img alt="./multimon.png" class="align-center" src="./multimon.png" /></div>
 <p>The machines monitored as well as the values and their column
-headings are all configurable (see /etc/apcupsd/hosts.conf and
-/etc/apcupsd/multimon.conf)</p>
+headings are all configurable (see /etc/apcctrl/hosts.conf and
+/etc/apcctrl/multimon.conf)</p>
 </div>
 <div class="section" id="upsstats-cgi">
 <h4><a class="toc-backref" href="#id130">upsstats.cgi</a></h4>
@@ -3235,7 +3235,7 @@ graph display of three of the monitored values. For example,</p>
 variables from the drop down menus at the top of each of the three
 bar graphs.</p>
 <p>As with multimon, if you have your local host configured in the
-/etc/apcupsd/hosts.conf file, you can execute it from a Unix shell
+/etc/apcctrl/hosts.conf file, you can execute it from a Unix shell
 from the source cgi directory as follows:</p>
 <pre class="literal-block">
 ./upsstats.cgi
@@ -3327,7 +3327,7 @@ can be useful to the original author in his project.</p>
 <h3><a class="toc-backref" href="#id134">Security Issues:</a></h3>
 <ul class="simple">
 <li><tt class="docutils literal">apcupsd</tt> runs as root.</li>
-<li>If you have <tt class="docutils literal">NETSERVER ON</tt> in your apcupsd.conf file (which is
+<li>If you have <tt class="docutils literal">NETSERVER ON</tt> in your apcctrl.conf file (which is
 the default), be aware that anyone on the network can read the
 status of your UPS. This may or may not pose a problem. If you
 don't consider this information privileged, as is the case for
@@ -3888,7 +3888,7 @@ Cannot open UPS tty /dev/cua01: No such file or directory.
 </td>
 </tr>
 <tr class="field"><th class="field-name">Answer:</th><td class="field-body"><p class="first">The two most likely causes of your problem are: 1. You
-have the wrong serial port device name in the apcupsd.conf file. 2.
+have the wrong serial port device name in the apcctrl.conf file. 2.
 The device name is not defined on your system. Suggestions for
 proceeding:For the first item, check what your serial port device
 should be named. You might be able to find the name with an:</p>
@@ -3909,7 +3909,7 @@ device.</p>
 </tr>
 <tr class="field"><th class="field-name">Answer:</th><td class="field-body"><p class="first">Slaves make their shutdown decision independently from the master.
 Therefore you can use the <tt class="docutils literal">TIMEOUT</tt>, <tt class="docutils literal">MINUTES</tt>, and <tt class="docutils literal">BATTERYLEVEL</tt>
-settings in the slaves' apcupsd.conf to configure them to shut down
+settings in the slaves' apcctrl.conf to configure them to shut down
 before the master.</p>
 </td>
 </tr>
@@ -3917,7 +3917,7 @@ before the master.</p>
 </td>
 </tr>
 <tr class="field"><th class="field-name">Answer:</th><td class="field-body"><p class="first last">You simply add whatever commands are necessary in the
-appropriate case statements in /etc/apcupsd/apccontrol, which is a
+appropriate case statements in /etc/apcctrl/apccontrol, which is a
 standard script file that is called to actually do the shutdown.
 Alternatively, you can add your own script file that will be called
 before doing the commands in apccontrol. Your script file must have
@@ -3933,7 +3933,7 @@ apccontrol.</p>
 <h2><a class="toc-backref" href="#id149">Customizing Event Handling</a></h2>
 <p>When apcupsd detects anomalies from your UPS device, it will make
 some decisions that usually result in one or more calls to the
-script located in <tt class="docutils literal">/etc/apcupsd/apccontrol</tt>. The <tt class="docutils literal">apccontrol</tt> file
+script located in <tt class="docutils literal">/etc/apcctrl/apccontrol</tt>. The <tt class="docutils literal">apccontrol</tt> file
 is a shell script that acts on the first argument that apcupsd
 passes to it. These actions are set up by default to sane behavior
 for all situations apcupsd is likely to detect from the UPS.
@@ -3941,12 +3941,12 @@ However, you can change the apccontrol behavior for every single
 action.</p>
 <p>To customize, so create a file with the same name as the action,
 which is passed as a command line argument. Put your script in the
-<tt class="docutils literal">/etc/apcupsd</tt> directory.</p>
+<tt class="docutils literal">/etc/apcctrl</tt> directory.</p>
 <p>These events are sent to the system log, optionally sent to the
-temporary events file (<tt class="docutils literal">/etc/apcupsd/apcupsd.events</tt>), and they also
-generate a call to <tt class="docutils literal">/etc/apcupsd/apccontrol</tt> which in turn will call
-any scripts you have placed in the <tt class="docutils literal">/etc/apcupsd</tt> directory.</p>
-<p>Normally, <tt class="docutils literal">/etc/apcupsd/apccontrol</tt> is called only by apcupsd.
+temporary events file (<tt class="docutils literal">/etc/apcctrl/apcupsd.events</tt>), and they also
+generate a call to <tt class="docutils literal">/etc/apcctrl/apccontrol</tt> which in turn will call
+any scripts you have placed in the <tt class="docutils literal">/etc/apcctrl</tt> directory.</p>
+<p>Normally, <tt class="docutils literal">/etc/apcctrl/apccontrol</tt> is called only by apcupsd.
 Consequently, you should not invoke it directly. However, it is
 important to understand how it functions, and in some cases, you
 may want to change the messages that it prints using <tt class="docutils literal">wall</tt>. We
@@ -3958,7 +3958,7 @@ will be invoked by apccontrol. For example, when a power fail
 occurs, you may want to send an email message to root.</p>
 <p>To write your own routine for the <tt class="docutils literal">powerout</tt> action, you create
 shell script named <tt class="docutils literal">powerout</tt> and put it in the lib directory
-(normally /etc/apcupsd). When the <tt class="docutils literal">powerout</tt> action is invoked by
+(normally /etc/apcctrl). When the <tt class="docutils literal">powerout</tt> action is invoked by
 apcupsd, apccontrol will first give control to your script. If you
 want apccontrol to continue with the default action, simply exit
 your script with an exit status of zero. If you do not want
@@ -3967,7 +3967,7 @@ exit with the special exit code of 99. However, in this case,
 please be aware that you must ensure proper shutdown of your
 machine if necessary.</p>
 <p>Some sample scripts (onbattery and mainsback) that email power
-failure messages can be found in /etc/apcupsd after an install or
+failure messages can be found in /etc/apcctrl after an install or
 in the platforms/etc directory of the source code.</p>
 <div class="section" id="apccontrol-command-line-options">
 <h3><a class="toc-backref" href="#id150">apccontrol Command Line Options</a></h3>
@@ -3996,7 +3996,7 @@ value is unimplemented and always 0.</dd>
 <dl class="docutils">
 <dt><strong>annoyme</strong></dt>
 <dd><p class="first">When a shutdown is scheduled, and the time
-specified on the ANNOYME directive in the apcupsd.conf file
+specified on the ANNOYME directive in the apcctrl.conf file
 expires, this event is generated.</p>
 <p class="last"><em>Default:</em> <tt class="docutils literal">wall</tt> a message</p>
 </dd>
@@ -4042,7 +4042,7 @@ following this one will be a shutdown.</p>
 </dd>
 <dt><strong>loadlimit</strong></dt>
 <dd><p class="first">This event is generated when the battery
-charge is below the low limit specified in the apcupsd.conf file.
+charge is below the low limit specified in the apcctrl.conf file.
 After completing this event, apcupsd will immediately
 initiate a <tt class="docutils literal">doshutdown</tt> event.</p>
 <p class="last"><em>Default:</em> <tt class="docutils literal">wall</tt> a message</p>
@@ -4058,7 +4058,7 @@ longer powerfailure.</p>
 <dd><p class="first">This event is generated 5 or 6 seconds
 after an initial powerfailure is detected. It means that apcupsd
 definitely considers the UPS to be on batteries. The onset of this
-event can be delayed by the <tt class="docutils literal">ONBATTERYDELAY</tt> apcupsd.conf
+event can be delayed by the <tt class="docutils literal">ONBATTERYDELAY</tt> apcctrl.conf
 configuration directive.</p>
 <p class="last"><em>Default:</em> <tt class="docutils literal">wall</tt> a message</p>
 </dd>
@@ -4083,7 +4083,7 @@ been severed.</p>
 </dd>
 <dt><strong>runlimit</strong></dt>
 <dd><p class="first">This event is generated when the <tt class="docutils literal">MINUTES</tt>
-value defined in the apcupsd.conf file expires while in a power
+value defined in the apcctrl.conf file expires while in a power
 fail condition. The <tt class="docutils literal">MINUTES</tt> is the remaining runtime as internally
 calculated by the UPS and monitored by apcupsd. After completing this
 event, apcupsd will immediately initiate a <tt class="docutils literal">doshutdown</tt> event.</p>
@@ -4091,7 +4091,7 @@ event, apcupsd will immediately initiate a <tt class="docutils literal">doshutdo
 </dd>
 <dt><strong>timeout</strong></dt>
 <dd><p class="first">This event is generated when the <tt class="docutils literal">TIMEOUT</tt> value
-defined in the apcupsd.conf file expires while in a power fail
+defined in the apcctrl.conf file expires while in a power fail
 condition. It indicates that the total time in a power failure has
 been exceeded and the machine should be shutdown. After completing this
 event, apcupsd will immediately initiate a <tt class="docutils literal">doshutdown</tt> event.</p>
@@ -4138,7 +4138,7 @@ a single copy of apcupsd but launch it multiple times using different
 configuration files and scripts. (Older versions of apcupsd required you to
 actually compile the daemon multiple times with different <tt class="docutils literal">configure</tt> options.
 This is no longer required, as all necessary adjustments can be made in
-<tt class="docutils literal">apcupsd.conf</tt>.)</p>
+<tt class="docutils literal">apcctrl.conf</tt>.)</p>
 <p>Additionally, you will run one instance of apcupsd on each of the machines
 you wish to be shut down. You will configure each of these apcupsd's to use
 the 'net' driver to read UPS status from the proper instance of apcupsd on the
@@ -4148,12 +4148,12 @@ more information on the 'net' driver and setting up net clients.</p>
 <h3><a class="toc-backref" href="#id152">Multiple UPS Example</a></h3>
 <p>There are many ways one could set up multiple apcupsd instances. Here I will
 present the way I have used with great success on Red Hat Linux.</p>
-<p>I have two apcupsd.conf files (this is for a 2 UPS setup, easily
+<p>I have two apcctrl.conf files (this is for a 2 UPS setup, easily
 expandable to N):</p>
 <pre class="literal-block">
-[adk0212&#64;mail apcupsd]$ ls -l /etc/apcupsd/*.conf
--rw-r--r-- 1 root root 11799 Aug  3 08:39 /etc/apcupsd/apcupsd.ups0.conf
--rw-r--r-- 1 root root 11822 Aug 25 14:31 /etc/apcupsd/apcupsd.ups1.conf
+[adk0212&#64;mail apcupsd]$ ls -l /etc/apcctrl/*.conf
+-rw-r--r-- 1 root root 11799 Aug  3 08:39 /etc/apcctrl/apcupsd.ups0.conf
+-rw-r--r-- 1 root root 11822 Aug 25 14:31 /etc/apcctrl/apcupsd.ups1.conf
 </pre>
 <p>In my case, ups0 is the UPS powering the UPS server running the multiple
 apcupsd instances, so only ups0 should initiate a shutdown of the local
@@ -4168,12 +4168,12 @@ fine too):</p>
 +UPSNAME ups1
 -DEVICE /dev/ups0
 +DEVICE /dev/ups1
--SCRIPTDIR /etc/apcupsd
-+SCRIPTDIR /etc/apcupsd/null
--PWRFAILDIR /etc/apcupsd
-+PWRFAILDIR /etc/apcupsd/null
+-SCRIPTDIR /etc/apcctrl
++SCRIPTDIR /etc/apcctrl/null
+-PWRFAILDIR /etc/apcctrl
++PWRFAILDIR /etc/apcctrl/null
 -NOLOGINDIR /etc
-+NOLOGINDIR /etc/apcupsd/null
++NOLOGINDIR /etc/apcctrl/null
 -ANNOY 300
 +ANNOY 0
 -NISPORT 3551
@@ -4190,7 +4190,7 @@ disable  the &quot;annoy&quot; feature on ups1. Since the state of that UPS does
 impact local users, there's no reason to annoy them.</p>
 <p>I have the following files in the special &quot;null&quot; directory:</p>
 <pre class="literal-block">
-[adk0212&#64;mail apcupsd]$ ls -l /etc/apcupsd/null
+[adk0212&#64;mail apcupsd]$ ls -l /etc/apcctrl/null
 total 32
 -rwxr--r-- 1 root root 4176 Aug  3 08:24 apccontrol
 -rwxr-xr-x 1 root root  475 Aug  3 08:28 changeme
@@ -4203,7 +4203,7 @@ total 32
 <p>The important change here is the addition of a 'doshutdown' script which
 overrides apccontrol's shutdown action:</p>
 <pre class="literal-block">
-[adk0212&#64;mail null]$ cat /etc/apcupsd/null/doshutdown
+[adk0212&#64;mail null]$ cat /etc/apcctrl/null/doshutdown
 exit 99
 </pre>
 <p>The &quot;exit 99&quot; tells apccontrol to skip its normal processing for that
@@ -4212,7 +4212,7 @@ original. The other scripts are also direct copies and have simply been
 modified to generate status email from NISPORT 3552 instead of 3551.</p>
 <p>I also have a custom init.d start/stop script to manage multiple
 instances. The start, stop, and status handlers are modified to iterate
-over all /etc/apcupsd/apcupsd.*.conf files. This is derived from the
+over all /etc/apcctrl/apcupsd.*.conf files. This is derived from the
 standard apcupsd redhat rc script:</p>
 <pre class="literal-block">
 #! /bin/sh
@@ -4243,9 +4243,9 @@ fi
 
 case &quot;$1&quot; in
     start)
-       rm -f /etc/apcupsd/powerfail
+       rm -f /etc/apcctrl/powerfail
        rm -f /etc/nologin
-       for conf in /etc/apcupsd/apcupsd.*.conf ; do
+       for conf in /etc/apcctrl/apcupsd.*.conf ; do
           inst=`basename $conf`
           echo -n &quot;Starting UPS monitoring ($inst):&quot;
           daemon /sbin/apcupsd -f $conf -P /var/run/apcupsd-$inst.pid
@@ -4255,7 +4255,7 @@ case &quot;$1&quot; in
        done
        ;;
     stop)
-       for conf in /etc/apcupsd/apcupsd.*.conf ; do
+       for conf in /etc/apcctrl/apcupsd.*.conf ; do
           inst=`basename $conf`
           echo -n &quot;Shutting down UPS monitoring ($inst):&quot;
           killproc -p /var/run/apcupsd-$inst.pid apcupsd
@@ -4274,7 +4274,7 @@ case &quot;$1&quot; in
        exit 3
        ;;
     status)
-       for conf in /etc/apcupsd/apcupsd.*.conf ; do
+       for conf in /etc/apcctrl/apcupsd.*.conf ; do
           inst=`basename $conf`
           status -p /var/run/apcupsd-$inst.pid apcupsd-$inst
           RETVAL=$?
@@ -4475,7 +4475,7 @@ the address set in the SNMP UPS.</p>
 card. The remaining sections describe configuration of the APCUPSD
 to communicate using SNMP Protocol.</p>
 <p>To enable the SNMP support it is enough to configure
-the correct device in your apcupsd.conf configuration file. The
+the correct device in your apcctrl.conf configuration file. The
 directive needed for this configuration is:</p>
 <pre class="literal-block">
 DEVICE &lt;host&gt;:&lt;port&gt;:&lt;vendor&gt;:&lt;community&gt;
@@ -4544,7 +4544,7 @@ to the trap port, so whichever one is started first will succeed
 and the others will fail. Apcupsd will fall back to polling
 behavior if it is unable to open the trap port. You can also
 forcibly disable trap catching by appending <tt class="docutils literal">_NOTRAP</tt> to your vendor
-string in the apcupsd.conf <tt class="docutils literal">DEVICE</tt> directive.</p>
+string in the apcctrl.conf <tt class="docutils literal">DEVICE</tt> directive.</p>
 </div>
 <div class="section" id="known-problems">
 <h3><a class="toc-backref" href="#id163">Known Problems</a></h3>
@@ -4665,7 +4665,7 @@ running on UPS batteries, ...</p>
 <p>LOG_ALERT a condition that needs immediate attention such as
 pending system shutdown, ...</p>
 <p>The default Facility for syslog() logging is DAEMON, although this
-can be changed with the FACILITY directive in apcupsd.conf. In the
+can be changed with the FACILITY directive in apcctrl.conf. In the
 following example, we should the facility as local0.</p>
 <p>More work needs to be done to the code to ensure that it
 corresponds to the above levels.</p>
@@ -4724,9 +4724,9 @@ double-click the installer executable and follow the instructions.</p>
 <div class="section" id="configuring-apcupsd-on-windows">
 <h3><a class="toc-backref" href="#id172">Configuring Apcupsd on Windows</a></h3>
 <p>If you are installing Apcupsd for the first time, the installer
-will give you an opportunity to edit the apcupsd.conf configuration
+will give you an opportunity to edit the apcctrl.conf configuration
 file to contain the values appropriate for your site. (Subsequent
-installations will maintain your existing apcupsd.conf, so you need
+installations will maintain your existing apcctrl.conf, so you need
 not edit it again unless there are new features or syntax changes
 that must be accounted for.)</p>
 <p>The default configuration calls for a USB connected UPS. This is
@@ -4843,17 +4843,17 @@ XP.</p>
 &quot;Uninstall Apcupsd&quot; link from Start -&gt; Programs -&gt; Apcupsd. Near the
 end of the uninstall you will be prompted about removing
 configuration and event files. You should answer &quot;No&quot; in order to
-preserve your existing apcupsd.conf file.</p>
+preserve your existing apcctrl.conf file.</p>
 <p>After the uninstall completes you may install the new version of
 Apcupsd as described above. If you preserved your existing
-apcupsd.conf file, the new apcupsd.conf will be installed as
-apcupsd.conf.new.</p>
+apcctrl.conf file, the new apcctrl.conf will be installed as
+apcctrl.conf.new.</p>
 </div>
 <div class="section" id="post-installation">
 <h3><a class="toc-backref" href="#id177">Post-Installation</a></h3>
 <p>After installing
 apcupsd and before running it, you should check the contents of the
-config file <tt class="docutils literal"><span class="pre">c:\apcupsd\etc\apcupsd\apcupsd.conf</span></tt>. You will
+config file <tt class="docutils literal"><span class="pre">c:\apcupsd\etc\apcupsd\apcctrl.conf</span></tt>. You will
 probably need to change your UPSCABLE directive, your UPSTYPE and
 possibly your DEVICE directives. Please refer to the configuration
 section of this manual for more details.</p>
@@ -4865,7 +4865,7 @@ domain resolution does not seem to work if you have not configured
 a DNS server in the Network section of the Control Panel. This
 problem should be apparent only when running a slave configuration.
 In this case, when you specify the name of the master in your
-apcupsd.conf file, apcupsd will be unable to resolve the name to a
+apcctrl.conf file, apcupsd will be unable to resolve the name to a
 valid IP address. To circumvent this problem, simply enter the
 address as an IP address rather than a hostname, or alternatively,
 ensure that you have a valid DNS server configured on your system.</p>
@@ -5036,14 +5036,14 @@ connect your serial-line UPS to a USB port. If you would like to
 free up your serial port and connect your existing serial port UPS
 to a USB port, it is possible if you have one of the later kernels.
 You simply get a serial to USB adapter that is supported by the
-kernel, plug it in and make one minor change to your apcupsd.conf
+kernel, plug it in and make one minor change to your apcctrl.conf
 file and away you go. (Kern adds: Thanks to Joe Acosta for pointing
 this out to me.)</p>
 <p>The device that Joe Acosta and Kern are using is IOgear GUC232A USB
 2 serial adapter. Bill Marr informs us that it also works with a
 Back-UPS Pro 650 and the 940-0095B cable.</p>
 <p>At Kern's site, running Red Hat 7.1 with kernel 2.4.9-12, he simply
-changed his /etc/apcupsd/apcupsd.conf configuration line to be:</p>
+changed his /etc/apcctrl/apcctrl.conf configuration line to be:</p>
 <pre class="literal-block">
 DEVICE /dev/ttyUSB0
 </pre>
@@ -5111,7 +5111,7 @@ may have permissions problems accessing the serial port.</li>
 <li>You may have cabling problems, either with an incorrect cable,
 or the incorrect cable specification directive in the configuration
 file.</li>
-<li>You may have a problem with the /etc/apcupsd/acpupsd.conf file.
+<li>You may have a problem with the /etc/apcctrl/acpupsd.conf file.
 For example, check that you have specified the correct type of UPS
 and the correct networking directives. For more details, see the
 <a class="reference internal" href="#after-installation">After Installation</a> section.</li>
@@ -5218,7 +5218,7 @@ Signal Computer                  UPS
  GND    5   --------------------  9  Ground
 </pre>
 <p>When using this cable with apcupsd specify the following in
-apcupsd.conf:</p>
+apcctrl.conf:</p>
 <pre class="literal-block">
 UPSCABLE smart
 UPSTYPE apcsmart
@@ -5323,7 +5323,7 @@ n/c   |    1   |  Frame/Case Gnd (optional)      |     9   |  22
 Note: the &lt;- and -&gt; indicate the signal direction.
 </pre>
 <p>When using this cable with apcupsd specify the following in
-apcupsd.conf:</p>
+apcctrl.conf:</p>
 <pre class="literal-block">
 UPSCABLE simple
 UPSTYPE dumb
@@ -5382,7 +5382,7 @@ original schematic), the UPS (a BackUPS CS 500 EI) will be unstable
 and likely to rapidly switch from power to batteries (i.e.
 chatter).</p>
 <p>When using this cable with apcupsd specify the following in
-apcupsd.conf:</p>
+apcctrl.conf:</p>
 <pre class="literal-block">
 UPSCABLE smart
 UPSTYPE apcsmart
@@ -6061,7 +6061,7 @@ shorten their life span.</p>
 </div>
 <div class="section" id="configuration-directive-reference">
 <h2><a class="toc-backref" href="#id213">Configuration Directive Reference</a></h2>
-<p>Configuration directives in /etc/apcupsd/apcupsd.conf control the
+<p>Configuration directives in /etc/apcctrl/apcctrl.conf control the
 behavior of the apcupsd daemon. For most installations it is only
 necessary to set a handful of general directives. The rest can be
 left at their defaults unless you have an exotic configuration.</p>
@@ -6167,7 +6167,7 @@ instances of apcupsd on the same machine.</dd>
 <dt><strong>EVENTSFILE</strong> <em>filename</em></dt>
 <dd><p class="first">If you want the apcupsd network information server to provide the last
 10 events via the network, you must specify a file where apcupsd will save
-these events. The default is: /etc/apcupsd/apcupsd.events.
+these events. The default is: /etc/apcctrl/apcupsd.events.
 Currently, apcupsd will save at most the last 50 events.
 Periodically (once an hour by default), apcupsd will check the size
 of this file. When more than 50 events are recorded, apcupsd will
@@ -6194,7 +6194,7 @@ signal, you must set the <tt class="docutils literal">TIMEOUT</tt> directive to 
 will halt the system when the remaining battery charge falls below
 the specified percentage. The default is 5 percent. This directive
 is ignored for dumb (voltage-signalling) UPSes. To totally disable
-this counter, set <tt class="docutils literal">BATTERYLEVEL <span class="pre">-1</span></tt> in your apcupsd.conf file.</dd>
+this counter, set <tt class="docutils literal">BATTERYLEVEL <span class="pre">-1</span></tt> in your apcctrl.conf file.</dd>
 <dt><strong>MINUTES</strong> <em>battery runtime in minutes</em></dt>
 <dd>If <tt class="docutils literal">MINUTES</tt> is specified, during a power failure, apcupsd
 will shutdown the system when the remaining runtime on batteries as
@@ -6206,7 +6206,7 @@ fully charged. This can be checked by examining the <tt class="docutils literal"
 value as printed in the output of an '<tt class="docutils literal">apcaccess status</tt>' command.
 If the value is zero or otherwise unreasonable, your UPS is
 probably broken. In this case, we recommend that you disable this
-timer by setting <tt class="docutils literal">MINUTES <span class="pre">-1</span></tt> in your apcupsd.conf file.</dd>
+timer by setting <tt class="docutils literal">MINUTES <span class="pre">-1</span></tt> in your apcctrl.conf file.</dd>
 <dt><strong>TIMEOUT</strong> <em>time in seconds</em></dt>
 <dd>After a power
 failure, apcupsd will halt the system when <tt class="docutils literal">TIMEOUT</tt> seconds have
@@ -6324,7 +6324,7 @@ all processes during the shutdown.</dd>
 <dd><p class="first">This option configures the directory in which apccontrol and
 other event scripts are located.</p>
 <p class="last">Normally, the <tt class="docutils literal">configure</tt> program will set an appropriate
-default value for your platform, often /etc/apcupsd.</p>
+default value for your platform, often /etc/apcctrl.</p>
 </dd>
 <dt><strong>PWRFAILDIR</strong> <em>path to powerfail dir</em></dt>
 <dd><p class="first">When apcupsd shuts down your system, it creates a temporary
@@ -6335,7 +6335,7 @@ chosen directory must be writable by the user apcupsd is running as
 (normally root) and must not be cleared or unmounted early in the
 shutdown sequence.</p>
 <p class="last">Normally, the <tt class="docutils literal">configure</tt> program will set an appropriate
-default value for your platform, often /etc/apcupsd. You may also
+default value for your platform, often /etc/apcctrl. You may also
 specify the <tt class="docutils literal"><span class="pre">--with-pwrfaildir=</span></tt> option of the <tt class="docutils literal">configure</tt>
 program to change the default at compile time.</p>
 </dd>
@@ -6355,7 +6355,7 @@ disabled by setting it to zero.</dd>
 <dt><strong>STATFILE</strong> <em>file</em></dt>
 <dd>This directive specifies the file
 to be used when writing the STATUS information. The default is
-/etc/apcupsd/apcupsd.status.</dd>
+/etc/apcctrl/apcupsd.status.</dd>
 <dt><strong>DATATIME</strong> <em>time in seconds</em></dt>
 <dd>This directives supplies the time
 interval in seconds between writes of PowerChute-like data information to
@@ -6502,7 +6502,7 @@ information concerning the UPS. Since the volume of data is rather
 large (over 1000 bytes per status), the STATUS data is not
 automatically sent to the system log file. Instead, it is written
 as a series of data records in a specific file (normally
-/etc/apcupsd/apcupsd.status).</p>
+/etc/apcctrl/apcupsd.status).</p>
 <p>After each write, the file is rewound so that the size of the file
 remains constant. The STATUS file is kept for backward compatibility
 and will be eliminated in a future version of apcupsd. The preferred
@@ -6512,7 +6512,7 @@ the CGI interface (see <a class="reference internal" href="#apcupsd-network-moni
 first record written contains a version number, the number of
 records that follow the first record, and the total number of bytes
 in those subsequent records. An actual example of such a status
-file (/etc/apcupsd/apcupsd.status) is shown below.</p>
+file (/etc/apcctrl/apcupsd.status) is shown below.</p>
 <p>Consequently, the first record always consists of 24 bytes (23
 characters followed by a newline). This record starts with APC and
 as indicated in the example is followed by 37 records
@@ -6751,15 +6751,15 @@ shutdown process.</p>
 <p>The shutdown sequence is as follows:</p>
 <ul>
 <li><p class="first">apcupsd detects that there is a power problem and it calls
-<tt class="docutils literal">/etc/apcupsd/apccontrol powerout</tt>. By default this event
+<tt class="docutils literal">/etc/apcctrl/apccontrol powerout</tt>. By default this event
 does nothing, but it can be overridden to notify users, etc.</p>
 </li>
 <li><p class="first">After the configured <tt class="docutils literal">ONBATTERYDELAY</tt>, apcupsd
-calls <tt class="docutils literal">/etc/apcupsd/apccontrol onbattery</tt>, which normally sends a
+calls <tt class="docutils literal">/etc/apcctrl/apccontrol onbattery</tt>, which normally sends a
 message to all users informing them that the UPS is on batteries.</p>
 </li>
 <li><p class="first">When one of the conditions listed below occurs, apcupsd issues a
-shutdown command by calling <tt class="docutils literal">/etc/apcupsd/apccontrol doshutdown</tt>,
+shutdown command by calling <tt class="docutils literal">/etc/apcctrl/apccontrol doshutdown</tt>,
 which should perform a shutdown of your system using the system
 shutdown(8) command. You can modify the behavior as described in
 <a class="reference internal" href="#customizing-event-handling">Customizing Event Handling</a>.</p>
@@ -6773,9 +6773,9 @@ shutdown(8) command. You can modify the behavior as described in
 <p>A shutdown could also be initiated if apcupsd detects that the
 batteries are no longer functioning correctly. This case, though
 very unusual, can happen at any time even if there is proper mains
-voltage, and <tt class="docutils literal">/etc/apcupsd/apccontrol emergency</tt> is called.</p>
+voltage, and <tt class="docutils literal">/etc/apcctrl/apccontrol emergency</tt> is called.</p>
 <p>Just before initiating any shutdown through the apccontrol script,
-apcupsd will create the file /etc/apcupsd/powerfail. This file will
+apcupsd will create the file /etc/apcctrl/powerfail. This file will
 be used later in the shutdown sequence to recall apcupsd after
 syncing of the disks to initiate a power off of the UPS.</p>
 <p>If the /etc/nologin file has not already been created, it will
@@ -6800,8 +6800,8 @@ call the halt script, which is usually in /etc/rc.d/halt or
 on your system. If apcupsd was properly installed, this standard
 halt script was modified to include a bit of new logic just before
 the final halt of the system. It first tests if the file
-/etc/apcupsd/powerfail exists, and if it does, it executes
-<tt class="docutils literal">/etc/apcupsd/apccontrol killpower</tt>. It is this last step that will
+/etc/apcctrl/powerfail exists, and if it does, it executes
+<tt class="docutils literal">/etc/apcctrl/apccontrol killpower</tt>. It is this last step that will
 cause apcupsd to be re-executed with the <tt class="docutils literal"><span class="pre">--killpower</span></tt> option
 on the command line. This option tells apcupsd to inform the UPS to
 kill the power.</p>
@@ -6813,11 +6813,11 @@ code used on the Red Hat version is:</p>
 <blockquote>
 <pre class="literal-block">
 # See if this is a powerfail situation.                              # ***apcupsd***
-if [ -f /etc/apcupsd/powerfail ]; then                               # ***apcupsd***
+if [ -f /etc/apcctrl/powerfail ]; then                               # ***apcupsd***
   echo                                                               # ***apcupsd***
   echo &quot;APCUPSD will now power off the UPS&quot;                          # ***apcupsd***
   echo                                                               # ***apcupsd***
-  /etc/apcupsd/apccontrol killpower                                  # ***apcupsd***
+  /etc/apcctrl/apccontrol killpower                                  # ***apcupsd***
   echo                                                               # ***apcupsd***
   echo &quot;Please ensure that the UPS has powered off before rebooting&quot; # ***apcupsd***
   echo &quot;Otherwise, the UPS may cut the power during the reboot!!!&quot;   # ***apcupsd***
@@ -8221,7 +8221,7 @@ rpmbuild --rebuild --define build_rh7 1&quot; apcupsd-x.x.x-x.src.rpm
 <dd><p class="first">Up through version 3.12, by default standard serial port support was built
 and the apcupsd-std package was produced. The usb package pre-configured
 the configuration files for usb devices and installed a couple
-additional tools in /etc/apcupsd but the usb driver was built
+additional tools in /etc/apcctrl but the usb driver was built
 regardless. To get the usb package and support in those versions
 either set the</p>
 <pre class="literal-block">

@@ -1264,7 +1264,7 @@ static void program_smart_eeprom(void)
 
 			case 14:
 				pmsg("The EEPROM values to be changed will be taken from\n"
-						"the configuration directives in your apcupsd.conf file.\n");
+						"the configuration directives in your apcctrl.conf file.\n");
 				cmd = get_cmd("Do you want to continue? (Y/N): ");
 				if (*cmd != 'y' && *cmd != 'Y') {
 					pmsg("EEPROM changes NOT made.\n");
@@ -3071,13 +3071,13 @@ static void brazil_getSchedule(){
 static void brazil_setSchedule(){
 	char *cmd;
 	pmsg("\n"
-			"Attention!!! You are going to turn off the UPS. Are you sure that you want to turn off and turn on after?\n"
+			"Attention!!! You are going to turn off the UPS!!! Are you sure that you want to turn off and turn on after?\n"
 			"Y) Yes\n"
 			"N) No\n\n");
 
 	cmd = get_cmd("Select the option: ");
 	if (tolower(*cmd) == 'y'){
-		(((BrazilUpsDriver*)(ups)->driver))->programmation(true,5,true,6);
+		(((BrazilUpsDriver*)(ups)->driver))->programmation(true,1,true,2);
 	}
 }
 static void brazil_cancelSchedule(){
@@ -3354,7 +3354,7 @@ static void do_brazil_testing(void)
 				"2) Query for last events\n"
 				"3) Query the internal UPS clock and scheduler\n"
 				"4) Schedule the UPS to shutdown in 1 minutes and restart 1 minute later.\n"
-				"5) Cancel Schedule. Do not shutdown and restart\n"
+				"5) Cancel Schedule. Do not shutdown or start\n"
 				"6) Test set input turn off\n"
 				"7) Test set input Turn on\n"
 				"8) Test battery health\n"

@@ -17,7 +17,7 @@ install-darwin:
 	@echo " "
 	@echo "apcupsd script installation for MacOS X (Darwin) complete." 
 	@echo " "
-	@echo "You should now edit $(DESTDIR)/$(sysconfdir)/apcupsd.conf to correspond"
+	@echo "You should now edit $(DESTDIR)/$(sysconfdir)/apcctrl.conf to correspond"
 	@echo "to your setup then start the apcupsd daemon with:"
 	@echo " "
 	@echo "   sudo launchctl load /Library/LaunchDaemons/org.apcupsd.apcupsd.plist"

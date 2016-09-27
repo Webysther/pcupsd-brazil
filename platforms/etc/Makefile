@@ -8,7 +8,7 @@ all-uninstall: uninstall-etc
 
 install-etc:
 	$(call MKDIR,$(sysconfdir))
-	$(call INSTNEW,644,apcupsd.conf,$(sysconfdir))
+	$(call INSTNEW,644,apcctrl.conf,$(sysconfdir))
 	$(call INSTORIG,744,changeme,$(sysconfdir))
 	$(call INSTORIG,744,commfailure,$(sysconfdir))
 	$(call INSTORIG,744,commok,$(sysconfdir))

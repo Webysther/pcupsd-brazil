@@ -31,7 +31,7 @@ IMPORTANT: Before running
 .Bl -bullet
 .It
 Check that the UPSCABLE, UPSTYPE and DEVICE configuration directives in the
-.Xr apcupsd.conf 5
+.Xr apcctrl.conf 5
 configuration file have been set appropriately; and
 .It
 Shutdown apcupsd if it is running. You cannot run both
@@ -224,10 +224,10 @@ Changes or disables the automatic self-test interval.
 .Pp
 This option allows the bulk programming of the EEPROM configuration variables
 from the values contained in the 
-.Pa /etc/apcupsd.conf
+.Pa /etc/apcctrl.conf
 configuration file.  Refer to the "APCTEST EEPROM CONFIGURATION DIRECTIVES"
 section of the man page for
-.Xr apcupsd.conf 5
+.Xr apcctrl.conf 5
 .It Option 15) Quit
 .Pp
 This option exits back to the previous (main) menu.
@@ -277,7 +277,7 @@ guess which cable should be used with the attached UPS.
 .Ss Option 9) Quit
 Exits from the program.
 .Sh FILES
-.Pa /etc/apcupsd/apcupsd.conf 
+.Pa /etc/apcctrl/apcctrl.conf 
 default configuration file
 .Pp
 .Pa apctest.out
@@ -285,7 +285,7 @@ transcript of the
 .Nm
 session
 .Sh SEE ALSO
-.Xr apcupsd.conf 5 , 
+.Xr apcctrl.conf 5 , 
 .Xr apcupsd 8 .
 .Pp
 The HTML apcupsd manual installed on your system or available online at

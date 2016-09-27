@@ -87,7 +87,7 @@ Once you have run the commands
         make install
 
 in the apcupsd source tree and verified the values (most notably, the
-"DEVICE" value) in the /etc/apcupsd/apcupsd.conf file, you should be
+"DEVICE" value) in the /etc/apcctrl/apcctrl.conf file, you should be
 able to manually start apcupsd by executing the following:
 
         /etc/rc.apcupsd start
@@ -109,10 +109,10 @@ shutdown request and the time the power is killed.  If the value is 20
 (seconds), then you have to modify it.  My OpenBSD machine shuts down
 fairly quickly, so I find a value of 180 seconds to be suitable.  Note
 that there are only a few discrete values which are permissable.  See 
-the apcupsd.conf file for details.
+the apcctrl.conf file for details.
 
 If you need to change this value, edit the "SLEEP" parameter in your
-apcupsd.conf file and set it to the appropriate value.  That parameter
+apcctrl.conf file and set it to the appropriate value.  That parameter
 is grouped, in the configuration file, with a bunch of other parameters
 used for programming the UPS EEPROM.   Make sure all the other parameters
 are commented out (you only want to change one at a time).

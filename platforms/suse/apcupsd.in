@@ -34,7 +34,7 @@ case "$1" in
        rm -f @PWRFAILDIR@/powerfail
        rm -f @nologdir@/nologin
        echo -n "Starting UPS monitoring:" 
-       /sbin/startproc @sbindir@/apcupsd -f @sysconfdir@/apcupsd.conf
+       /sbin/startproc @sbindir@/apcupsd -f @sysconfdir@/apcctrl.conf
        RETVAL=$?
 	  rc_status -v
        echo

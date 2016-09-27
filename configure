@@ -1492,7 +1492,7 @@ Optional Packages:
   --with-libwrap=DIR      Compile in libwrap (tcp_wrappers) support
   --with-generic-usb      Force use of generic USB driver
   --with-nisip=IP-ADDRESS Specify the IP address to bind to (default=0.0.0.0)
-  --with-cgi-bin=DIR      Specify cgi-bin directory (default=/etc/apcupsd)
+  --with-cgi-bin=DIR      Specify cgi-bin directory (default=/etc/apcctrl)
   --with-distname=NAME    Specify DISTNAME
   --with-nologin=DIR      Specify nologin file directory (default /etc)
   --with-pid-dir=DIR      Specify PIDDIR directory (default is OS dependent)
@@ -2764,7 +2764,7 @@ then
 else
 
    if test x$sysconfdir = x'${prefix}/etc' ; then
-      sysconfdir='/etc/apcupsd'
+      sysconfdir='/etc/apcctrl'
    fi
 
    if test x$sbindir = x'${exec_prefix}/sbin' ; then
@@ -8241,7 +8241,7 @@ fi
 
 
 
-CGIBIN="/etc/apcupsd"
+CGIBIN="/etc/apcctrl"
 
 # Check whether --with-cgi-bin was given.
 if test "${with_cgi_bin+set}" = set; then :
@@ -8995,7 +8995,7 @@ UPSCABLE=simple
 nologdir=/etc
 
 # Find the default directory to put the root-mode PID file in
-for PIDDIR in "/var/run" "/etc/apcupsd"
+for PIDDIR in "/var/run" "/etc/apcctrl"
 do
    if test -d $PIDDIR
    then
@@ -9004,7 +9004,7 @@ do
 done
 
 # Find the default directory to put the apcupsd.events and apcupsd.status files
-for LOGDIR in "/var/log" "/etc/apcupsd"
+for LOGDIR in "/var/log" "/etc/apcctrl"
 do
    if test -d $LOGDIR
    then
@@ -9013,7 +9013,7 @@ do
 done
 
 # set the default serial port lock director
-for LOCKDIR in "/var/lock" "/var/spool/locks" "/etc/apcupsd"
+for LOCKDIR in "/var/lock" "/var/spool/locks" "/etc/apcctrl"
 do
    if test -d $LOCKDIR
    then
@@ -9040,7 +9040,7 @@ alpha)
    DISTVER=`uname -r`
    SERIALDEV=/dev/tty01
    LOCKDIR=/var/spool/locks
-   LOGDIR=/etc/apcupsd
+   LOGDIR=/etc/apcctrl
    DFILES="\
       platforms/alpha/apcupsd \
       platforms/alpha/awkhaltprog"
@@ -9356,7 +9356,7 @@ GENERATE_FILES="\
    platforms/etc/commok \
    platforms/etc/offbattery \
    platforms/etc/onbattery \
-   platforms/etc/apcupsd.conf \
+   platforms/etc/apcctrl.conf \
    examples/safe.apccontrol \
    $DFILES"
 

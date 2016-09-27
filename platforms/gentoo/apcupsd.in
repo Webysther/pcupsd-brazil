@@ -7,7 +7,7 @@ APCPID=@PIDDIR@/apcupsd.pid
 APCUPSD=@sbindir@/apcupsd
 
 start() {
-	rm -f /etc/apcupsd/powerfail
+	rm -f /etc/apcctrl/powerfail
 	ebegin "Starting APC UPS daemon"
 	start-stop-daemon --start --quiet --exec $APCUPSD -- 1>&2
 	eend $?

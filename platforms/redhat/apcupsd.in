@@ -16,7 +16,7 @@ case "$1" in
        rm -f @PWRFAILDIR@/powerfail
        rm -f @nologdir@/nologin
        echo -n "Starting UPS monitoring:" 
-       daemon @sbindir@/apcupsd -f @sysconfdir@/apcupsd.conf
+       daemon @sbindir@/apcupsd -f @sysconfdir@/apcctrl.conf
        RETVAL=$?
        echo
        [ $RETVAL -eq 0 ] && touch @LOCKDIR@/subsys/apcupsd

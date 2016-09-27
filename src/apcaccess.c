@@ -213,7 +213,7 @@ int main(int argc, char **argv)
    }
 
    // Translate host of 0.0.0.0 to localhost
-   // This is due to NISIP in apcupsd.conf being 0.0.0.0 for listening on all
+   // This is due to NISIP in apcctrl.conf being 0.0.0.0 for listening on all
    // interfaces. In that case just use loopback.
    if (!strcmp(host, "0.0.0.0"))
       host = DEFAULT_HOST;

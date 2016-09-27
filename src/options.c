@@ -211,7 +211,7 @@ int parse_options(int argc, char *argv[])
 
    /*
     * If the user did not provide a -f argument to specify
-    * the location of apcupsd.conf, simulate one relative to current
+    * the location of apcctrl.conf, simulate one relative to current
     * executable path.
     */
    if (cfgfile == APCCONF) {

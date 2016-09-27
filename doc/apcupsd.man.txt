@@ -37,7 +37,7 @@ DESCRIPTION
 
      -f file --config-file file
 		 Load the specified configuration file.  The default configu‐
-		 ration file is /etc/apcupsd/apcupsd.conf.  It must be changed
+		 ration file is /etc/apcctrl/apcctrl.conf.  It must be changed
 		 when running more than one copy of apcupsd on the same com‐
 		 puter to control multiple UPSes.
 
@@ -67,7 +67,7 @@ DESCRIPTION
 		 This shutdown grace delay is a programmable value stored in a
 		 Smart-UPS EEPROM which can be changed using apctest(8).  In
 		 hibernate mode, the UPS will again supply power to the system
-		 when the utility power returns. Refer to apcupsd.conf(5) for
+		 when the utility power returns. Refer to apcctrl.conf(5) for
 		 an alternative method using the KILLDELAY configuration
 		 directive and the only method available when using a Back-UPS
 		 or other UPS operating in simple signalling mode.
@@ -100,7 +100,7 @@ DESCRIPTION
      "Support for SNMP UPSes" section of the apcupsd manual.
 
 IMPLEMENTATION NOTES
-     The shutdown is made by calls to the script /etc/apcupsd/apccontrol by
+     The shutdown is made by calls to the script /etc/apcctrl/apccontrol by
      the apcupsd daemon.  Consequently, no changes to /etc/inittab are neces‐
      sary on Linux as there is no communication between the daemon and the
      init(1) process.  Installation of the daemon modifies the halt script so
@@ -110,23 +110,23 @@ IMPLEMENTATION NOTES
      On some operating systems (eg FreeBSD) there is no halt script so apccon‐
      trol must be modified to cause the daemon to power off the UPS after a
      delay.  Alternatives are to use the --kill-on-powerfail command on the
-     apcupsd command line or refer to apcupsd.conf(5) for details of the
+     apcupsd command line or refer to apcctrl.conf(5) for details of the
      KILLDELAY configuration directive.
 
 CONFIGURATION
      It will almost certainly be necessary to customise the configuration
-     information in the /etc/apcupsd/apcupsd.conf configuration file to suit
+     information in the /etc/apcctrl/apcctrl.conf configuration file to suit
      your configuration and desired UPS behaviour.
 
      For information on the configuration directives and the format of the
-     configuration file, refer to apcupsd.conf(5).
+     configuration file, refer to apcctrl.conf(5).
 
 EVENTS
      apcupsd generates events when certain conditions occur.  These events are
      sent to the system log and, optionally, to the temporary events file
      (/var/log/apcupsd.events).  They also generate a call to  the
-     /etc/apcupsd/apccontrol script which in turn will call any custom scripts
-     placed in the /etc/apcupsd directory which may override apccontrol's
+     /etc/apcctrl/apccontrol script which in turn will call any custom scripts
+     placed in the /etc/apcctrl directory which may override apccontrol's
      default behaviour. For details of the events and customising apccontrol's
      behaviour, refer to apccontrol(8).
 
@@ -141,11 +141,11 @@ STATUS REPORT FORMAT
      single piece of information on each line of output. The content varies
      based on the model of UPS being used and, in some cases, the firmware
      version. This status report is also optionally written the the
-     /etc/apcupsd/apcupsd.status file. Refer to apcaccess(8) for full details
+     /etc/apcctrl/apcupsd.status file. Refer to apcaccess(8) for full details
      of the status report output.
 
 FILES
-     /etc/apcupsd/apcupsd.conf default configuration file
+     /etc/apcctrl/apcctrl.conf default configuration file
 
      /var/run/apcupsd.pid default process ID file
 
@@ -154,7 +154,7 @@ FILES
      /var/log/apcupsd.events default events file
 
 SEE ALSO
-     apcupsd.conf(5), apcaccess(8), apccontrol(8), apctest(8).
+     apcctrl.conf(5), apcaccess(8), apccontrol(8), apctest(8).
 
      The HTML apcupsd manual installed on your system or available online at
      http://www.apcupsd.org/

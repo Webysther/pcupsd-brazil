@@ -38,7 +38,7 @@ The Smart-Custom cable is not an APC product.*
           GND    5   --------------------  9  Ground
 
 When using this cable with apcupsd specify the following in
-apcupsd.conf:
+apcctrl.conf:
 
 ::
 
@@ -159,7 +159,7 @@ cable:
          Note: the <- and -> indicate the signal direction.
 
 When using this cable with apcupsd specify the following in
-apcupsd.conf:
+apcctrl.conf:
 
 ::
 
@@ -226,7 +226,7 @@ and likely to rapidly switch from power to batteries (i.e.
 chatter).
 
 When using this cable with apcupsd specify the following in
-apcupsd.conf:
+apcctrl.conf:
 
 ::
 

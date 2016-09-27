@@ -26,7 +26,7 @@ install-alpha:
 	@echo " "
 	@echo "apcupsd script installation for the Alpha $(DISTVER) complete." 
 	@echo " "
-	@echo "You should now edit  /etc/apcupsd/apcupsd.conf  to correspond"
+	@echo "You should now edit  /etc/apcctrl/apcctrl.conf  to correspond"
 	@echo "to your setup then start the apcupsd daemon with:"
 	@echo " "
 	@echo "/sbin/init.d/apcupsd start"

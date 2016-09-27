@@ -19,12 +19,12 @@ files="/System/Library/Extensions/ApcupsdDummy.kext \
        /Library/StartupItems/apcupsd \
        /Library/LaunchDaemons/org.apcupsd.apcupsd.plist \
        /Applications/apcagent.app \
-       /etc/apcupsd \
+       /etc/apcctrl \
        /sbin/apcaccess \
        /sbin/apcupsd \
        /sbin/apctest \
        /sbin/smtp \
-       /usr/share/man/man5/apcupsd.conf.5 \
+       /usr/share/man/man5/apcctrl.conf.5 \
        /usr/share/man/man8/apcaccess.8 \
        /usr/share/man/man8/apccontrol.8 \
        /usr/share/man/man8/apcupsd.8 \

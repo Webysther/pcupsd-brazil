@@ -51,7 +51,7 @@ Set debugging output level where level is a number greater than zero.
 .It Fl f Ar file Fl -config-file Ar file
 Load the specified configuration file. 
 The default configuration file is 
-.Pa /etc/apcupsd/apcupsd.conf .
+.Pa /etc/apcctrl/apcctrl.conf .
 It must be changed when running more than one copy of
 .Nm
 on the same computer to control multiple UPSes.
@@ -83,7 +83,7 @@ value stored in a Smart-UPS EEPROM which can be changed using
 .Xr apctest 8 .
 In hibernate mode, the UPS will again supply power 
 to the system when the utility power returns. Refer to
-.Xr apcupsd.conf 5
+.Xr apcctrl.conf 5
 for an alternative method using the KILLDELAY configuration 
 directive and the only method available when using a Back-UPS or other 
 UPS operating in simple signalling mode.
@@ -128,7 +128,7 @@ For more information and configuration details on this mode, refer to the
 .Sh IMPLEMENTATION NOTES
 .Pp
 The shutdown is made by calls to the script
-.Pa /etc/apcupsd/apccontrol
+.Pa /etc/apcctrl/apccontrol
 by the
 .Nm
 daemon.  Consequently, no changes to
@@ -143,18 +143,18 @@ must be modified to cause the daemon to power off the UPS after a delay.
 Alternatives are to use the --kill-on-powerfail command on the
 .Nm 
 command line or refer to 
-.Xr apcupsd.conf 5
+.Xr apcctrl.conf 5
 for details of the KILLDELAY configuration directive. 
 .Pp
 .Sh CONFIGURATION
 It will almost certainly be necessary to customise the configuration 
 information in the
-.Pa /etc/apcupsd/apcupsd.conf
+.Pa /etc/apcctrl/apcctrl.conf
 configuration file to suit your configuration and desired UPS behaviour.
 .Pp
 For information on the configuration directives and the format of 
 the configuration file, refer to 
-.Xr apcupsd.conf 5 .
+.Xr apcctrl.conf 5 .
 .Pp
 .Sh EVENTS
 .Pp
@@ -164,9 +164,9 @@ These events are sent to the system log and, optionally,
 to the temporary events file 
 .Pa ( /var/log/apcupsd.events ) .
 They also generate a call to  the
-.Pa /etc/apcupsd/apccontrol
+.Pa /etc/apcctrl/apccontrol
 script which in turn will call any custom scripts placed in the
-.Pa /etc/apcupsd
+.Pa /etc/apcctrl
 directory which may override apccontrol's default behaviour. For 
 details of the events and customising apccontrol's behaviour, refer to
 .Xr apccontrol 8 .
@@ -184,12 +184,12 @@ is a single piece of information on each line of output. The
 content varies based on the model of UPS being used and, in
 some cases, the firmware version. This status report is also
 optionally written the the 
-.Pa /etc/apcupsd/apcupsd.status
+.Pa /etc/apcctrl/apcupsd.status
 file. Refer to
 .Xr apcaccess 8
 for full details of the status report output.
 .Sh FILES
-.Pa /etc/apcupsd/apcupsd.conf 
+.Pa /etc/apcctrl/apcctrl.conf 
 default configuration file
 .Pp
 .Pa /var/run/apcupsd.pid 
@@ -203,7 +203,7 @@ default events file
 .Pp
 .Sh SEE ALSO
 .Pp
-.Xr apcupsd.conf 5 ,
+.Xr apcctrl.conf 5 ,
 .Xr apcaccess 8 ,
 .Xr apccontrol 8 ,
 .Xr apctest 8 .

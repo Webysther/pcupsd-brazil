@@ -13,7 +13,7 @@
 	<key>ProgramArguments</key>
 	<array>
 		<string>/bin/sh</string>
-		<string>-f/etc/apcupsd/apcupsd.conf</string>
+		<string>-f/etc/apcctrl/apcctrl.conf</string>
 		<string>-b</string>
 	</array>
 	<key>KeepAlive</key>

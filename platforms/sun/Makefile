@@ -18,7 +18,7 @@ install-sun:
 	$(call SYMLINK,../init.d/apcupsd,/etc/rc2.d/S89apcupsd)
 	@echo "================================================="
 	@echo "apcupsd script installation for Solaris $(DISTVER) complete."
-	@echo "You should now edit $(sysconfdir)/apcupsd.conf  to correspond"
+	@echo "You should now edit $(sysconfdir)/apcctrl.conf  to correspond"
 	@echo "to your setup then start the apcupsd daemon with:"
 	@echo 
 	@echo "/etc/init.d/apcupsd start"

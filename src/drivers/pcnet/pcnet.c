@@ -797,7 +797,7 @@ bool PcnetUpsDriver::kill_power()
    if (!_auth) {
       Error_abort("Cannot perform killpower without authentication "
                    "data. Please set ip:user:pass for DEVICE in "
-                   "apcupsd.conf.\n");
+                   "apcctrl.conf.\n");
    }
 
    /* Open a TCP stream to the UPS */

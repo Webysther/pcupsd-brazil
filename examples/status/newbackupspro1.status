@@ -1,7 +1,7 @@
 UPSCABLE smart
 UPSTYPE newbackupspro
 
-/etc/apcupsd/apcupsd.status reads:
+/etc/apcctrl/apcupsd.status reads:
 APC      : 001,049,0937
 DATE     : Sun Sep 17 20:41:37 PDT 2000
 HOSTNAME : broken-machine

@@ -1,7 +1,7 @@
 #!/bin/sh
 #
-# This shell script if placed in /etc/apcupsd
-# will be called by /etc/apcupsd/apccontrol when the    
+# This shell script if placed in /etc/apcctrl
+# will be called by /etc/apcctrl/apccontrol when the    
 # UPS goes back on to the mains after a power failure.
 # We send an email message to root to notify him.
 #

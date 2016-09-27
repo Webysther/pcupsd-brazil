@@ -4,7 +4,7 @@
 # description: apcupsd monitors power and takes action if necessary
 # processname: apcupsd
 # pidfile: @PIDDIR@/apcupsd.pid
-# config: @sysconfdir@/apcupsd.conf
+# config: @sysconfdir@/apcctrl.conf
 
 APCPID=@PIDDIR@/apcupsd.pid
 
@@ -12,7 +12,7 @@ APCPID=@PIDDIR@/apcupsd.pid
 . /etc/init.d/functions
 
 [ -f @sbindir@/apcupsd ] || exit 0
-[ -f @sysconfdir@/apcupsd.conf ] || exit 0
+[ -f @sysconfdir@/apcctrl.conf ] || exit 0
 
 # See how we were called.
 case "$1" in
@@ -20,7 +20,7 @@ case "$1" in
        echo -n "               APCUPSD UPS monitor      "
        rm -f @PWRFAILDIR@/powerfail
        rm -f @nologdir@/nologin
-       daemon @sbindir@/apcupsd -f @sysconfdir@/apcupsd.conf
+       daemon @sbindir@/apcupsd -f @sysconfdir@/apcctrl.conf
        echo
        touch @LOCKDIR@/apcupsd
        ;;

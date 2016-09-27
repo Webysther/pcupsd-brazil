@@ -10,7 +10,7 @@
 PACKAGE = apcupsd
 DISTNAME = debian
 DISTVER = 8.4
-VERSION = 0.7.5
+VERSION = 0.7.6
 
 #
 # programs needed by compilation
@@ -38,8 +38,8 @@ RST2PDF := /usr/bin/rst2pdf
 # Files and directories (paths)
 prefix = /usr
 exec_prefix = ${prefix}
-sysconfdir = /etc/apcupsd
-cgibin = /etc/apcupsd
+sysconfdir = /etc/apcctrl
+cgibin = /etc/apcctrl
 VPATH = /usr/lib:/usr/local/lib
 srcdir = .
 abstopdir = /home/wagner/workspace/apcupsd_brazil
@@ -50,7 +50,7 @@ bindir = ${exec_prefix}/bin
 datadir = ${prefix}/share
 HALPOLICYDIR = /usr/share/hal/fdi/policy/20thirdparty
 DISTDIR = debian
-PWRFAILDIR = /etc/apcupsd
+PWRFAILDIR = /etc/apcctrl
 LOCKDIR = /var/lock
 CROSSTOOLS = 
 DEPKGS = 
@@ -73,8 +73,8 @@ X_LIBS =
 X_EXTRA_LIBS = 
 
 CPPFLAGS =  -I/usr/local/include -I$(topdir)/include $(EXTRAINCS)
-CFLAGS = $(CPPFLAGS) -g -Wall 
-CXXFLAGS = $(CPPFLAGS) -g -fno-exceptions -fno-rtti -Wall 
+CFLAGS = $(CPPFLAGS) -g -O2 -Wall 
+CXXFLAGS = $(CPPFLAGS) -g -O2 -fno-exceptions -fno-rtti -Wall 
 OBJCFLAGS = $(CPPFLAGS) $(CFLAGS)
 LDFLAGS =  -L/usr/local/lib64 -L/usr/local/lib
 LIBS =  -lm -lsupc++

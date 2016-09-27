@@ -15,8 +15,8 @@ suffix.
 Once 'make install' has been run, there are still two steps which must
 be carried out in order to complete the installation:
 
-1.  You must create/edit the file apcupsd.conf file (by default, it
-    belongs in the /etc/apcupsd directory).  Some examples of this file are
+1.  You must create/edit the file apcctrl.conf file (by default, it
+    belongs in the /etc/apcctrl directory).  Some examples of this file are
     given in the directories:
 	contrib/apcupsdconf/cfgfiles
 	examples

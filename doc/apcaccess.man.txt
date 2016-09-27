@@ -17,7 +17,7 @@ DESCRIPTION
      The command line options are:
 
      -f 	configuration file of apcupsd (default is usually
-		/etc/apcupsd/apcupsd.conf)
+		/etc/apcctrl/apcctrl.conf)
 
      -h 	hostname and port of apcupsd to communicate with.  The default
 		hostname and port are obtained from the configuration file.
@@ -48,7 +48,7 @@ DESCRIPTION
 	     NETSERVER on
 	     NISPORT 3551
 
-     in the /etc/apcupsd/apcupsd.conf configuration file so that the Network
+     in the /etc/apcctrl/apcctrl.conf configuration file so that the Network
      Information Server will be accessible.  Firewall rules for appropriate
      network access may also be needed.
 
@@ -236,10 +236,10 @@ EXAMPLES
      STATFLAG  : UPS status flag in hex.
 
 FILES
-     /etc/apcupsd/apcupsd.conf
+     /etc/apcctrl/apcctrl.conf
 
 SEE ALSO
-     apcupsd.conf(5), apcupsd(8).
+     apcctrl.conf(5), apcupsd(8).
 
      The HTML apcupsd manual installed on your system or available online at
      http://www.apcupsd.org/

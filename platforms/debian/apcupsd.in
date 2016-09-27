@@ -8,7 +8,7 @@
 # Default-Stop:      0 1 6
 # Short-Description: Start the APC UPS daemon to monitor power status
 # Description: This script will start APC UPS daemon as specified
-#              in @sysconfdir@/apcupsd.conf
+#              in @sysconfdir@/apcctrl.conf
 ### END INIT INFO
 
 # apcupsd
@@ -31,7 +31,7 @@ NAME=apcupsd
 DAEMONPID=@PIDDIR@/apcupsd.pid
 DAEMON=@sbindir@/apcupsd
 #to debug apcupsd or another arguments
-#DAEMON_ARGS="-d 100 -f /etc/apcupsd/apcupsd.conf"
+#DAEMON_ARGS="-d 100 -f /etc/apcctrl/apcctrl.conf"
 
 if [ ! -x $DAEMON ]; then
     log_daemon_msg "APC UPS power management"

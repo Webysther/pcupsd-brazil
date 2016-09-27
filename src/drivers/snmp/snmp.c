@@ -56,7 +56,7 @@ int SnmpUpsDriver::initialize_device_data()
 
    /*
     * Split the DEVICE statement and assign pointers to the various parts.
-    * The DEVICE statement syntax in apcupsd.conf is:
+    * The DEVICE statement syntax in apcctrl.conf is:
     *
     *    DEVICE address:port:vendor:community
     *

@@ -31,7 +31,7 @@
 #endif
 
 #ifndef APCCONF_FILE
-# define APCCONF_FILE           "/apcupsd.conf"
+# define APCCONF_FILE           "/apcctrl.conf"
 #endif
 
 #ifndef PWRFAIL_FILE
@@ -57,7 +57,7 @@
  * Then if we change the format later, we can just change this string.
  * Also, we could write code to use/convert out-of-date config files.
  */
-#define APC_CONFIG_MAGIC        "## apcupsd.conf v1.1 ##"
+#define APC_CONFIG_MAGIC        "## apcctrl.conf v1.1 ##"
 
 #define POWERFAIL               "POWER FAILURE\n"       /* put in nologin file */
 

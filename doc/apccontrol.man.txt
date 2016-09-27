@@ -21,7 +21,7 @@ DESCRIPTION
 		 ble events below.
 
      ups-name	 This is the name of the UPS as specified in the
-		 /etc/apcupsd/apcupsd.conf configuration file - not the name
+		 /etc/apcctrl/apcctrl.conf configuration file - not the name
 		 in the EEPROM of a smart UPS.
 
      connected	 This is 1 if apcupsd is connected to the UPS via a serial or
@@ -33,14 +33,14 @@ DESCRIPTION
 		 mented and always defaults to 0.
 
      Events are sent to the system log and, optionally, to the temporary
-     events file (/etc/apcupsd/apcupsd.events), and they also generate a call
+     events file (/etc/apcctrl/apcupsd.events), and they also generate a call
      to apccontrol which in turn will call any scripts you have placed in the
-     /etc/apcupsd directory.
+     /etc/apcctrl directory.
 
    LIST OF EVENTS AND DEFAULT ACTIONS
      annoyme	  apcupsd generates this event when a shutdown is scheduled,
 		  and the time specified by the ANNOYME configuration direc‐
-		  tive in the /etc/apcupsd/apcupsd.conf file has expired.
+		  tive in the /etc/apcctrl/apcctrl.conf file has expired.
 
 		  Default action -- sends "Power problems please logoff." to
 		  wall(1) and then exits.
@@ -209,7 +209,7 @@ DESCRIPTION
 
      The recommended way to customise an event action is simply to create an
      executable program or script file with the same name as the event and put
-     that file in the /etc/apcupsd directory. Now, when the selected event
+     that file in the /etc/apcctrl directory. Now, when the selected event
      occurs, apccontrol will execute your program or script.
 
      If you want apccontrol to also execute its default action for the
@@ -223,14 +223,14 @@ DESCRIPTION
 
      Some sample scripts (changeme, commfailure, commok, offbattery and onbat‐
      tery) that email messages to root instead of broadcasting messages to all
-     logged-in users may be found in /etc/apcupsd after an installation and
+     logged-in users may be found in /etc/apcctrl after an installation and
      also in the platforms/etc directory of the apcupsd source code.
 
 FILES
-     /etc/apcupsd/apccontrol
+     /etc/apcctrl/apccontrol
 
 SEE ALSO
-     wall(1), apcupsd.conf(5), apcupsd(8), shutdown(8).
+     wall(1), apcctrl.conf(5), apcupsd(8), shutdown(8).
 
      The HTML apcupsd manual installed on your system or available online at
      http://www.apcupsd.org/

@@ -25,7 +25,7 @@ install-engarde:
 	@echo " "
 	@echo "apcupsd script installation for Engarde Secure Linux complete." 
 	@echo " "
-	@echo "You should now edit  /etc/apcupsd/apcupsd.conf  to correspond"
+	@echo "You should now edit  /etc/apcctrl/apcctrl.conf  to correspond"
 	@echo "to your setup then start the apcupsd daemon with:"
 	@echo " "
 	@echo "/etc/init.d/apcupsd start"

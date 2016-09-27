@@ -91,10 +91,10 @@ Here is the configure I'm using for the 3.12.x releases:
 ./configure \
        --prefix=/apcupsd \
        --sbindir=/apcupsd/bin \
-       --sysconfdir=/apcupsd/etc/apcupsd \
-       --with-pid-dir=/apcupsd/etc/apcupsd \
+       --sysconfdir=/apcupsd/etc/apcctrl \
+       --with-pid-dir=/apcupsd/etc/apcctrl \
        --mandir=/apcupsd \
-       --with-cgi-bin=/apcupsd/etc/apcupsd/cgi \
+       --with-cgi-bin=/apcupsd/etc/apcctrl/cgi \
        --enable-pthreads \
        --enable-net \
        --enable-snmp \
@@ -158,7 +158,7 @@ Conversion USB UPS (Apcupsd)". You should NOT see "HID UPS Battery"
 under the "Batteries" section.
     13. Future plugging/unplugging of the UPS will be handled 
 automatically. The driver only needs to be installed once.
-    14. Edit apcupsd.conf to set...
+    14. Edit apcctrl.conf to set...
         UPSCABLE usb
         UPSTYPE usb
         DEVICE

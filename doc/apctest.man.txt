@@ -23,7 +23,7 @@ DESCRIPTION
      IMPORTANT: Before running apctest
 
      ·	 Check that the UPSCABLE, UPSTYPE and DEVICE configuration directives
-	 in the apcupsd.conf(5) configuration file have been set appropri‐
+	 in the apcctrl.conf(5) configuration file have been set appropri‐
 	 ately; and
 
      ·	 Shutdown apcupsd if it is running. You cannot run both apcupsd and
@@ -227,9 +227,9 @@ SERIAL PORT (SMART PROTOCOL MODE)
      Option 14) Set EEPROM with configuration file values
 
 	     This option allows the bulk programming of the EEPROM configura‐
-	     tion variables from the values contained in the /etc/apcupsd.conf
+	     tion variables from the values contained in the /etc/apcctrl.conf
 	     configuration file.  Refer to the "APCTEST EEPROM CONFIGURATION
-	     DIRECTIVES" section of the man page for apcupsd.conf(5)
+	     DIRECTIVES" section of the man page for apcctrl.conf(5)
 
      Option 15) Quit
 
@@ -289,12 +289,12 @@ SERIAL PORT (SIMPLE SIGNALLING MODE)
      Exits from the program.
 
 FILES
-     /etc/apcupsd/apcupsd.conf default configuration file
+     /etc/apcctrl/apcctrl.conf default configuration file
 
      apctest.out transcript of the apctest session
 
 SEE ALSO
-     apcupsd.conf(5), apcupsd(8).
+     apcctrl.conf(5), apcupsd(8).
 
      The HTML apcupsd manual installed on your system or available online at
      http://www.apcupsd.org/

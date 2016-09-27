@@ -49,7 +49,7 @@ apcupsd (3.5.8-4) unstable; urgency=low
 
 apcupsd (3.5.8-3) unstable; urgency=low
 
-  * Various edits to /etc/apcupsd.conf
+  * Various edits to /etc/apcctrl.conf
   * Fixed /etc/init.d/apcupsd
   * Added logrotate script
 
@@ -57,7 +57,7 @@ apcupsd (3.5.8-3) unstable; urgency=low
 
 apcupsd (3.5.8-2) unstable; urgency=low
 
-  * Added apcupsd.conf warning
+  * Added apcctrl.conf warning
 
  -- Leon Breedt <ljb@debian.org>  Tue, 25 May 1999 21:42:53 +0200
 

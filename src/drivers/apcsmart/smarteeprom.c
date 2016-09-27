@@ -431,7 +431,7 @@ void ApcSmartUpsDriver::change_extended()
    /*
     * Note, a value of -1 in the variable at the beginning
     * means that the user did not put a configuration directive
-    * in /etc/apcupsd/apcupsd.conf. Consequently, if no value
+    * in /etc/apcctrl/apcctrl.conf. Consequently, if no value
     * was given, we won't attept to change it.
     */
 

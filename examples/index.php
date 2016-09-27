@@ -9,9 +9,9 @@
   your computer blow up, you're on your own. That said, I sincerely doubt that's even possible.
 
   User-Configurable variables below:
-      $statusfile_location       This is the location of the apcupsd.status file, as found in /etc/apcupsd/apcupsd.conf
+      $statusfile_location       This is the location of the apcupsd.status file, as found in /etc/apcctrl/apcctrl.conf
                                  If this file exists, the graphical parse will be displayed.
-      $logfile_location          This is the location of the apcupsd.events file, as found in /etc/apcupsd/apcupsd.conf
+      $logfile_location          This is the location of the apcupsd.events file, as found in /etc/apcctrl/apcctrl.conf
                                  If this file exists, it will be displayed with most recent entries first.
       $showloglines              By default, this script does not display the entire .events file. This is the number of
                                  lines to display by default. The script generates a link that enables displaying the

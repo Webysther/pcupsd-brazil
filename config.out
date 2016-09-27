@@ -1,21 +1,21 @@
 
 
-Configuration on Fri Sep  2 14:51:45 BRT 2016:
+Configuration on Tue Sep 27 16:31:57 BRT 2016:
 
   Host:                       x86_64-unknown-linux-gnu -- debian 8.4
-  Apcupsd version:            0.7.5 (13 June 2016)
+  Apcupsd version:            0.7.6 (2 September 2016)
   Source code location:       .
   Install binaries:           /sbin
-  Install config files:       /etc/apcupsd
+  Install config files:       /etc/apcctrl
   Install man files:          ${prefix}/share/man
   Nologin file in:            /etc
   PID directory:              /var/run
   LOG dir (events, status)    /var/log
   LOCK dir (for serial port)  /var/lock
-  Power Fail dir              /etc/apcupsd
+  Power Fail dir              /etc/apcctrl
   Compiler:                   g++ 4.9.2-10)
   Preprocessor flags:          -I/usr/local/include
-  Compiler flags:             -g -fno-exceptions -fno-rtti -Wall 
+  Compiler flags:             -g -O2 -fno-exceptions -fno-rtti -Wall 
   Linker:                     gcc
   Linker flags:                -L/usr/local/lib64 -L/usr/local/lib
   Host and version:           debian 8.4
@@ -30,7 +30,7 @@ Configuration on Fri Sep  2 14:51:45 BRT 2016:
   enable-nis:                 yes
   with-nisip:                 0.0.0.0
   enable-cgi:                 no
-  with-cgi-bin:               /etc/apcupsd
+  with-cgi-bin:               /etc/apcctrl
   with-libwrap:               
   enable-pthreads:            yes
   enable-dist-install:        yes

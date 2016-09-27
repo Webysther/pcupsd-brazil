@@ -1,7 +1,7 @@
 #!/bin/sh
 #
-# This shell script if placed in /etc/apcupsd
-# will be called by /etc/apcupsd/apccontrol when apcupsd
+# This shell script if placed in /etc/apcctrl
+# will be called by /etc/apcctrl/apccontrol when apcupsd
 # loses contact with the UPS (i.e. the serial connection is not responding).
 # We send an email message to root to notify him.
 #

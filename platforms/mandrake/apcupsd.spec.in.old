@@ -2,7 +2,7 @@
 %define version @VERSION@
 %define release 1mdk
 %define _cgibin /var/www/cgi-bin
-%define _sysconfdir /etc/apcupsd
+%define _sysconfdir /etc/apcctrl
 %define _sbindir /sbin
 
 Summary: Power management software for APC UPS hardware
@@ -63,7 +63,7 @@ perl -pi -e 's|\@/sbin/chkconfig|\#\@/sbin/chkconfig|' platforms/mandrake/Makefi
 
 %files -f %{name}.lang
 %defattr(-,root,root)
-%config(noreplace) /etc/apcupsd/*
+%config(noreplace) /etc/apcctrl/*
 %config(noreplace) /etc/rc.d/init.d/apcupsd
 %{_sbindir}/*
 %{_mandir}/man8/*

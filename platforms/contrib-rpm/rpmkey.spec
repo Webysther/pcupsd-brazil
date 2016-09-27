@@ -19,7 +19,7 @@ Source0: %{pubkeyname}.asc
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-root
 
-%define gpgkeypath /etc/apcupsd/pubkeys
+%define gpgkeypath /etc/apcctrl/pubkeys
 
 %description
 The %{pubkeyname} rpm public key. If you trust %{pubkeyname} component

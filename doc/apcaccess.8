@@ -20,7 +20,7 @@ any computer on the network which is running apcuspd in NIS mode.
 The command line options are:
 .Bl -hang -width "<command>"
 .It -f
-configuration file of apcupsd (default is usually /etc/apcupsd/apcupsd.conf)
+configuration file of apcupsd (default is usually /etc/apcctrl/apcctrl.conf)
 .It -h 
 hostname and port of apcupsd to communicate with.  The default hostname and port are obtained from the configuration file.
 .It -p
@@ -58,7 +58,7 @@ necessary to have the following configuration directives:
 .El
 .Pp
 in the
-.Pa /etc/apcupsd/apcupsd.conf
+.Pa /etc/apcctrl/apcctrl.conf
 configuration file so that the Network Information Server will be accessible.
 Firewall rules for appropriate network access may also be needed.
 .Sh STATUS REPORT FORMAT
@@ -404,9 +404,9 @@ SHUTTING DOWN
 : UPS status flag in hex.
 .El
 .Sh FILES
-.Pa /etc/apcupsd/apcupsd.conf
+.Pa /etc/apcctrl/apcctrl.conf
 .Sh SEE ALSO
-.Xr apcupsd.conf 5 , 
+.Xr apcctrl.conf 5 , 
 .Xr apcupsd 8 .
 .Pp
 The HTML apcupsd manual installed on your system or available online at

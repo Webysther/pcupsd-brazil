@@ -315,7 +315,7 @@ rm -f $RPM_BUILD_DIR/Release_Notes-%{version}-%{release}.txt
 %config(noreplace) %{_sysconfdir}/apcupsd/commok
 %config(noreplace) %{_sysconfdir}/apcupsd/onbattery
 %config(noreplace) %{_sysconfdir}/apcupsd/offbattery
-%config(noreplace) %{_sysconfdir}/apcupsd/apcupsd.conf
+%config(noreplace) %{_sysconfdir}/apcupsd/apcctrl.conf
 /sbin/*
 %attr(-,root,man) %{_mandir}/*/*
 
@@ -442,7 +442,7 @@ fi
 * Sun May 27 2007 Adam Kropelin <akropel1 at rochester.rr.com>
 - add support for rhel5
 * Sun Jan 28 2007 D. Scott Barninger <barninger at fairfieldcomputers.com>
-- remove /etc/apcupsd/masterconnect and mastertimeout files
+- remove /etc/apcctrl/masterconnect and mastertimeout files
 * Sat Jan 27 2007 D. Scott Barninger <barninger at fairfieldcomputers.com>
 - add snmp build
 - fix location of Requires for base package
@@ -488,7 +488,7 @@ fi
 * Sun Oct 31 2004 D. Scott Barninger <barninger at fairfieldcomputers.com>
 - add Mandrake support
 * Wed Aug 04 2004 D. Scott Barninger <barninger at fairfieldcomputers.com>
-- changed location of apcupsd.css to /etc/apcupsd from /etc/apcupsd/cgi
+- changed location of apcupsd.css to /etc/apcctrl from /etc/apcctrl/cgi
 - corrected typo introduced in SuSE configuration for initdir definition
 * Sun Apr 25 2004 D. Scott Barninger <barninger at fairfieldcomputers.com>
 - add SuSE configuration
@@ -511,7 +511,7 @@ fi
 - expanded usb devices from 0-9 to 0-15
 * Fri Nov 07 2003 Scott at fairfieldcomputers dot com
 - corrected device path for usb devices to /dev/usb and added patch for
-- rh7 builds to make it /dev/usb/hid in /etc/apcupsd/apcupsd.conf
+- rh7 builds to make it /dev/usb/hid in /etc/apcctrl/apcctrl.conf
 * Sat Oct 18 2003 Scott at fairfieldcomputers dot com
 - added master-slave, apcsmart and dumb to configure options
 * Sun Sep 14 2003 Scott at fairfieldcomputers dot com

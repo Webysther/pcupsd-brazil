@@ -40,7 +40,7 @@ install-netbsd:
 		echo ""; \
 		( echo "While /etc/rc.local has been patched to run apcupsd,";\
 		echo "the commands are currently commented out.  You should"; \
-		echo "examine the $(sysconfdir)/apcupsd.conf file to ensure"; \
+		echo "examine the $(sysconfdir)/apcctrl.conf file to ensure"; \
 		echo "that it is suitable for your site.  Then run"; \
 		echo "/etc/rc.apcupsd manually to ensure sane operation."; \
 		echo "Once you are satisfied, uncomment the appropriate"; \

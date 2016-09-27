@@ -18,7 +18,7 @@ DEPEND="virtual/glibc
 XPIDDIR=/var/run
 XLOGDIR=/var/log
 XLOCKDIR=/var/lock
-XSYSCONFDIR=/etc/apcupsd
+XSYSCONFDIR=/etc/apcctrl
 XPWRFAILDIR=${XSYSCONFDIR}
 
 src_unpack() {
@@ -94,23 +94,23 @@ XAPCPID=${XPIDDIR}/apcupsd.pid
 pkg_preinst() {
 	if test -f $XAPCPID -a -d /proc/`cat $XAPCPID`; then
 		stop_apcupsd
-		touch /etc/apcupsd/.wasrunning
-	elif ! test -f /etc/apcupsd/apcupsd.conf; then
-		mkdir -p /etc/apcupsd
-		touch /etc/apcupsd/.newinstall
+		touch /etc/apcctrl/.wasrunning
+	elif ! test -f /etc/apcctrl/apcctrl.conf; then
+		mkdir -p /etc/apcctrl
+		touch /etc/apcctrl/.newinstall
 	fi
 }
 
 pkg_postinst() {
-	if test -f /etc/apcupsd/.wasrunning; then
+	if test -f /etc/apcctrl/.wasrunning; then
 		echo "Restarting new apcupsd daemon..."
 		/etc/init.d/apcupsd start
-		rm -f /etc/apcupsd/.wasrunning
-	elif test -f /etc/apcupsd/.newinstall; then
+		rm -f /etc/apcctrl/.wasrunning
+	elif test -f /etc/apcctrl/.newinstall; then
 		echo "Adding to standard runlevels..."
 		rc-update add apcupsd boot default nonetwork single
-		rm -f /etc/apcupsd/.newinstall
-		echo "Edit ${SYSCONFDIR}/apcupsd.conf for your UPS."
+		rm -f /etc/apcctrl/.newinstall
+		echo "Edit ${SYSCONFDIR}/apcctrl.conf for your UPS."
 	fi
 }
 
@@ -127,7 +127,7 @@ pkg_postrm() {
 		echo "Removing apcupsd from all runlevels..."
 		rc-update del apcupsd
 		echo "Removing apcupsd configuration files..."
-		rm -rf /etc/apcupsd
+		rm -rf /etc/apcctrl
 		rm -f /etc/init.d/apcupsd
 		rm -f /etc/init.d/halt	# we installed it, but still...
 	fi

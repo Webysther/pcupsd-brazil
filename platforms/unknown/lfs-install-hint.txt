@@ -120,7 +120,7 @@ source /etc/init.d/functions
 case "$1" in
         start)
 		# House keeping if this were a restart from powerfail
-		rm -f /etc/apcupsd/powerfail
+		rm -f /etc/apcctrl/powerfail
 		rm -f /etc/nologin
 		# Start apcupsd
                 echo -n "Starting apcupsd power management ..."
@@ -180,11 +180,11 @@ Using a text editor create UPSdown as follows in /etc/init.d:
 #
 #
 # See if this is a powerfail situation
-if [ -f /etc/apcupsd/powerfail ]; then
+if [ -f /etc/apcctrl/powerfail ]; then
         echo
         echo "APCUPSD will now power off the UPS"
         echo
-        /etc/apcupsd/apccontrol killpower       
+        /etc/apcctrl/apccontrol killpower       
         echo
         echo "Verify the UPS shuts down or turn off the system"
         echo
@@ -231,7 +231,7 @@ ln -s ../init.d/apcupsd K990apcupsd
 ================
 
 Our generic configure in  3.1 above placed the configuration file in
-/etc/apcupsd.  This file is called apcupsd.conf.  Pleae consult the apcupsd
+/etc/apcctrl.  This file is called apcctrl.conf.  Pleae consult the apcupsd
 manual to determine the settings for your system and APC model UPS.
 
 ================

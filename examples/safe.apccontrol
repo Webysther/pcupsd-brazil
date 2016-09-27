@@ -10,7 +10,7 @@ prefix=/usr
 exec_prefix=${prefix}
 APCUPSD=/sbin/apcupsd
 SHUTDOWN=/sbin/shutdown
-SCRIPTDIR=/etc/apcupsd
+SCRIPTDIR=/etc/apcctrl
 
 #
 case "$1" in

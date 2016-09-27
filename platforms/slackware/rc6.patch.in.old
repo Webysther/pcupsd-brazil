@@ -18,7 +18,7 @@
 +
 +  # This block was added in by the apcupsd installation process.  This
 +  # will cause the UPS to kill the power supply after a configurable number
-+  # of seconds (see the apcupsd.conf file).  This is important for situations
++  # of seconds (see the apcctrl.conf file).  This is important for situations
 +  # where the mains power comes back before the UPS batteries are completely
 +  # dead.
 +  if [ -f @PWRFAILDIR@/powerfail ]; then

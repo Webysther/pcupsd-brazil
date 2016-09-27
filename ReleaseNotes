@@ -1,5 +1,18 @@
              Release Notes for ApcCtrl 0.7.x
 
+0.8.0 - 27 de setembro de 2016
+
+    * No Ubuntu 16.04.1 a porta serial padrão do nobreak é ttyACM0. Alterando
+      comentário no arquivo de configuração. Sugestão de Caio Moysés de Lima. 
+    
+    * O Ubuntu 16.04.1 não possui a aplicação insserv para atualizar o rc.d
+      e por isso o Makefile em plataforms/debian/Makefile faz o teste
+      pela existência dessa aplicação. Observado por Caio Moysés de Lima.
+    
+    * Mudança da pasta padrão de config para /etc/apcctrl
+    * Mudança do arquivo padrão de config para apcctrl.conf
+    
+
 0.7.0 - 28 de junho de 2016
 
     * Suporte para os modelos com protocolo solis
@@ -12,6 +25,9 @@
 
     * Mudança no shutdownauto
     
+    * Adição do parâmetro BATTEXPANDER no arquivo de configuração
+      para indicar o tamanho do expansor de bateria.
+    
 0.7.5 - 01 de julho de 2016
 
     * Correção de BUG grave. Duplo desligamento! Por detecção de ausência de carga
@@ -21,12 +37,6 @@
 ----------------------------------------------------------------------------
 
              Release Notes for ApcCtrl 0.6.x
-
-ApcCtrl é um branch do projeto apcupsd 3.14.x e ele foi criado para dar
-suporte aos nobreaks da APC no Brasil. Quer são modelos herdados da Microsol.
-Essa aplicação não é oficial da APC Brasil. Foi desenvolvida por terceiros
-e ela opera nos modelos da "GNU GENERAL PUBLIC LICENSE". Todo o código fonte
-pode ser obtido no site do projeto.
 
 0.6.9 - 16 de Junho de 2016
 
@@ -171,7 +181,7 @@ NEW FEATURES
 
     For now, apcupsd supports MODBUS over RS232 serial only. It DOES NOT yet 
     support MODBUS over USB. See the apcupsd manual[3] for information on
-    setting up apcupsd.conf for MODBUS UPSes.
+    setting up apcctrl.conf for MODBUS UPSes.
 
     [1] http://www.apc.com/whitepaper/?an=176
     [2] http://www.schneider-electric.us/support/index?page=content&country=ITB&lang=EN&id=FA164737
@@ -208,7 +218,7 @@ NEW FEATURES
 
   * SNMP enhancements:
     - Autodetection of MIB and community if they are not specified in
-      apcupsd.conf
+      apcctrl.conf
     - Support for RFC1628 MIB
     - Support for MGE MIB (Contributed by	Lars Taeuber <taeuber@bbaw.de>)
 
@@ -219,7 +229,7 @@ NEW FEATURES
       detected and provide status now.
 
   * When using the generic USB driver (Windows, OS X, newer FreeBSD)
-    DEVICE string in apcupsd.conf can be set as serial number of UPS
+    DEVICE string in apcctrl.conf can be set as serial number of UPS
     to monitor. This is useful in order to "lock" apcupsd to a specific
     UPS if you have more than one connected to the server.
 
@@ -315,7 +325,7 @@ NEW FEATURES
 BUG FIXES
 
   * Windows COM ports above COM9 now work without user needing to manually
-    add \\.\ UNC prefix in apcupsd.conf
+    add \\.\ UNC prefix in apcctrl.conf
 
   * Fix configure script not noticing when C++ compiler is missing
 
@@ -338,7 +348,7 @@ NEW FEATURES
     easy to update. (The only down side is the multi-page HTML version is 
     no longer available; the HTML version is all on a single page.)
 
-  * New manpages for apcupsd, apcupsd.conf, apctest, apcaccess, and 
+  * New manpages for apcupsd, apcctrl.conf, apctest, apcaccess, and 
     apccontrol. Many thanks to Trevor Roydhouse <trev@sentry.org> for the
     hard work!
 

@@ -66,19 +66,19 @@ install -m755 distributions/redhat/apcupsd $RPM_BUILD_ROOT%{initdir}
 %files
 %defattr(-,root,root)
 %doc COPYING ChangeLog INSTALL TODO doc/* examples
-%dir /etc/apcupsd
-%dir /etc/apcupsd/cgi
+%dir /etc/apcctrl
+%dir /etc/apcctrl/cgi
 %{initdir}/apcupsd
-%config(noreplace) /etc/apcupsd/apccontrol
-%config(noreplace) /etc/apcupsd/changeme
-%config(noreplace) /etc/apcupsd/commfailure
-%config(noreplace) /etc/apcupsd/commok
-%config(noreplace) /etc/apcupsd/onbattery
-%config(noreplace) /etc/apcupsd/offbattery
-%config(noreplace) /etc/apcupsd/apcupsd.conf
-%config(noreplace) /etc/apcupsd/hosts.conf
-%config(noreplace) /etc/apcupsd/multimon.conf
-/etc/apcupsd/cgi/*
+%config(noreplace) /etc/apcctrl/apccontrol
+%config(noreplace) /etc/apcctrl/changeme
+%config(noreplace) /etc/apcctrl/commfailure
+%config(noreplace) /etc/apcctrl/commok
+%config(noreplace) /etc/apcctrl/onbattery
+%config(noreplace) /etc/apcctrl/offbattery
+%config(noreplace) /etc/apcctrl/apcctrl.conf
+%config(noreplace) /etc/apcctrl/hosts.conf
+%config(noreplace) /etc/apcctrl/multimon.conf
+/etc/apcctrl/cgi/*
 /sbin/*
 %attr(-,root,man) %{_mandir}/*/*
 
@@ -105,7 +105,7 @@ awk '# Stuff left over from a previous apcupsd, remove it
     print "   echo                                                               # ***apcupsd***"
     print "   echo \"APCUPSD will now power off the UPS\"                          # ***apcupsd***"
     print "   echo                                                               # ***apcupsd***"
-    print "   /etc/apcupsd/apccontrol killpower                                  # ***apcupsd***"
+    print "   /etc/apcctrl/apccontrol killpower                                  # ***apcupsd***"
     print "   echo                                                               # ***apcupsd***"
     print "   echo \"Please ensure that the UPS has powered off before rebooting\" # ***apcupsd***"
     print "   echo \"Otherwise, the UPS may cut the power during the reboot!!!\"   # ***apcupsd***"

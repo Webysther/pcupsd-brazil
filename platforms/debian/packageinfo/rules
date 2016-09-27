@@ -16,7 +16,7 @@ build-stamp:
        
        # Add here commands to compile the package.
        -autoconf -l autoconf autoconf/configure.in >configure
-       SHUTDOWN=/sbin/shutdown CFLAGS="-O2 -g -Wall" ./configure --prefix=/usr --mandir=/usr/share/man --infodir=/usr/share/info --enable-powerflute --enable-cgi --sysconfdir=/etc/apcupsd --with-cgi-bin=/usr/lib/cgi-bin/apcupsd --with-catgets --with-pid-dir=/var/run
+       SHUTDOWN=/sbin/shutdown CFLAGS="-O2 -g -Wall" ./configure --prefix=/usr --mandir=/usr/share/man --infodir=/usr/share/info --enable-powerflute --enable-cgi --sysconfdir=/etc/apcctrl --with-cgi-bin=/usr/lib/cgi-bin/apcupsd --with-catgets --with-pid-dir=/var/run
        $(MAKE)
 
        touch build-stamp
@@ -39,9 +39,9 @@ install-stamp: build-stamp
        dh_installdirs
 
        # Install the package into debian/tmp.
-       make prefix=`pwd`/debian/tmp/usr cgibin=`pwd`/debian/tmp/usr/lib/cgi-bin/apcupsd sysconfdir=`pwd`/debian/tmp/etc/apcupsd sbindir=`pwd`/debian/tmp/sbin mandir=`pwd`/debian/tmp/usr/share/man install
-       install -m 0644 -g root -o root debian/apcupsd.conf `pwd`/debian/tmp/etc/apcupsd
-       install -m 0755 -g root -o root debian/apccontrol `pwd`/debian/tmp/etc/apcupsd
+       make prefix=`pwd`/debian/tmp/usr cgibin=`pwd`/debian/tmp/usr/lib/cgi-bin/apcupsd sysconfdir=`pwd`/debian/tmp/etc/apcctrl sbindir=`pwd`/debian/tmp/sbin mandir=`pwd`/debian/tmp/usr/share/man install
+       install -m 0644 -g root -o root debian/apcctrl.conf `pwd`/debian/tmp/etc/apcctrl
+       install -m 0755 -g root -o root debian/apccontrol `pwd`/debian/tmp/etc/apcctrl
     
        touch install-stamp
 

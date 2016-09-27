@@ -8,7 +8,7 @@
 # Default-Stop:      0 1 6
 # Short-Description: Start the APC UPS daemon to monitor power status
 # Description: This script will start APC UPS daemon as specified
-#              in /etc/apcupsd/apcupsd.conf
+#              in /etc/apcctrl/apcctrl.conf
 ### END INIT INFO
 
 # apcupsd
@@ -31,7 +31,7 @@ NAME=apcupsd
 DAEMONPID=/var/run/apcupsd.pid
 DAEMON=/sbin/apcupsd
 #to debug apcupsd or another arguments
-#DAEMON_ARGS="-d 100 -f /etc/apcupsd/apcupsd.conf"
+#DAEMON_ARGS="-d 100 -f /etc/apcctrl/apcctrl.conf"
 
 if [ ! -x $DAEMON ]; then
     log_daemon_msg "APC UPS power management"
@@ -40,7 +40,7 @@ if [ ! -x $DAEMON ]; then
 fi;
 
 start_apcupsd () {
-    rm -f /etc/apcupsd/powerfail
+    rm -f /etc/apcctrl/powerfail
     if [ ! -f /etc/nologin.boot -a -f /etc/nologin ]; then
        rm -f /etc/nologin
        /etc/init.d/rmnologin start
