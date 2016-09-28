@@ -5,7 +5,7 @@
  *      Author: wagner
  */
 
-#include "brazilbattery1207.h"
+#include "brazilbattery.h"
 
 #include <math.h>
 #include "apc.h"
@@ -84,37 +84,43 @@
  */
 
 
-const double BrazilBattery1207::COEF_C1[4] = {-5976.6571433071,1695.1547620352,-160.3571428695,5.0595238099};
-const double BrazilBattery1207::COEF_VI[4] = {12.760511,-0.669034,0.121307,-0.012784};
-const double BrazilBattery1207::COEF_VF[4] = {10.127273,0.768182,-0.563636,0.068182};
+const double BrazilBattery::COEF_1207_C1[4] = {-5976.6571433071,1695.1547620352,-160.3571428695,5.0595238099};
+const double BrazilBattery::COEF_1207_VI[4] = {12.760511,-0.669034,0.121307,-0.012784};
+const double BrazilBattery::COEF_1207_VF[4] = {10.127273,0.768182,-0.563636,0.068182};
 
-BrazilBattery1207::BrazilBattery1207(){
-	this->battery_1207_serie = 0;
-	this->battery_1207_parallel = 0;
-	this->battery_expander = 0;
+BrazilBattery::BrazilBattery(){
+	this->battery_voltage_nom = 0;
+	this->battery_current_nom = 0;
+	this->battery_current_expander_nom = 0;
 }
-BrazilBattery1207::~BrazilBattery1207(){
+BrazilBattery::~BrazilBattery(){
 }
-void BrazilBattery1207::setBatteryCount(double battery_1207_serie, double battery_1207_parallel){
-	if(battery_1207_serie < 1)battery_1207_serie = 1;
-	this->battery_1207_serie = battery_1207_serie;
-	if(battery_1207_parallel < 1)battery_1207_parallel = 1;
-	this->battery_1207_parallel = battery_1207_parallel;
+void BrazilBattery::setBattery(double voltage, double current, double current_expander){
+	if(voltage < 0) voltage = 12;
+	this->battery_voltage_nom = voltage;
+	if(current < 0) current = 14;
+	this->battery_current_nom = current;
+	if(current_expander < 0) current_expander = 0;
+	this->battery_current_expander_nom = current_expander;
 }
-void BrazilBattery1207::setExpander(double ampers_per_hour_nominal){
-	if(ampers_per_hour_nominal < 0)ampers_per_hour_nominal = 0;
-	this->battery_expander = ampers_per_hour_nominal;
+double BrazilBattery::getBatteryVoltageNom(){
+	return this->battery_voltage_nom;
 }
-double BrazilBattery1207::getBatteryVoltageNom(){
-	return BrazilBattery1207::VOLTAGE_12V_REF * this->battery_1207_serie;
+double BrazilBattery::getBatteryCurrentNom(){
+	return this->battery_current_nom + this->battery_current_expander_nom;
 }
-double BrazilBattery1207::calcBatteryLoadC1(double act_power){
-	double batpower = this->getBatteryVoltageNom() * BrazilBattery1207::AMPER_HOUR_C1 * this->battery_1207_parallel;
-	batpower += this->getBatteryVoltageNom() * this->battery_expander / (BrazilBattery1207::AMPER_HOUR_C1 / 7);
+double BrazilBattery::getBatteryCurrentC1Nom(){
+	return this->getBatteryCurrentNom() * BrazilBattery::CURRENT_RATE_C1_C20;
+}
+double BrazilBattery::getBatteryPowerC1Nom(){
+	return this->getBatteryVoltageNom() * this->getBatteryCurrentC1Nom();
+}
+double BrazilBattery::calcBatteryLoadC1(double act_power){
+	double batpower = this->getBatteryVoltageNom() * this->getBatteryCurrentNom() * BrazilBattery::CURRENT_RATE_C1_C20;
 	return act_power / batpower;
 }
 
-double BrazilBattery1207::calcTimeLeft(double load, double voltage){
+double BrazilBattery::calcTimeLeft(double load, double voltage){
 	double vload_max = this->calcVoltageMax(load);
 	double vload_min = this->calcVoltageMin(load);
 
@@ -126,55 +132,54 @@ double BrazilBattery1207::calcTimeLeft(double load, double voltage){
 	double prop = (voltage - vload_min) / (vload_max - vload_min);
 	double voltage_c1 = vc1_min + (vc1_max - vc1_min) * prop;
 
-	double timeleft = BrazilBattery1207::TIMELEFT_MUL * this->calcTimeLeftC1(voltage_c1) / pow(load,BrazilBattery1207::TIMELEFT_POW);
+	double timeleft = BrazilBattery::TIMELEFT_MUL * this->calcTimeLeftC1(voltage_c1) / pow(load,BrazilBattery::TIMELEFT_POW);
 	return timeleft;
 }
-double BrazilBattery1207::calcTimeLeftPeukert(double load){
-	if(load < BrazilBattery1207::LOAD_MIN) load = BrazilBattery1207::LOAD_MIN;
-	double timeleft = BrazilBattery1207::PEUKERT_MUL * (BrazilBattery1207::AMPER_HOUR_C1/pow(load*BrazilBattery1207::AMPER_HOUR_C1,BrazilBattery1207::PEUKERT_POW)) * 60;
+double BrazilBattery::calcTimeLeftPeukert(double load){
+	if(load < BrazilBattery::LOAD_MIN) load = BrazilBattery::LOAD_MIN;
+	double timeleft = BrazilBattery::PEUKERT_MUL * (this->getBatteryCurrentC1Nom()/pow(load*this->getBatteryCurrentC1Nom(),BrazilBattery::PEUKERT_POW)) * 60;
 	return timeleft;
 }
-double BrazilBattery1207::calcLevel(double load, double voltage){
+double BrazilBattery::calcLevel(double load, double voltage){
 	double timeleft = this->calcTimeLeft(load, voltage);
-	double voltage_max = this->calcVoltageMax(load);
-	double timeleft_max = this->calcTimeLeft(load, voltage_max);
+	double timeleft_max = this->calcTimeLeft(load, this->calcVoltageMax(load));
 	return 100 * (timeleft / timeleft_max);
 }
 
-double BrazilBattery1207::calcTimeLeftC1(double voltage){
-	double voltage_12v = voltage / this->battery_1207_serie;
-	if(voltage_12v < BrazilBattery1207::VOLTAGE_12V_C1_MIN) voltage_12v = BrazilBattery1207::VOLTAGE_12V_C1_MIN;
-	if(voltage_12v > BrazilBattery1207::VOLTAGE_12V_C1_MAX) voltage_12v = BrazilBattery1207::VOLTAGE_12V_C1_MAX;
+double BrazilBattery::calcTimeLeftC1(double voltage){
+	double voltage_12v = (voltage / this->battery_voltage_nom) * BrazilBattery::VOLTAGE_12V_REF;
+	if(voltage_12v < BrazilBattery::VOLTAGE_12V_C1_MIN) voltage_12v = BrazilBattery::VOLTAGE_12V_C1_MIN;
+	if(voltage_12v > BrazilBattery::VOLTAGE_12V_C1_MAX) voltage_12v = BrazilBattery::VOLTAGE_12V_C1_MAX;
 
 	double res = 0;
-	for(int i=0 ; i<BrazilBattery1207::COEF_C1_SIZE ; i++){
-			res += BrazilBattery1207::COEF_C1[i]*pow(voltage_12v,i);
+	for(int i=0 ; i<BrazilBattery::COEF_1207_C1_SIZE ; i++){
+			res += BrazilBattery::COEF_1207_C1[i]*pow(voltage_12v,i);
 	}
 	if(res < 0) res = 0;
 	return res;
 }
 
-double BrazilBattery1207::calcVoltageMax(double load){
-	if(load < BrazilBattery1207::LOAD_MIN) load = BrazilBattery1207::LOAD_MIN;
-	if(load > BrazilBattery1207::LOAD_MAX) load = BrazilBattery1207::LOAD_MAX;
+double BrazilBattery::calcVoltageMax(double load){
+	if(load < BrazilBattery::LOAD_MIN) load = BrazilBattery::LOAD_MIN;
+	if(load > BrazilBattery::LOAD_MAX) load = BrazilBattery::LOAD_MAX;
 
 	double res = 0;
-	for(int i=0 ; i<BrazilBattery1207::COEF_VI_SIZE ; i++){
-			res += BrazilBattery1207::COEF_VI[i]*pow(load,i);
+	for(int i=0 ; i<BrazilBattery::COEF_1207_VI_SIZE ; i++){
+			res += BrazilBattery::COEF_1207_VI[i]*pow(load,i);
 	}
-	res *= this->battery_1207_serie;
+	res = (res / BrazilBattery::VOLTAGE_12V_REF) * this->battery_voltage_nom;
 	if(res < 0) res = 0;
 	return res;
 }
-double BrazilBattery1207::calcVoltageMin(double load){
-	if(load < BrazilBattery1207::LOAD_MIN) load = BrazilBattery1207::LOAD_MIN;
-	if(load > BrazilBattery1207::LOAD_MAX) load = BrazilBattery1207::LOAD_MAX;
+double BrazilBattery::calcVoltageMin(double load){
+	if(load < BrazilBattery::LOAD_MIN) load = BrazilBattery::LOAD_MIN;
+	if(load > BrazilBattery::LOAD_MAX) load = BrazilBattery::LOAD_MAX;
 
 	double res = 0;
-	for(int i=0 ; i<BrazilBattery1207::COEF_VF_SIZE ; i++){
-			res += BrazilBattery1207::COEF_VF[i]*pow(load,i);
+	for(int i=0 ; i<BrazilBattery::COEF_1207_VF_SIZE ; i++){
+			res += BrazilBattery::COEF_1207_VF[i]*pow(load,i);
 	}
-	res *= this->battery_1207_serie;
+	res = (res / BrazilBattery::VOLTAGE_12V_REF) * this->battery_voltage_nom;
 	if(res < 0) res = 0;
 	return res;
 }
