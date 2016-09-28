@@ -48,7 +48,7 @@ InstallDir "c:\apcctrl-brazil"
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
-Page custom EditapcctrlConfEnter EditapcctrlConfExit ""
+Page custom EditApcctrlConfEnter EditApcctrlConfExit ""
 Page custom InstallServiceEnter InstallServiceExit ""
 Page custom ApctrayEnter ApctrayExit ""
 !define MUI_FINISHPAGE_SHOWREADME
@@ -107,7 +107,7 @@ Function ShowReadme
   Exec 'write "$INSTDIR\ReleaseNotes"'
 FunctionEnd
 
-Function EditapcctrlConfEnter
+Function EditApcctrlConfEnter
   ; Skip this page if config file was preexisting
   ${If} $ExistingConfig == 1
     Abort
@@ -120,11 +120,11 @@ Function EditapcctrlConfEnter
 
   ; Configure header text and instantiate the page
   !insertmacro MUI_HEADER_TEXT "Edit Configuration File" "Configure apcctrl for your UPS."
-  !insertmacro MUI_INSTALLOPTIONS_INITDIALOG "EditapcctrlConf.ini"
+  !insertmacro MUI_INSTALLOPTIONS_INITDIALOG "EditApcctrlConf.ini"
   Pop $R0 ;HWND of dialog
 
   ; Set contents of text field
-  !insertmacro MUI_INSTALLOPTIONS_READ $R0 "EditapcctrlConf.ini" "Field 1" "HWND"
+  !insertmacro MUI_INSTALLOPTIONS_READ $R0 "EditApcctrlConf.ini" "Field 1" "HWND"
   SendMessage $R0 ${WM_SETTEXT} 0 \
       "STR:The default configuration is suitable for UPSes connected with a USB cable. \
        All other types of connections require editing the client configuration file, \
@@ -138,9 +138,9 @@ Function EditapcctrlConfEnter
   !insertmacro MUI_INSTALLOPTIONS_SHOW
 FunctionEnd
 
-Function EditapcctrlConfExit
+Function EditApcctrlConfExit
   ; Launch wordpad to edit apcctrl.conf if checkbox is checked
-  !insertmacro MUI_INSTALLOPTIONS_READ $R1 "EditapcctrlConf.ini" "Field 2" "State"
+  !insertmacro MUI_INSTALLOPTIONS_READ $R1 "EditApcctrlConf.ini" "Field 2" "State"
   ${If} $R1 == 1
     ExecWait 'write "$INSTDIR\etc\apcctrl\apcctrl.conf"'
   ${EndIf}
@@ -467,7 +467,7 @@ Function .onInit
   ${EndIf}
 
   ; Extract custom pages. Automatically deleted when installer exits.
-  !insertmacro MUI_INSTALLOPTIONS_EXTRACT "EditapcctrlConf.ini"
+  !insertmacro MUI_INSTALLOPTIONS_EXTRACT "EditApcctrlConf.ini"
   !insertmacro MUI_INSTALLOPTIONS_EXTRACT "InstallService.ini"
   !insertmacro MUI_INSTALLOPTIONS_EXTRACT "Apctray.ini"
 
