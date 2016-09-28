@@ -467,12 +467,10 @@ int BrazilUpsDriver::ReadData(bool getevents)
 			// ret == 1: test ok!
 			if(ret == 1){
 				if(this->model == 0){
-					this->model = BrazilModelAbstract::newInstance(this->_buffer[bufpos]);
+					this->model = BrazilModelAbstract::newInstance(this->_buffer[bufpos],_ups->expander_ampere);
 					if(this->model == 0){
 						log_event(_ups, LOG_ERR, "APC Brazil. Model %u not recognized.",this->_buffer[bufpos]);
 						bufpos++;
-					}else{
-						this->model->bat->setExpander(_ups->expander_ampere);
 					}
 				}
 				if(this->model != 0){

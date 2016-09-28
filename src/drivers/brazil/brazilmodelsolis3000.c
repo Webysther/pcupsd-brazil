@@ -83,11 +83,11 @@ bool BrazilModelSolis3000::hasShutdownAuto(){
 	return true;
 }
 
-double BrazilModelSolis3000::getBattery12V07ASerie(){
-	return 2;
+double BrazilModelSolis3000::getBatteryVoltageNom(){
+	return 24;
 }
-double BrazilModelSolis3000::getBattery12V07AParallel(){
-	return 5.14;    // 2 x 18A/h = 2 * 2.57 * 7A/h
+double BrazilModelSolis3000::getBatteryCurrentNom(){
+	return 36;    // 2 x 18A/h = 2 * 2.57 * 7A/h
 }
 double BrazilModelSolis3000::getInverterEfficiency(){
 	return 1.0;

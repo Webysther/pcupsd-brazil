@@ -25,8 +25,8 @@
 
 
 #include "apc.h"
+#include "brazilbattery.h"
 
-#include "brazilbattery1207.h"
 #include "brazilmodel.h"
 
 BrazilModelAbstract::BrazilModelAbstract(unsigned char model){
@@ -34,13 +34,13 @@ BrazilModelAbstract::BrazilModelAbstract(unsigned char model){
 	this->vmodel = model;
 	this->lock = false;
 	this->regulating_relay = 0;
-	this->bat = new BrazilBattery1207();
+	this->bat = new BrazilBattery();
 }
 
 BrazilModelAbstract::~BrazilModelAbstract(){
 	delete this->bat;
 }
-BrazilModelAbstract *BrazilModelAbstract::newInstance(unsigned char model){
+BrazilModelAbstract *BrazilModelAbstract::newInstance(unsigned char model, double current_expander){
 	Dmsg(50, "Instancing specific model, number %03u.\n",model);
 	BrazilModelAbstract *value = 0;
 	switch(model){
@@ -86,7 +86,7 @@ BrazilModelAbstract *BrazilModelAbstract::newInstance(unsigned char model){
 		value = 0;
 		break;
 	}
-	value->bat->setBatteryCount(value->getBattery12V07ASerie(), value->getBattery12V07AParallel());
+	value->bat->setBattery(value->getBatteryVoltageNom(), value->getBatteryCurrentNom(), current_expander);
 	return value;
 }
 int BrazilModelAbstract::testBuffer(unsigned char *buffer, unsigned int datasize){

@@ -28,7 +28,7 @@
 #ifndef SRC_DRIVERS_BRAZIL_BRAZILMODEL_H_
 #define SRC_DRIVERS_BRAZIL_BRAZILMODEL_H_
 
-#include "brazilbattery1207.h"
+#include "brazilbattery.h"
 
 enum DAYS_OF_WEEK{
 	Sunday = 0,
@@ -46,7 +46,7 @@ public:
 	BrazilModelAbstract(unsigned char model);
 	virtual ~BrazilModelAbstract();
 
-	static BrazilModelAbstract *newInstance(unsigned char model);
+	static BrazilModelAbstract *newInstance(unsigned char model, double current_expander);
 
 	static int testBuffer(unsigned char *buffer, unsigned int datasize);
 
@@ -83,7 +83,6 @@ public:
 	virtual unsigned char getMinute() = 0;
 	virtual unsigned char getSecond() = 0;
 
-	double getBatteryVoltageNom();
 	double getBatteryLevel();
 	double getBatteryTimeLeft();
 	double getBatteryVoltageExpectedInitial();
@@ -92,8 +91,8 @@ public:
 	double getBatteryLoad();
 
 	virtual double getInverterEfficiency() = 0;
-	virtual double getBattery12V07ASerie() = 0;
-	virtual double getBattery12V07AParallel() = 0;
+	virtual double getBatteryVoltageNom() = 0;
+	virtual double getBatteryCurrentNom() = 0;
 
 	virtual double getOutputPowerNom() = 0;
 	virtual double getOutputActivePowerNom() = 0;
@@ -138,7 +137,7 @@ public:
 
 	static const unsigned int BUFFERLEN = 200;
 
-	BrazilBattery1207 *bat;
+	BrazilBattery *bat;
 
 protected:
 	unsigned char _buffer[BrazilModelAbstract::BUFFERLEN];
@@ -270,8 +269,8 @@ public:
 	int getLineVoltageNom();
 	int getLineVoltageMin();
 	int getLineVoltageMax();
-	double getBattery12V07ASerie();
-	double getBattery12V07AParallel();
+	double getBatteryVoltageNom();
+	double getBatteryCurrentNom();
 	double getInverterEfficiency();
 
 	bool hasShutdownAuto();
@@ -294,8 +293,8 @@ public:
 	int getLineVoltageNom();
 	int getLineVoltageMin();
 	int getLineVoltageMax();
-	double getBattery12V07ASerie();
-	double getBattery12V07AParallel();
+	double getBatteryVoltageNom();
+	double getBatteryCurrentNom();
 	double getInverterEfficiency();
 
 	bool hasShutdownAuto();
@@ -317,8 +316,8 @@ public:
 	int getLineVoltageNom();
 	int getLineVoltageMin();
 	int getLineVoltageMax();
-	double getBattery12V07ASerie();
-	double getBattery12V07AParallel();
+	double getBatteryVoltageNom();
+	double getBatteryCurrentNom();
 	double getInverterEfficiency();
 
 	bool hasShutdownAuto();
@@ -340,8 +339,8 @@ public:
 	int getLineVoltageNom();
 	int getLineVoltageMin();
 	int getLineVoltageMax();
-	double getBattery12V07ASerie();
-	double getBattery12V07AParallel();
+	double getBatteryVoltageNom();
+	double getBatteryCurrentNom();
 	double getInverterEfficiency();
 
 	bool hasShutdownAuto();
@@ -365,8 +364,8 @@ public:
 	int getLineVoltageNom();
 	int getLineVoltageMin();
 	int getLineVoltageMax();
-	double getBattery12V07ASerie();
-	double getBattery12V07AParallel();
+	double getBatteryVoltageNom();
+	double getBatteryCurrentNom();
 	double getInverterEfficiency();
 
 	bool hasShutdownAuto();
@@ -388,8 +387,8 @@ public:
 	int getLineVoltageNom();
 	int getLineVoltageMin();
 	int getLineVoltageMax();
-	double getBattery12V07ASerie();
-	double getBattery12V07AParallel();
+	double getBatteryVoltageNom();
+	double getBatteryCurrentNom();
 	double getInverterEfficiency();
 
 	bool hasShutdownAuto();
@@ -499,8 +498,8 @@ public:
 	int getLineVoltageNom();
 	int getLineVoltageMin();
 	int getLineVoltageMax();
-	double getBattery12V07ASerie();
-	double getBattery12V07AParallel();
+	double getBatteryVoltageNom();
+	double getBatteryCurrentNom();
 	double getInverterEfficiency();
 
 	bool hasShutdownAuto();
@@ -522,8 +521,8 @@ public:
 	int getLineVoltageNom();
 	int getLineVoltageMin();
 	int getLineVoltageMax();
-	double getBattery12V07ASerie();
-	double getBattery12V07AParallel();
+	double getBatteryVoltageNom();
+	double getBatteryCurrentNom();
 	double getInverterEfficiency();
 
 	bool hasShutdownAuto();
@@ -545,8 +544,8 @@ public:
 	int getLineVoltageNom();
 	int getLineVoltageMin();
 	int getLineVoltageMax();
-	double getBattery12V07ASerie();
-	double getBattery12V07AParallel();
+	double getBatteryVoltageNom();
+	double getBatteryCurrentNom();
 	double getInverterEfficiency();
 
 	bool hasShutdownAuto();
@@ -568,8 +567,8 @@ public:
 	int getLineVoltageNom();
 	int getLineVoltageMin();
 	int getLineVoltageMax();
-	double getBattery12V07ASerie();
-	double getBattery12V07AParallel();
+	double getBatteryVoltageNom();
+	double getBatteryCurrentNom();
 	double getInverterEfficiency();
 
 	bool hasShutdownAuto();
@@ -591,8 +590,8 @@ public:
 	int getLineVoltageNom();
 	int getLineVoltageMin();
 	int getLineVoltageMax();
-	double getBattery12V07ASerie();
-	double getBattery12V07AParallel();
+	double getBatteryVoltageNom();
+	double getBatteryCurrentNom();
 	double getInverterEfficiency();
 
 	bool hasShutdownAuto();
@@ -614,8 +613,8 @@ public:
 	int getLineVoltageNom();
 	int getLineVoltageMin();
 	int getLineVoltageMax();
-	double getBattery12V07ASerie();
-	double getBattery12V07AParallel();
+	double getBatteryVoltageNom();
+	double getBatteryCurrentNom();
 	double getInverterEfficiency();
 
 	bool hasShutdownAuto();

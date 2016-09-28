@@ -74,9 +74,9 @@
 
 ----------------------------------------------------------------------------
 
-             Release Notes for apcctrl 3.14.x
+             Release Notes for apcupsd 3.14.x
 
-apcctrl 3.14.x is the latest STABLE release, containing many bug fixes and
+apcupsd 3.14.x is the latest STABLE release, containing many bug fixes and
 new features over the previous 3.12.x stable series. Users of all previous
 versions are encouraged to upgrade.
 
@@ -95,7 +95,7 @@ NEW FEATURES
     USB HID driver because it offers access to more UPS data readouts and
     controls. The only configuration file change needed versus MODBUS serial
     is to change UPSCABLE to usb and use an empty DEVICE setting. See the 
-    MODBUS section of the apcctrl manual for more details.
+    MODBUS section of the apcupsd manual for more details.
 
   * Support for Apple Notification Center on Mac OS X (replaces Growl)
 
@@ -132,7 +132,7 @@ MISC
 
 NEW FEATURES
 
-  * apcaccess and apcctrl status format updates to ease parsing by scripts
+  * apcaccess and apcupsd status format updates to ease parsing by scripts
   
   * UPS name is included in subject line of emails in default scripts
 
@@ -184,13 +184,13 @@ NEW FEATURES
     support will be your best contact for determining if your UPS supports a 
     MODBUS upgrade the information linked below does not make it clear.
 
-    For now, apcctrl supports MODBUS over RS232 serial only. It DOES NOT yet 
-    support MODBUS over USB. See the apcctrl manual[3] for information on
-    setting up apcctrl.conf for MODBUS UPSes.
+    For now, apcupsd supports MODBUS over RS232 serial only. It DOES NOT yet 
+    support MODBUS over USB. See the apcupsd manual[3] for information on
+    setting up apcupsd.conf for MODBUS UPSes.
 
     [1] http://www.apc.com/whitepaper/?an=176
     [2] http://www.schneider-electric.us/support/index?page=content&country=ITB&lang=EN&id=FA164737
-    [3] http://www.apcctrl.com/manual/manual.html
+    [3] http://www.apcupsd.com/manual/manual.html
 
   * Windows USB driver is now digitally signed thanks to Jernej Simoncic 
     <jernej's-sflist@eternallybored.org>
@@ -208,7 +208,7 @@ BUG FIXES
   * USB driver support for newer Microlink models on Mac OS X Lion and Windows
 
   * Ignore transitions to battery due to calibration (possible if user
-    initiates calibration, then exits apctest and starts apcctrl before 
+    initiates calibration, then exits apctest and starts apcupsd before 
     calibration completes.
 
   * Fix truncation of long UPS model names such as "Smart-UPS RT 5000 XL"
@@ -223,7 +223,7 @@ NEW FEATURES
 
   * SNMP enhancements:
     - Autodetection of MIB and community if they are not specified in
-      apcctrl.conf
+      apcupsd.conf
     - Support for RFC1628 MIB
     - Support for MGE MIB (Contributed by	Lars Taeuber <taeuber@bbaw.de>)
 
@@ -234,8 +234,8 @@ NEW FEATURES
       detected and provide status now.
 
   * When using the generic USB driver (Windows, OS X, newer FreeBSD)
-    DEVICE string in apcctrl.conf can be set as serial number of UPS
-    to monitor. This is useful in order to "lock" apcctrl to a specific
+    DEVICE string in apcupsd.conf can be set as serial number of UPS
+    to monitor. This is useful in order to "lock" apcupsd to a specific
     UPS if you have more than one connected to the server.
 
   * Ed Dondlinger's Windows email scripts are included in the Win32
@@ -267,7 +267,7 @@ BUG FIXES
     config and events files without prompting.
 
   * win32: When logging events, convert LOG_CRIT to a WARNING rather
-	 than an ERROR since apcctrl uses it for power events which aren't
+	 than an ERROR since apcupsd uses it for power events which aren't
 	 really daemon errors.
 
 
@@ -275,7 +275,7 @@ BUG FIXES
 
 NEW FEATURES
 
-  * Mac OS X version of apctray (apcagent) for monitoring apcctrl instances.
+  * Mac OS X version of apctray (apcagent) for monitoring apcupsd instances.
     Same feature set as apctray on Windows (monitor multiple instances,
     get detailed status and events logs). Popup notifications delivered via 
     Growl, if available.
@@ -311,7 +311,7 @@ BUG FIXES
      error.
 
    * Use /kill switch from the installer to shut down running instances
-     of apcctrl and apctray. This will provide more reliable termination
+     of apcupsd and apctray. This will provide more reliable termination
      on Vista/Win7.
      
    * Update apctest to use 'Q' to exit any menu instead of a number that
@@ -330,7 +330,7 @@ NEW FEATURES
 BUG FIXES
 
   * Windows COM ports above COM9 now work without user needing to manually
-    add \\.\ UNC prefix in apcctrl.conf
+    add \\.\ UNC prefix in apcupsd.conf
 
   * Fix configure script not noticing when C++ compiler is missing
 
@@ -353,7 +353,7 @@ NEW FEATURES
     easy to update. (The only down side is the multi-page HTML version is 
     no longer available; the HTML version is all on a single page.)
 
-  * New manpages for apcctrl, apcctrl.conf, apctest, apcaccess, and 
+  * New manpages for apcupsd, apcupsd.conf, apctest, apcaccess, and 
     apccontrol. Many thanks to Trevor Roydhouse <trev@sentry.org> for the
     hard work!
 
@@ -390,7 +390,7 @@ BUG FIXES
 
   * apctest: Do not create pid file. There is little reason for it
     since apctest is a command-line tool, not a daemon. Plus nothing
-    ever deletes the file so it interferes with apcctrl operation.
+    ever deletes the file so it interferes with apcupsd operation.
 
   * gapcmon: Network connect timeout fix.
 
@@ -407,7 +407,7 @@ BUG FIXES
   * apctray: Improve multiple instance behavior for /add, /del, and
     /kill on modern platforms (Win2K and newer).
 
-  * Support shutting down apcctrl instances running in other sessions
+  * Support shutting down apcupsd instances running in other sessions
     (such as terminal services or remote desktop sessions).
 
   * Makefile: 'make install' fixes for first install on RedHat/SuSE.
@@ -418,7 +418,7 @@ BUG FIXES
   * Makefile: Fix dependency build errors on Darwin and other platforms.
     ('echo -n' is not portable; use 'tr' to strip newline instead)
 
-  * RPMs: Automatically restart apcctrl when upgrading
+  * RPMs: Automatically restart apcupsd when upgrading
 
 
 3.14.4 -- 18 May 2008                (Maintenance Release)
@@ -442,7 +442,7 @@ MAJOR CHANGES
         build.
 
   * Built-in version of libgd for multimon cgi has been removed. The version
-    previously included in apcctrl was old and likely had security issues.
+    previously included in apcupsd was old and likely had security issues.
     It is safer to use libgd from the target system. Therefore, your system
     must provide libgd if you choose to build cgi now. Generally this is 
     easy to achieve by installing a vendor-supplied package.
@@ -497,8 +497,8 @@ BUG FIXES
 NEW FEATURES
 
   * A HAL policy file is automatically installed on Linux systems to disable
-    the hald-addon-hid-ups module which conflicts with apcctrl's control of
-    USB UPSes. The file is automatically removed when apcctrl is uninstalled.
+    the hald-addon-hid-ups module which conflicts with apcupsd's control of
+    USB UPSes. The file is automatically removed when apcupsd is uninstalled.
 
 BUG FIXES
 
@@ -523,13 +523,13 @@ BUG FIXES
 NEW FEATURES
 
   * Tray icon support on Vista. Vista does not allow background services
-    to interact with the user's desktop, so winapcctrl's built-in tray
+    to interact with the user's desktop, so winapcupsd's built-in tray
     icon did not work.
 
   * Tray icon is now a standalone application "apctray" which is capable of
-    monitoring multiple apcctrl instances via apcctrl's NIS. Any apcctrl
+    monitoring multiple apcupsd instances via apcupsd's NIS. Any apcupsd
     running NIS can be monitored. By default the icon monitors a single
-    apcctrl at 127.0.0.1:3551. See command line options below for adding
+    apcupsd at 127.0.0.1:3551. See command line options below for adding
     additional monitors.
 
   * Tray icon can be installed individually (disable other packages in the
@@ -562,7 +562,7 @@ NEW FEATURES
 
 BUG FIXES
 
-  * The win32 portions of winapcctrl have been almost entirely rewritten. 
+  * The win32 portions of winapcupsd have been almost entirely rewritten. 
     The code is cleaner (mostly) and lots of unused baggage has been removed.
 
   * USB fix for BackUPS LCD series. This fix carries a risk of breaking other
@@ -640,7 +640,7 @@ BUG FIXES
   * (linux-usb) Rewrite device opening logic to be more reliable. See 
       ChangeLog for details.
 
-  * (apcctrl) Do not attempt to cancel shutdowns.
+  * (apcupsd) Do not attempt to cancel shutdowns.
 
 
 3.14.0 -- 09 February 2007      (Feature Release)
@@ -653,44 +653,44 @@ NEW FEATURES
   	- Mac OS X (Darwin)
   	- Solaris 10 (x86 and SPARC)
 
-        Please see the apcctrl manual for details on USB configuration for the
+        Please see the apcupsd manual for details on USB configuration for the
         new platforms.
 
   * Native Windows port
   
-       The winapcctrl port has been completely rewritten to use native
+       The winapcupsd port has been completely rewritten to use native
        Win32 libraries (based on MinGW32). It no longer relies on a Cygwin
        translation layer, thus improving compatibility and performance.
 
   * PowerChute Network Shutdown driver
   
-       apcctrl now supports the PowerChute Network Shutdown protocol (PCNET)
+       apcupsd now supports the PowerChute Network Shutdown protocol (PCNET)
        offered by the AP9617 family of smart slot modules. This protocol is
        much lighter-weight than SNMP and offers better security. Please see 
-       the apcctrl manual for details on PCNET configuration.
+       the apcupsd manual for details on PCNET configuration.
 
   * GAPCMON GUI monitoring tool
   
-       apcctrl is now packaged with the GAPCMON GUI monitoring application
+       apcupsd is now packaged with the GAPCMON GUI monitoring application
        thanks to James Scott, Jr. This is a Gnome/GTK based application which
        integrates into most desktop panels (not just Gnome). It monitors one or
-       more apcctrl instances using apcctrl's NIS networking server. The status
+       more apcupsd instances using apcupsd's NIS networking server. The status
        of each UPS is shown with a icon similar to the Win32 tray icon in 
-       winapcctrl. Enable building of gapcmon at compile time via 
-       --enable-gapcmon or install the apcctrl-gapcmon RPM.
+       winapcupsd. Enable building of gapcmon at compile time via 
+       --enable-gapcmon or install the apcupsd-gapcmon RPM.
 
   * Unreliable MASTER/SLAVE networking mode is removed
   
        Yes, this is a feature. The old MASTER/SLAVE mode for shutting down
        multiple servers from one UPS has historically been unreliable and prone
-       to loss of communications or lockups. apcctrl has long had a replacement
+       to loss of communications or lockups. apcupsd has long had a replacement
        networking mode using the NIS server (NIS stands for Network Information
        Server, and has nothing to do with Sun's NIS/YP protocol). The NIS net
        mode is very reliable and has none of the lockup bugs that have plagued 
        MASTER/SLAVE mode.
        
        In 3.14.x, MASTER/SLAVE mode has been removed and the associated 
-       configuration directives are now obsolete. Please see the apcctrl manual
+       configuration directives are now obsolete. Please see the apcupsd manual
        for a very simple NIS networking configuration to replace MASTER/SLAVE.
 
    * New configuration directives to set paths at runtime
@@ -702,8 +702,8 @@ NEW FEATURES
           - PWRFAILDIR (sets location where powerfail file will be written)
           - NOLOGINDIR (set location where nologin file will be written)
 
-       These directives can be used to rearrange the apcctrl installation
-       after compiling, or to run multiple apcctrl instances on the
+       These directives can be used to rearrange the apcupsd installation
+       after compiling, or to run multiple apcupsd instances on the
        same machine without compiling separate copies.
 
-       See the apcctrl manual for details on these new directives.
+       See the apcupsd manual for details on these new directives.

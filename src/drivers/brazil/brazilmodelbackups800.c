@@ -73,11 +73,11 @@ bool BrazilModelBackUPS800::hasShutdownAuto(){
 	return true;
 }
 
-double BrazilModelBackUPS800::getBattery12V07ASerie(){
-	return 1;
+double BrazilModelBackUPS800::getBatteryVoltageNom(){
+	return 12;
 }
-double BrazilModelBackUPS800::getBattery12V07AParallel(){
-	return 1;
+double BrazilModelBackUPS800::getBatteryCurrentNom(){
+	return 7;
 }
 double BrazilModelBackUPS800::getInverterEfficiency(){
 	return 1.0;

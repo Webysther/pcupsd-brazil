@@ -1,4 +1,4 @@
-ApcCtrl é um branch do projeto apcctrl 3.14.x. Ele foi criado para dar
+ApcCtrl é um branch do projeto apcupsd 3.14.x. Ele foi criado para dar
 suporte aos nobreaks da APC no Brasil, que são modelos herdados da Microsol.
 Essa aplicação não é oficial da APC Brasil. Foi desenvolvida por terceiros
 e ela opera nos modelos da "GNU GENERAL PUBLIC LICENSE". Todo o código fonte

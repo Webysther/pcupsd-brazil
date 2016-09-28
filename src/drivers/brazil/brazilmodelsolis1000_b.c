@@ -82,11 +82,11 @@ bool BrazilModelSolis1000_b::hasShutdownAuto(){
 	return true;
 }
 
-double BrazilModelSolis1000_b::getBattery12V07ASerie(){
-	return 2;
+double BrazilModelSolis1000_b::getBatteryVoltageNom(){
+	return 24;
 }
-double BrazilModelSolis1000_b::getBattery12V07AParallel(){
-	return 2;
+double BrazilModelSolis1000_b::getBatteryCurrentNom(){
+	return 14;
 }
 double BrazilModelSolis1000_b::getInverterEfficiency(){
 	return 1.0;
