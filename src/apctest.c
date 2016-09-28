@@ -2971,11 +2971,9 @@ static void brazil_print(){
 	pmsg("OUT ACT POWER NOM:      %04.1f W\n",((BrazilUpsDriver*)(ups)->driver)->model->getOutputActivePowerNom());
 	pmsg("OUT TOTAL POWER:        %04.1f VA\n",((BrazilUpsDriver*)(ups)->driver)->model->getOutputPower());
 	pmsg("OUT TOTAL POWER NOM:    %04.1f VA\n",((BrazilUpsDriver*)(ups)->driver)->model->getOutputPowerNom());
-	pmsg("BATTERY 1207 SERIE:     %02.1f \n",((BrazilUpsDriver*)(ups)->driver)->model->getBattery12V07ASerie());
-	pmsg("BATTERY 1207 PARALLEL:  %02.1f \n",((BrazilUpsDriver*)(ups)->driver)->model->getBattery12V07AParallel());
-	pmsg("BATTERY EXPANDER:       %d A\n",ups->expander_ampere);
 	pmsg("BATTERY VOLTAGE:        %02.1f V\n",((BrazilUpsDriver*)(ups)->driver)->model->getBatteryVoltage());
-	pmsg("BATTERY VOLTAGE NOM:    %02.1f V\n",((BrazilUpsDriver*)(ups)->driver)->model->getBatteryVoltageNom());
+	pmsg("BATTERY VOLTAGE NOM:    %02.1f V\n",((BrazilUpsDriver*)(ups)->driver)->model->bat->getBatteryVoltageNom());
+	pmsg("BATTERY CURRENT NOM:    %02.1f A\n",((BrazilUpsDriver*)(ups)->driver)->model->bat->getBatteryCurrentNom());
 	pmsg("TEMPERATURE:            %02.1f oC\n",((BrazilUpsDriver*)(ups)->driver)->model->getTemperature());
 	pmsg("TIMELEFT ESTIMATE:      %02.1f minutes\n",((BrazilUpsDriver*)(ups)->driver)->model->getBatteryTimeLeft());
 	pmsg("FLAG LINE 220V:         %s\n",((BrazilUpsDriver*)(ups)->driver)->model->isLine220V()?"true":"false");
@@ -3156,7 +3154,6 @@ static void brazil_testBatteryHealth(){
 	timeleft0 = br->getBatteryTimeLeft();
 	bat0 = timeleft1 = br->getBatteryVoltage();
 	power0 = br->getOutputActivePower();
-	batcritical = false;
 
 	int transcorrido = 0;
 	char datetime[50];
@@ -3167,9 +3164,6 @@ static void brazil_testBatteryHealth(){
 		time(&now);
 		gmtime_r(&now, &tm_now);
 		transcorrido = floor(now - start);
-		if(br->isBatteryCritical()){
-			batcritical = true;
-		}
 		sprintf(datetime,"%04d-%02d-%02d %02d:%02d:%02d",(tm_now.tm_year+1900),tm_now.tm_mon+1,tm_now.tm_mday,tm_now.tm_hour,tm_now.tm_min,tm_now.tm_sec);
 		fprintf(CsvFile,"\"%s\",\"%d\",\"%2.2f\",\"%2.1f\",\"%1.2f\"\n",
 				datetime,
@@ -3262,11 +3256,14 @@ static void brazil_testTimeLeftRoutines(){
 
 	fprintf(CsvFile,"\"### INFORMAÇÕES BÁSICAS ###\"\n");
 	fprintf(CsvFile,"\"Modelo:\",\"%s\"\n",br->getModelName());
-	fprintf(CsvFile,"\"Tensão de entrada nominal:\",\"%3.0d\"\n",br->getLineVoltageNom());
-	fprintf(CsvFile,"\"Tensão de saída nominal:\",\"%3.0d\"\n",br->getOutputVoltageNom());
-	fprintf(CsvFile,"\"Potência de saída real (ativa) nominal:\",\"%4.0f\"\n",br->getOutputActivePowerNom());
-	fprintf(CsvFile,"\"Potência de saída total (ativa+reativa) nominal:\",\"%4.0f\"\n",br->getOutputPowerNom());
-	fprintf(CsvFile,"\"Número de baterias 12V:\",\"%1.1f\"\n",br->getBattery12V07ASerie());
+	fprintf(CsvFile,"\"Tensão de entrada nominal:\",\"%3.0d V\"\n",br->getLineVoltageNom());
+	fprintf(CsvFile,"\"Tensão de saída nominal:\",\"%3.0d V\"\n",br->getOutputVoltageNom());
+	fprintf(CsvFile,"\"Potência de saída real (ativa) nominal:\",\"%2.0f W\"\n",br->getOutputActivePowerNom());
+	fprintf(CsvFile,"\"Potência de saída total nominal:\",\"%4.0f VA\"\n",br->getOutputPowerNom());
+	fprintf(CsvFile,"\"Tensão nominal do banco de baterias:\",\"%2.1f V\"\n",br->bat->getBatteryVoltageNom());
+	fprintf(CsvFile,"\"Corrente nominal do banco de baterias:\",\"%2.1f A\"\n",br->bat->getBatteryCurrentNom());
+	fprintf(CsvFile,"\"Corrente nominal do banco de baterias em C1:\",\"%2.1f A\"\n",br->bat->getBatteryCurrentC1Nom());
+	fprintf(CsvFile,"\"Potência real do banco de baterias em C1:\",\"%4.1f W\"\n",br->bat->getBatteryPowerC1Nom());
 	fprintf(CsvFile,"\n");
 	fprintf(CsvFile,"\"### DADOS INICIAIS TEÓRICOS\"\n");
 	fprintf(CsvFile,"\"Os dados à seguir são funções unicamente da corrente requerida da bateria (A).\"\n");
@@ -3285,17 +3282,21 @@ static void brazil_testTimeLeftRoutines(){
 	fprintf(CsvFile,"\"de calculo da autonomia.\"\n");
 	fprintf(CsvFile,"\n");
 	fprintf(CsvFile,"\"Quando o nobreak está ligado a rede elétrica a autonomia é calculada com base na formula\"\n");
-	fprintf(CsvFile,"\"de Peikert. Essa autonomia teórica é uma função da carga da bateria. Compare o dados\"\n");
-	fprintf(CsvFile,"\"gerados com o manual do fabricante\"\n");
+	fprintf(CsvFile,"\"de Peikert. Essa autonomia teórica é uma função da potência de saída do nobreak. Compare os\"\n");
+	fprintf(CsvFile,"\"dados gerados com o manual do fabricante\"\n");
 	fprintf(CsvFile,"\n");
-	fprintf(CsvFile,"\"Potência ativa de saída (W)\",\"Taxa de descarga da bateria (C)\",\"Tensão inicial (V)\",\"Autonomia (minutos)\"\n");
+	fprintf(CsvFile,"\"TABELA 1: Calculo da autonomia inicial (Peukert Law) em função da potência ativa de saída\"\n");
+	fprintf(CsvFile,"\"          do nobreak. Essa tabela é usada para comparar o calculo pela formula de Peukert\"\n");
+	fprintf(CsvFile,"\"          (com a rede elétrica) versus formula em função da tensão da bateria.\"\n");
+	fprintf(CsvFile,"\"Potência ativa de saída (W)\",\"Taxa de descarga da bateria (C)\",\"Tensão inicial esperada da bateria(V)\",\"Autonomia Peukert (minutos)\",\"Autonomia inicial na bateria (minutos)\"\n");
 	double power = 75;
 	do{
 		power += 25;
-		double batload = power / (br->bat->AMPER_HOUR_C1 * br->bat->getBatteryVoltageNom());
-		double timeleft = br->bat->calcTimeLeftPeukert(batload);
+		double batload = br->bat->calcBatteryLoadC1(power);
 		double volt_inicial = br->bat->calcVoltageMax(batload);
-		fprintf(CsvFile,"\"%4.1f\",\"%1.1f\",\"%2.2f\",\"%2.1f\"\n",power,batload,volt_inicial,timeleft);
+		double timeleft_peukert = br->bat->calcTimeLeftPeukert(batload);
+		double timeleft_tensao = br->bat->calcTimeLeft(batload,volt_inicial);
+		fprintf(CsvFile,"\"%4.1f\",\"%1.1f\",\"%2.2f\",\"%2.2f\",\"%2.2f\"\n",power,batload,volt_inicial,timeleft_peukert,timeleft_tensao);
 	}while(power < br->getOutputActivePowerNom());
 
 	fprintf(CsvFile,"\n");
@@ -3304,31 +3305,37 @@ static void brazil_testTimeLeftRoutines(){
 	fprintf(CsvFile,"Quando o nobreak está funcionando com as baterias a autonomia é estimada com base na\"\n");
 	fprintf(CsvFile,"tensão das baterias (V) e na taxa de descarregamento da bateria (C).\n");
 	fprintf(CsvFile,"\n");
+	fprintf(CsvFile,"\"TABELA 2: Calculo da autonomia em função da potência ativa de saída e da tensão na bateria.\"\n");
+	fprintf(CsvFile,"\"          Esse cálculo é usado quando o nobreak está operando com as baterias.\"\n");
 	fprintf(CsvFile,"\"Potência ativa de saída (W)\",\"Taxa de descarga da bateria (C)\",\"Tensão (V)\",\"Autonomia (minutos)\"\n");
 	power = 75;
 	do{
 		power += 25;
-		double batload = power / (br->bat->AMPER_HOUR_C1 * br->bat->getBatteryVoltageNom());
+		double batload = br->bat->calcBatteryLoadC1(power);
 		double volt_max = br->bat->calcVoltageMax(batload);
 		double volt_min = br->bat->calcVoltageMin(batload);
 		for(double volt=volt_max ; volt>volt_min ; volt-=((volt_max-volt_min)/10)){
 			double timeleft = br->bat->calcTimeLeft(batload,volt);
-			fprintf(CsvFile,"\"%4.1f\",\"%1.1f\",\"%2.2f\",\"%2.1f\"\n",power,batload,volt,timeleft);
+			fprintf(CsvFile,"\"%4.1f\",\"%1.1f\",\"%2.2f\",\"%2.2f\"\n",power,batload,volt,timeleft);
 
 		}
 	}while(power < br->getOutputActivePowerNom());
 	fprintf(CsvFile,"\n");
 	fprintf(CsvFile,"\n");
 	fprintf(CsvFile,"\"### AUTONOMIA EM FUNÇÃO DA TENSÃO DA BATERIA COM C1\"\n");
-	fprintf(CsvFile,"Quando o nobreak está funcionando com as baterias a autonomia é estimada com base na\"\n");
-	fprintf(CsvFile,"tensão das baterias (V) e na taxa de descarregamento da bateria (C).\n");
+	fprintf(CsvFile,"\"Quando o nobreak está funcionando com as baterias a autonomia é estimada com base na\"\n");
+	fprintf(CsvFile,"\"tensão das baterias (V) e na taxa de descarregamento da bateria (C).\"\n");
 	fprintf(CsvFile,"\n");
+	fprintf(CsvFile,"\"TABELA 3: Calculo da autonomia em relação da potência ativa de saída e da tensão na bateria.\"\n");
+	fprintf(CsvFile,"\"          Essa tabela serve para comparar com datasheet de uma bateria de chumbo-ácido.\"\n");
 	fprintf(CsvFile,"\"Potência ativa de saída (W)\",\"Taxa de descarga da bateria (C)\",\"Tensão (V)\",\"Autonomia (minutos)\"\n");
 	double batload = 1;
-	power = br->bat->getBatteryVoltageNom() * br->bat->AMPER_HOUR_C1;
-	for(double volt=br->bat->calcVoltageMax(1) ; volt > br->bat->calcVoltageMin(1) ; volt-=0.1){
+	double voltmax = br->bat->calcVoltageMax(batload);
+	double voltmin = br->bat->calcVoltageMin(batload);
+	power = br->bat->getBatteryPowerC1Nom();
+	for(double volt = voltmax ; volt > voltmin ; volt-=0.1){
 		double timeleft = br->bat->calcTimeLeft(batload,volt);
-		fprintf(CsvFile,"\"%4.1f\",\"%1.1f\",\"%2.2f\",\"%2.1f\"\n",power,batload,volt,timeleft);
+		fprintf(CsvFile,"\"%4.1f\",\"%1.1f\",\"%2.2f\",\"%2.2f\"\n",power,batload,volt,timeleft);
 	}
 
 	fflush(CsvFile);

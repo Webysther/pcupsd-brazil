@@ -1,0 +1,46 @@
+
+
+Configuration on Wed Sep 28 15:18:04 BRT 2016:
+
+  Host:                       x86_64-unknown-linux-gnu -- debian 8.4
+  apcctrl version:            0.8.0 (27 September 2016)
+  Source code location:       .
+  Install binaries:           /sbin
+  Install config files:       /etc/apcctrl
+  Install man files:          ${prefix}/share/man
+  Nologin file in:            /etc
+  PID directory:              /var/run
+  LOG dir (events, status)    /var/log
+  LOCK dir (for serial port)  /var/lock
+  Power Fail dir              /etc/apcctrl
+  Compiler:                   g++ 4.9.2-10)
+  Preprocessor flags:          -I/usr/local/include
+  Compiler flags:             -g -O2 -fno-exceptions -fno-rtti -Wall 
+  Linker:                     gcc
+  Linker flags:                -L/usr/local/lib64 -L/usr/local/lib
+  Host and version:           debian 8.4
+  Shutdown Program:           /sbin/shutdown
+  Port/Device:                /dev/ttyS0
+  Network Info Port (CGI):    3551
+  UPSTYPE                     brazil
+  UPSCABLE                    simple
+
+  drivers (no-* are disabled): apcsmart dumb net no-usb snmp no-net-snmp pcnet modbus no-modbus-usb no-test brazil
+
+  enable-nis:                 yes
+  with-nisip:                 0.0.0.0
+  enable-cgi:                 no
+  with-cgi-bin:               /etc/apcctrl
+  with-libwrap:               
+  enable-pthreads:            yes
+  enable-dist-install:        yes
+  enable-gapcmon:             yes
+  enable-apcagent:            no
+
+  ****** ATENÇÃO ******
+
+  O projeto ApcCtrl necessita da sua ajuda! Informe todos os resultados do seu teste
+  para os desenvolvedores através do site www.apcctrl.com.br. Atualmente apenas os modelos
+  BACK UPS BR 1200VA e 1500VA foram reportados.
+
+  

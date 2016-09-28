@@ -79,8 +79,8 @@ OBJCFLAGS = $(CPPFLAGS) $(CFLAGS)
 LDFLAGS =  -L/usr/local/lib64 -L/usr/local/lib
 LIBS =  -lm -lsupc++
 LIBGD = 
-GAPCMON_CFLAGS =  -DHAVE_FUNC_GETHOSTBYNAME_R_6
-GAPCMON_LIBS = 
+GAPCMON_CFLAGS = -I/usr/include/gtk-2.0 -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include -I/usr/include/gio-unix-2.0/ -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/libpng12 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libpng12 -I/usr/include/pango-1.0 -I/usr/include/harfbuzz -I/usr/include/pango-1.0 -I/usr/include/freetype2 -I/usr/include/gconf/2 -I/usr/include/dbus-1.0 -I/usr/lib/x86_64-linux-gnu/dbus-1.0/include -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include  -DVERSION=\"0.8.0\" -DHAVE_FUNC_GETHOSTBYNAME_R_6
+GAPCMON_LIBS = -lgtk-x11-2.0 -lgdk-x11-2.0 -lpangocairo-1.0 -latk-1.0 -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lpangoft2-1.0 -lpango-1.0 -lgobject-2.0 -lfontconfig -lfreetype -lgthread-2.0 -pthread -lgconf-2 -lglib-2.0 
 LIBEXTRAOBJ = 
 RST2HTMLOPTS = --field-name-limit=0 --generator --time --no-footnote-backlinks --record-dependencies=$(df).d
 RST2PDFOPTS = --no-footnote-backlinks --real-footnotes
@@ -102,7 +102,7 @@ BRAZILDRV  := brazil
 USBTYPE    := 
 CGIDIR     := 
 USBHIDDIR  := 
-GAPCMON    := 
+GAPCMON    := gapcmon
 APCAGENT   := 
 WIN32      := 
 

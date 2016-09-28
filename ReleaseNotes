@@ -10,7 +10,12 @@
       pela existência dessa aplicação. Observado por Caio Moysés de Lima.
     
     * Mudança da pasta padrão de config para /etc/apcctrl
+    
     * Mudança do arquivo padrão de config para apcctrl.conf
+    
+    * Mudança no nome do daemon para apcctrl
+    
+    * Mudança na classe brazilbattery 
     
 
 0.7.0 - 28 de junho de 2016
