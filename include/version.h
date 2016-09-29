@@ -1,5 +1,5 @@
 #define DEBUG 1
-#define VERSION "0.8.0"
+#define VERSION "0.8.1"
 #define ADATE   "27 September 2016"
 
 #define APCCTRL_RELEASE VERSION
