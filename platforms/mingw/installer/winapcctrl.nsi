@@ -178,17 +178,17 @@ Function InstallServiceExit
     ExecWait '"$INSTDIR\bin\apcctrl.exe" /install'
     ${If} ${IsNT}
       ; Installed as a service and we're on NT
-      CreateShortCut "$SMPROGRAMS\ApcCtrl\Start apcctrl.lnk" "$SYSDIR\net.exe" "start apcctrl" "$SYSDIR\shell32.dll" ${START_ICON_INDEX}
-      CreateShortCut "$SMPROGRAMS\ApcCtrl\Stop apcctrl.lnk"  "$SYSDIR\net.exe" "stop apcctrl"  "$SYSDIR\shell32.dll" ${STOP_ICON_INDEX}
+      CreateShortCut "$SMPROGRAMS\ApcCtrl\Start apcctrl (run as adm).lnk" "$SYSDIR\net.exe" "start apcctrl" "$SYSDIR\shell32.dll" ${START_ICON_INDEX}
+      CreateShortCut "$SMPROGRAMS\ApcCtrl\Stop apcctrl (run as adm).lnk"  "$SYSDIR\net.exe" "stop apcctrl"  "$SYSDIR\shell32.dll" ${STOP_ICON_INDEX}
     ${Else}
       ; Installed as a service, but not on NT
-      CreateShortCut "$SMPROGRAMS\ApcCtrl\Start apcctrl.lnk" "$INSTDIR\bin\apcctrl.exe" "/service" "$SYSDIR\shell32.dll" ${START_ICON_INDEX}
-      CreateShortCut "$SMPROGRAMS\ApcCtrl\Stop apcctrl.lnk"  "$INSTDIR\bin\apcctrl.exe" "/kill"    "$SYSDIR\shell32.dll" ${STOP_ICON_INDEX}
+      CreateShortCut "$SMPROGRAMS\ApcCtrl\Start apcctrl (run as adm).lnk" "$INSTDIR\bin\apcctrl.exe" "/service" "$SYSDIR\shell32.dll" ${START_ICON_INDEX}
+      CreateShortCut "$SMPROGRAMS\ApcCtrl\Stop apcctrl (run as adm).lnk"  "$INSTDIR\bin\apcctrl.exe" "/kill"    "$SYSDIR\shell32.dll" ${STOP_ICON_INDEX}
     ${EndIf}
   ${Else}
     ; Not installed as a service
-    CreateShortCut "$SMPROGRAMS\ApcCtrl\Start apcctrl.lnk" "$INSTDIR\bin\apcctrl.exe" ""       "$SYSDIR\shell32.dll" ${START_ICON_INDEX}
-    CreateShortCut "$SMPROGRAMS\ApcCtrl\Stop apcctrl.lnk"  "$INSTDIR\bin\apcctrl.exe" "/kill"  "$SYSDIR\shell32.dll" ${STOP_ICON_INDEX}
+    CreateShortCut "$SMPROGRAMS\ApcCtrl\Start apcctrl (run as adm).lnk" "$INSTDIR\bin\apcctrl.exe" ""       "$SYSDIR\shell32.dll" ${START_ICON_INDEX}
+    CreateShortCut "$SMPROGRAMS\ApcCtrl\Stop apcctrl (run as adm).lnk"  "$INSTDIR\bin\apcctrl.exe" "/kill"  "$SYSDIR\shell32.dll" ${STOP_ICON_INDEX}
   ${EndIf}
 
   ; Start apcctrl now, if so requested
@@ -460,7 +460,7 @@ Section "-Finish"
   WriteRegDWORD HKLM "${UNINSTREG}" "EstimatedSize" "$0"
 
   WriteUninstaller "$INSTDIR\Uninstall.exe"
-  CreateShortCut "$SMPROGRAMS\ApcCtrl\Uninstall apcctrl.lnk" "$INSTDIR\Uninstall.exe"
+  CreateShortCut "$SMPROGRAMS\ApcCtrl\Uninstall apcctrl (run as adm).lnk" "$INSTDIR\Uninstall.exe"
 SectionEnd
 
 ;
