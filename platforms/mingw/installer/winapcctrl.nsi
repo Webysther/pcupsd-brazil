@@ -194,7 +194,7 @@ Function InstallServiceExit
   ; Start apcctrl now, if so requested
   !insertmacro MUI_INSTALLOPTIONS_READ $R2 "InstallService.ini" "Field 4" "State"
   ${If} $R2 == 1
-    ExecShell "" "$SMPROGRAMS\ApcCtrl\Start apcctrl.lnk" "" SW_HIDE
+    ExecShell "" "$SMPROGRAMS\ApcCtrl\Start apcctrl (run as adm).lnk" "" SW_HIDE
   ${Endif}  
 FunctionEnd
 

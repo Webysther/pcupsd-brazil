@@ -17,6 +17,8 @@
     
     * Mudança na classe brazilbattery 
     
+    * Correção do instalador para Windows para iniciar o serviço durante a
+      instalação
 
 0.7.0 - 28 de junho de 2016
 
