@@ -19,8 +19,8 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 #ifndef _DEFINES_H
@@ -177,6 +177,9 @@ enum {
    CI_LowBattery,
    CI_Calibration,
    CI_AlarmTimer,
+   CI_OutputCurrent,
+   CI_LoadApparent,
+   CI_NomApparent,
 
    /* Only seen on the BackUPS Pro USB (so far) */
    CI_BUPBattCapBeforeStartup,  
@@ -372,9 +375,13 @@ enum {
 #define Dmsg(lvl, msg, args...)     d_msg(__FILE__, __LINE__, lvl, msg, ##args)
 void d_msg(const char *file, int line, int level, const char *fmt, ...);
 
+#define hex_dump(lvl, data, len)    h_dump(__FILE__, __LINE__, (lvl), (data), (len))
+void h_dump(const char *file, int line, int level, const void *data, unsigned int len);
+
 #else
 
-#define Dmsg(lvl, msg, args...)
+#define Dmsg(lvl, msg, args...)  do { } while(0)
+#define hex_dump(lvl, data, len) do { } while(0)
 
 #endif
 
@@ -446,6 +453,9 @@ typedef int sock_t;
 # define O_NDELAY 0
 #endif
 
+#ifndef O_CLOEXEC
+# define O_CLOEXEC 0
+#endif
 
 /* ETIME not on BSD, incl. Darwin */
 #ifndef ETIME

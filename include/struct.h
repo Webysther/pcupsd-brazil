@@ -19,8 +19,8 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 #ifndef _STRUCT_H
@@ -58,7 +58,6 @@ typedef enum {
    DUMB_UPS,            /* Dumb UPS driver      */
    APCSMART_UPS,        /* APC Smart UPS (any)  */
    USB_UPS,             /* USB UPS driver       */
-   SNMP_UPS,            /* SNMP UPS driver      */
    NETWORK_UPS,         /* NETWORK UPS driver   */
    TEST_UPS,            /* TEST UPS Driver      */
    BRAZIL_UPS,          /* BRAZIL UPS Driver      */
@@ -277,7 +276,8 @@ class UPSINFO {
    double BattChg;                 /* remaining UPS charge % */
    double LineMin;                 /* min line voltage seen */
    double LineMax;                 /* max line voltage seen */
-   double UPSLoad;                 /* battery load percentage */
+   double UPSLoad;                 /* output real power load percentage */
+   double LoadApparent;            /* output apparent power load percentage */
    double LineFreq;                /* line freq. */
    double LineVoltage;             /* Line Voltage */
    double OutputVoltage;           /* Output Voltage */
@@ -291,13 +291,13 @@ class UPSINFO {
    double TimeLeft;                /* Est. time UPS can run on batt. */
    double humidity;                /* Humidity */
    double ambtemp;                 /* Ambient temperature */
-   char eprom[500];                /* Eprom values */
 
    /* Items reported by smart UPS */
    /* Static items that normally do not change during UPS operation */
    int NomOutputVoltage;           /* Nominal voltage when on batteries */
    int NomInputVoltage;            /* Nominal input voltage */
-   int NomPower;                   /* Nominal power (watts) */
+   int NomPower;                   /* Nominal real power (watts) */
+   int NomApparentPower;           /* Nominal apparent power (VA) */
    double nombattv;                /* Nominal batt. voltage -- not actual */
    int extbatts;                   /* number of external batteries attached */
    int badbatts;                   /* number of bad batteries */
@@ -316,6 +316,7 @@ class UPSINFO {
    char upsmodel[MAXSTRING];       /* ups model number */
    char sensitivity[8];            /* sensitivity to line fluxuations */
    char beepstate[8];              /* when to beep on power failure. */
+   char eprom[500];                /* Eprom values */
 
    /* Items specified from config file */
    int annoy;

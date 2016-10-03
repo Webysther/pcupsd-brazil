@@ -8,6 +8,9 @@
 /* Define to 1 if you have the `abort' function. */
 #define HAVE_ABORT 1
 
+/* Define to 1 if you have the `accept4' function. */
+#define HAVE_ACCEPT4 1
+
 /* Define if building for AIX */
 /* #undef HAVE_AIX_OS */
 
@@ -115,7 +118,7 @@
 /* #undef HAVE_MINGW */
 
 /* Define if building MODBUS driver */
-#define HAVE_MODBUS_DRIVER 1
+/* #undef HAVE_MODBUS_DRIVER */
 
 /* Define if building MODBUS/USB driver */
 /* #undef HAVE_MODBUS_USB_DRIVER */
@@ -137,9 +140,6 @@
 
 /* Define if building net driver */
 #define HAVE_NET_DRIVER 1
-
-/* Define if you have libnetsnmp */
-/* #undef HAVE_NET_SNMP */
 
 /* Define if apcctrl NIS library is being built */
 #define HAVE_NISLIB /**/
@@ -182,9 +182,6 @@
 
 /* Define if building snmplite driver */
 #define HAVE_SNMPLITE_DRIVER 1
-
-/* Define if building snmp driver */
-/* #undef HAVE_SNMP_DRIVER */
 
 /* Define to 1 if you have the `snprintf' function. */
 #define HAVE_SNPRINTF 1
@@ -271,9 +268,6 @@
 /* Define to 1 if you don't have `tm_zone' but do have the external array
    `tzname'. */
 /* #undef HAVE_TZNAME */
-
-/* Define if you have libsnmp */
-/* #undef HAVE_UCD_SNMP */
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #define HAVE_UNISTD_H 1

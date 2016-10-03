@@ -18,8 +18,8 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 #ifndef _EXTERN_H
@@ -31,7 +31,7 @@ extern UPSINFO *core_ups;
 extern char argvalue[MAXSTRING];
 extern void (*error_out) (const char *file, int line, const char *fmt, va_list arg_ptr);
 extern void (*error_cleanup) (void);
-extern void error_out_wrapper(const char *file, int line, const char *fmt, ...);
+extern void error_out_wrapper(const char *file, int line, const char *fmt, ...) __attribute__((noreturn));
 
 extern UPSCOMMANDS ups_event[];
 extern UPSCMDMSG event_msg[];
@@ -148,7 +148,6 @@ extern void clean_threads(void);
 /* In apclog.c */
 extern void log_event(const UPSINFO *ups, int level, const char *fmt, ...);
 extern void logf(const char *fmt, ...);
-extern void hex_dump(int level, const void *data, unsigned int len);
 extern int format_date(time_t timestamp, char *dest, size_t destlen);
 
 /* In apcerror.c */
@@ -169,6 +168,10 @@ size_t strlcat(char *dst, const char *src, size_t size);
 #ifndef HAVE_NANOSLEEP
   int nanosleep(const struct timespec *req, struct timespec *rem);
 #endif
+
+/* In sockcloexec.c */
+sock_t socket_cloexec(int domain, int type, int protocol);
+sock_t accept_cloexec(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
 
 /*
  * Common interface to the various versions of gethostbyname_r().
