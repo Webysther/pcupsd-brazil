@@ -653,6 +653,7 @@ GAPCMON_LIBS
 GAPCMON_CFLAGS
 PKG_CONFIG
 NISIP
+LIBUSBHID
 LIBUSBH
 usbcfg
 MODBUS_DRIVER
@@ -660,13 +661,10 @@ MODBUS_USB_DRIVER
 PCNET_DRIVER
 BRAZIL_DRIVER
 TEST_DRIVER
-SNMP_DRIVER
 SNMPLITE_DRIVER
 NET_DRIVER
 USB_TYPE
 USB_DRIVER
-LIBUSBHIDINC
-LIBUSBHID
 DUMB_DRIVER
 APCSMART_DRIVER
 GDHEAD
@@ -788,7 +786,6 @@ with_generic_usb
 enable_usb
 enable_net
 enable_snmp
-enable_net_snmp
 enable_test
 enable_brazil
 enable_pcnet
@@ -1460,9 +1457,6 @@ Optional Features:
 
   --enable-snmp           Compile SNMP driver (default)
   --disable-snmp          No SNMP driver
-
-  --enable-net-snmp       Compile NET-SNMP UPS code (OBSOLETE)
-  --disable-net-snmp      No NET-SNMP UPS code (default)
 
   --enable-test           Compile TEST driver code
   --disable-test          No TEST driver (default)
@@ -2733,7 +2727,7 @@ if test "$cross_compiling" = "no" ; then
    done
 fi
 
-if test "$host_os" == "mingw32" ; then
+if test "$host_os" = "mingw32" ; then
    if test -z "$CROSSTOOLS" ; then
       CROSSTOOLS=${topdir}/../cross-tools
    fi
@@ -5179,7 +5173,6 @@ if test x$mandir = x'${prefix}/man' ; then
 fi
 
 
-
 for ac_func in abort calloc getpid \
    rewind signal strerror strncmp \
    strncpy vfprintf
@@ -5198,7 +5191,7 @@ fi
 done
 
 
-for ac_func in snprintf vsnprintf strlcpy strlcat
+for ac_func in snprintf vsnprintf strlcpy strlcat accept4
 do :
   as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
 ac_fn_c_check_func "$LINENO" "$ac_func" "$as_ac_var"
@@ -7426,7 +7419,6 @@ fi
 
 
 
-
 case $host in
    *-*-linux*)
       HALPOLICYDIR="/usr/share/hal/fdi/policy/20thirdparty"
@@ -7784,14 +7776,12 @@ if test "${enable_usb+set}" = set; then :
          usbhost=$host
       fi
 
-            case $usbhost in
-         *-*-freebsd*)
-            tmp=`uname -r`
-            if test ${tmp%%.*} -ge 8 ; then
-               usbhost=forcegeneric
-            fi
-            ;;
-      esac
+
+$as_echo "#define HAVE_USB_DRIVER /**/" >>confdefs.h
+
+      USB_DRIVER="usb"
+
+      APCDRVLIBS="$APCDRVLIBS \$(topdir)/src/drivers/usb/libusbdrv.a"
 
       case $usbhost in
          *-*-linux*)
@@ -7799,29 +7789,12 @@ if test "${enable_usb+set}" = set; then :
             { $as_echo "$as_me:${as_lineno-$LINENO}: result: Using Linux USB driver." >&5
 $as_echo "Using Linux USB driver." >&6; }
             ;;
-         *-*-freebsd* | *-*-openbsd* | *-*-netbsd*)
-            LIBUSBHIDINC="-I\$(topdir)/src/libusbhid"
-            LIBUSBHID=libusbhid
-            APCDRVLIBS="$APCDRVLIBS \$(topdir)/src/libusbhid/libusbhid.a"
-
-
-            USB_TYPE="bsd"
-            { $as_echo "$as_me:${as_lineno-$LINENO}: result: Using BSD USB driver." >&5
-$as_echo "Using BSD USB driver." >&6; }
-            ;;
          *)
             needlibusb=true
             USB_TYPE="generic"
             ;;
       esac
 
-
-$as_echo "#define HAVE_USB_DRIVER /**/" >>confdefs.h
-
-      USB_DRIVER="usb"
-
-
-      APCDRVLIBS="$APCDRVLIBS \$(topdir)/src/drivers/usb/libusbdrv.a"
 
       DISPLAY_USB_DRIVER=$USB_TYPE-$USB_DRIVER
      fi
@@ -7865,166 +7838,6 @@ else
      DISPLAY_SNMP_DRIVER="snmp"
 
      APCDRVLIBS="$APCDRVLIBS \$(topdir)/src/drivers/snmplite/libsnmplitedrv.a"
-fi
-
-
-# Check whether --enable-net-snmp was given.
-if test "${enable_net_snmp+set}" = set; then :
-  enableval=$enable_net_snmp;  if test "$enableval" = "yes" ; then
-                { $as_echo "$as_me:${as_lineno-$LINENO}: checking for EVP_DigestInit in -lcrypto" >&5
-$as_echo_n "checking for EVP_DigestInit in -lcrypto... " >&6; }
-if ${ac_cv_lib_crypto_EVP_DigestInit+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lcrypto  $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char EVP_DigestInit ();
-int
-main ()
-{
-return EVP_DigestInit ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-  ac_cv_lib_crypto_EVP_DigestInit=yes
-else
-  ac_cv_lib_crypto_EVP_DigestInit=no
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_crypto_EVP_DigestInit" >&5
-$as_echo "$ac_cv_lib_crypto_EVP_DigestInit" >&6; }
-if test "x$ac_cv_lib_crypto_EVP_DigestInit" = xyes; then :
-  echo '   including crypto library for snmp.'
-            DRVLIBS="$DRVLIBS -lcrypto"
-fi
-
-
-        SNMP_LIB_FOUND="no"
-
-                CPPFLAGS="${CPPFLAGS} -I/usr/local/include"
-        LDFLAGS="${LDFLAGS} -L/usr/local/lib"
-
-                if test "$SNMP_LIB_FOUND" = "no" ; then
-           { $as_echo "$as_me:${as_lineno-$LINENO}: checking for snmp_open in -lnetsnmp" >&5
-$as_echo_n "checking for snmp_open in -lnetsnmp... " >&6; }
-if ${ac_cv_lib_netsnmp_snmp_open+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lnetsnmp $DRVLIBS $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char snmp_open ();
-int
-main ()
-{
-return snmp_open ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-  ac_cv_lib_netsnmp_snmp_open=yes
-else
-  ac_cv_lib_netsnmp_snmp_open=no
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_netsnmp_snmp_open" >&5
-$as_echo "$ac_cv_lib_netsnmp_snmp_open" >&6; }
-if test "x$ac_cv_lib_netsnmp_snmp_open" = xyes; then :
-  DRVLIBS="$DRVLIBS -lnetsnmp"
-
-$as_echo "#define HAVE_NET_SNMP /**/" >>confdefs.h
-
-               SNMP_LIB_FOUND="yes"
-fi
-
-        fi
-
-                if test "$SNMP_LIB_FOUND" = "no" ; then
-           { $as_echo "$as_me:${as_lineno-$LINENO}: checking for snmp_open in -lsnmp" >&5
-$as_echo_n "checking for snmp_open in -lsnmp... " >&6; }
-if ${ac_cv_lib_snmp_snmp_open+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lsnmp $DRVLIBS $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char snmp_open ();
-int
-main ()
-{
-return snmp_open ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-  ac_cv_lib_snmp_snmp_open=yes
-else
-  ac_cv_lib_snmp_snmp_open=no
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_snmp_snmp_open" >&5
-$as_echo "$ac_cv_lib_snmp_snmp_open" >&6; }
-if test "x$ac_cv_lib_snmp_snmp_open" = xyes; then :
-  DRVLIBS="$DRVLIBS -lsnmp"
-
-$as_echo "#define HAVE_UCD_SNMP /**/" >>confdefs.h
-
-               SNMP_LIB_FOUND="yes"
-fi
-
-        fi
-
-        if test "$SNMP_LIB_FOUND" = "no" ; then
-           as_fn_error $? "Cannot find SNMP libraries." "$LINENO" 5
-        fi
-
-
-$as_echo "#define HAVE_SNMP_DRIVER /**/" >>confdefs.h
-
-        DISPLAY_NETSNMP_DRIVER="net-snmp"
-
-        SNMP_DRIVER="snmp"
-
-        APCDRVLIBS="$APCDRVLIBS \$(topdir)/src/drivers/snmp/libsnmpdrv.a"
-     fi
 fi
 
 
@@ -8103,12 +7916,6 @@ $as_echo "#define HAVE_MODBUS_DRIVER /**/" >>confdefs.h
 
         APCDRVLIBS="$APCDRVLIBS \$(topdir)/src/drivers/modbus/libmodbusdrv.a"
      fi
-else
-   $as_echo "#define HAVE_MODBUS_DRIVER 1" >>confdefs.h
-
-     MODBUS_DRIVER="modbus"
-
-     APCDRVLIBS="$APCDRVLIBS \$(topdir)/src/drivers/modbus/libmodbusdrv.a"
 fi
 
 
@@ -8768,13 +8575,17 @@ $as_echo "yes -- will attempt workaround" >&6; }
       esac
       ;;
    esac
+fi
 
-   # See if GCC supports -fno-exceptions...
-   { $as_echo "$as_me:${as_lineno-$LINENO}: checking if GCC supports -fno-exceptions" >&5
-$as_echo_n "checking if GCC supports -fno-exceptions... " >&6; }
-   OLDCXXFLAGS="$CXXFLAGS"
-   CXXFLAGS="$CXXFLAGS -fno-exceptions"
-   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C compiler accepts -fno-exceptions" >&5
+$as_echo_n "checking whether C compiler accepts -fno-exceptions... " >&6; }
+if ${ax_cv_check_cflags___fno_exceptions+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+  ax_check_save_flags=$CFLAGS
+  CFLAGS="$CFLAGS  -fno-exceptions"
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 int
@@ -8786,21 +8597,30 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
+  ax_cv_check_cflags___fno_exceptions=yes
 else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-      CXXFLAGS="$OLDCXXFLAGS"
+  ax_cv_check_cflags___fno_exceptions=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+  CFLAGS=$ax_check_save_flags
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_check_cflags___fno_exceptions" >&5
+$as_echo "$ax_cv_check_cflags___fno_exceptions" >&6; }
+if test x"$ax_cv_check_cflags___fno_exceptions" = xyes; then :
+  CXXFLAGS="$CXXFLAGS -fno-exceptions"
+else
+  :
+fi
 
-   # See if GCC supports -fno-rtti...
-   { $as_echo "$as_me:${as_lineno-$LINENO}: checking if GCC supports -fno-rtti" >&5
-$as_echo_n "checking if GCC supports -fno-rtti... " >&6; }
-   OLDCXXFLAGS="$CXXFLAGS"
-   CXXFLAGS="$CXXFLAGS -fno-rtti"
-   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C compiler accepts -fno-rtti" >&5
+$as_echo_n "checking whether C compiler accepts -fno-rtti... " >&6; }
+if ${ax_cv_check_cflags___fno_rtti+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+  ax_check_save_flags=$CFLAGS
+  CFLAGS="$CFLAGS  -fno-rtti"
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 int
@@ -8812,19 +8632,92 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
+  ax_cv_check_cflags___fno_rtti=yes
 else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-      CXXFLAGS="$OLDCXXFLAGS"
+  ax_cv_check_cflags___fno_rtti=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-
-   # Use -Wall on gcc only
-   CFLAGS="$CFLAGS -Wall"
-   CXXFLAGS="$CXXFLAGS -Wall"
+  CFLAGS=$ax_check_save_flags
 fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_check_cflags___fno_rtti" >&5
+$as_echo "$ax_cv_check_cflags___fno_rtti" >&6; }
+if test x"$ax_cv_check_cflags___fno_rtti" = xyes; then :
+  CXXFLAGS="$CXXFLAGS -fno-rtti"
+else
+  :
+fi
+
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C compiler accepts -Wall" >&5
+$as_echo_n "checking whether C compiler accepts -Wall... " >&6; }
+if ${ax_cv_check_cflags___Wall+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+  ax_check_save_flags=$CFLAGS
+  CFLAGS="$CFLAGS  -Wall"
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  ax_cv_check_cflags___Wall=yes
+else
+  ax_cv_check_cflags___Wall=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+  CFLAGS=$ax_check_save_flags
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_check_cflags___Wall" >&5
+$as_echo "$ax_cv_check_cflags___Wall" >&6; }
+if test x"$ax_cv_check_cflags___Wall" = xyes; then :
+  CXXFLAGS="$CXXFLAGS -Wall"
+else
+  :
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C compiler accepts -Wno-unused-result" >&5
+$as_echo_n "checking whether C compiler accepts -Wno-unused-result... " >&6; }
+if ${ax_cv_check_cflags___Wno_unused_result+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+  ax_check_save_flags=$CFLAGS
+  CFLAGS="$CFLAGS  -Wno-unused-result"
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  ax_cv_check_cflags___Wno_unused_result=yes
+else
+  ax_cv_check_cflags___Wno_unused_result=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+  CFLAGS=$ax_check_save_flags
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_check_cflags___Wno_unused_result" >&5
+$as_echo "$ax_cv_check_cflags___Wno_unused_result" >&6; }
+if test x"$ax_cv_check_cflags___Wno_unused_result" = xyes; then :
+  CXXFLAGS="$CXXFLAGS -Wno-unused-result"
+else
+  :
+fi
+
 
 
 
@@ -8909,7 +8802,7 @@ fi
 if test "x$DISTNAME" != "x"
 then
    echo "distname set to $DISTNAME"
-elif test "$host_os" == "mingw32" ; then
+elif test "$host_os" = "mingw32" ; then
    DISTNAME=mingw
 elif test $HAVE_UNAME=yes -a x`uname -s` = xOSF1
 then
@@ -9184,7 +9077,10 @@ darwin)
    PIDDIR=/var/run
    LOCKDIR=/var/tmp
    DFILES="\
-      platforms/darwin/apccontrol"
+      platforms/darwin/apccontrol \
+      platforms/darwin/apcctrl-start \
+      platforms/darwin/apcctrl-uninstall \
+      platforms/darwin/org.apcctrl.apcctrl.plist"
    ;;
 qnx)
    PTHREAD_LFLAGS=""
@@ -10697,7 +10593,7 @@ Configuration on `date`:
   UPSTYPE                     ${UPSTYPE}
   UPSCABLE                    ${UPSCABLE}
 
-  drivers (no-* are disabled): ${APCSMART_DRIVER:-no-apcsmart} ${DUMB_DRIVER:-no-dumb} ${NET_DRIVER:-no-net} ${DISPLAY_USB_DRIVER:-no-usb} ${DISPLAY_SNMP_DRIVER:-no-snmp} ${DISPLAY_NETSNMP_DRIVER:-no-net-snmp} ${PCNET_DRIVER:-no-pcnet} ${MODBUS_DRIVER:-no-modbus} ${MODBUS_USB_DRIVER:-no-modbus-usb} ${TEST_DRIVER:-no-test} ${BRAZIL_DRIVER:-no-brazil}
+  drivers (no-* are disabled): ${APCSMART_DRIVER:-no-apcsmart} ${DUMB_DRIVER:-no-dumb} ${NET_DRIVER:-no-net} ${DISPLAY_USB_DRIVER:-no-usb} ${PCNET_DRIVER:-no-pcnet} ${MODBUS_DRIVER:-no-modbus} ${MODBUS_USB_DRIVER:-no-modbus-usb} ${TEST_DRIVER:-no-test} ${BRAZIL_DRIVER:-no-brazil}
 
   enable-nis:                 ${NISSRV_ENABLED}
   with-nisip:                 ${NISIP}
