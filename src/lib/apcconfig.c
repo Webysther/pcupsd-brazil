@@ -21,8 +21,8 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 #include "apc.h"
@@ -109,7 +109,6 @@ static const GENINFO types[] = {
    { "test",     "TEST UPS Driver",     TEST_UPS },
    { "brazil",   "BRAZIL UPS Driver",     BRAZIL_UPS },
    { "pcnet",    "PCNET UPS Driver",    PCNET_UPS },
-   { "netsnmp",  "NET-SNMP UPS Driver", SNMP_UPS },
    { "modbus",   "MODBUS UPS Driver",   MODBUS_UPS },
    { NULL,       "*invalid-ups-type*",  NO_UPS },
 };
@@ -610,8 +609,10 @@ void check_for_config(UPSINFO *ups, char *cfgfile)
    char line[MAXSTRING];
    int errors = 0;
    int erpos = 0;
+   int fd;
 
-   if ((apcconf = fopen(cfgfile, "r")) == NULL) {
+   if ((fd = open(cfgfile, O_RDONLY|O_CLOEXEC)) == -1 ||
+       (apcconf = fdopen(fd, "r")) == NULL) {
       Error_abort("Error opening configuration file (%s): %s\n",
          cfgfile, strerror(errno));
    }
@@ -701,7 +702,6 @@ jump_into_the_loop:
       match_range(ups, WHERE(cable), cables, "usb");
       break;
    case SNMPLITE_UPS:
-   case SNMP_UPS: 
    case PCNET_UPS:
    case NETWORK_UPS:
       match_range(ups, WHERE(cable), cables, "ether");

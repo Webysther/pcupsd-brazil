@@ -1,7 +1,7 @@
 topdir:=../..
 
 SUBDIRS = $(SMARTDRV) $(DUMBDRV) $(NETDRV) $(PCNETDRV) $(USBDRV) \
-          $(SNMPDRV) $(SNMPLTDRV) $(TESTDRV) $(MODBUSDRV) $(BRAZILDRV)
+          $(SNMPLTDRV) $(TESTDRV) $(MODBUSDRV) $(BRAZILDRV)
 
 include $(topdir)/autoconf/targets.mak
 

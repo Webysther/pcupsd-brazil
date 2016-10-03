@@ -19,8 +19,8 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 #include "apc.h"
@@ -98,7 +98,9 @@ void logf(const char *fmt, ...)
       if (!trace_fd) {
          char fn[200];
          asnprintf(fn, sizeof(fn), "./apcctrl.trace");
-         trace_fd = fopen(fn, "a+");
+         int fd = open(fn, O_RDWR|O_APPEND|O_CREAT|O_CLOEXEC, 0666);
+         if (fd != -1)
+            trace_fd = fdopen(fd, "a+");
       }
       if (trace_fd) {
          vfprintf(trace_fd, fmt, arg_ptr);
@@ -158,7 +160,7 @@ void d_msg(const char *file, int line, int level, const char *fmt, ...)
 #endif
 }
 
-void hex_dump(int level, const void *data, unsigned int len)
+void h_dump(const char *file, int ln, int level, const void *data, unsigned int len)
 {
    unsigned int pos = 0;
    const unsigned char *dat = (const unsigned char *)data;
@@ -176,7 +178,7 @@ void hex_dump(int level, const void *data, unsigned int len)
    if (debug_level < level)
       return;
 
-   Dmsg(level, "Dumping %d bytes @ 0x%08x\n", len, data);
+   d_msg(file, ln, level, "Dumping %d bytes @ 0x%08x\n", len, data);
    while (pos < len)
    {
       int num = MIN(16, len-pos);
@@ -209,7 +211,7 @@ void hex_dump(int level, const void *data, unsigned int len)
          strlcat(line, buf, sizeof(line));
       }
 
-      Dmsg(level, "%s\n", line);
+      d_msg(file, ln, level, "%s\n", line);
       pos += num;
    }
 }

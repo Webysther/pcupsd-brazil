@@ -11,8 +11,8 @@ install-darwin:
 	$(call MKDIR,/Library/LaunchDaemons)
 	$(call INSTDATA,644,org.apcctrl.apcctrl.plist,/Library/LaunchDaemons)
 	-$(V)chown root:wheel $(DESTDIR)/Library/LaunchDaemons/org.apcctrl.apcctrl.plist
-	$(call INSTDATA,755,apcctrl-uninstall,/sbin)
-	$(call INSTDATA,755,apcctrl-start,/sbin)
+	$(call INSTDATA,755,apcctrl-uninstall,$(sbindir))
+	$(call INSTDATA,755,apcctrl-start,$(sbindir))
 	@echo "================================================="
 	@echo " "
 	@echo "apcctrl script installation for MacOS X (Darwin) complete." 
@@ -38,13 +38,16 @@ install-darwin:
 	@echo "================================================="
 
 install-usb:
-	$(call MKDIR,/System/Library/Extensions/apcctrlDummy.kext/Contents)
-	-$(V)chown root:wheel $(DESTDIR)/System/Library/Extensions/apcctrlDummy.kext
-	-$(V)chown root:wheel $(DESTDIR)/System/Library/Extensions/apcctrlDummy.kext/Contents
+	$(call MKDIR,/System/Library/Extensions/apcctrlDummy.kext/Contents/_CodeSignature)
+	-$(V)$(call INSTDATA,644,apcctrlDummy.kext/Contents/Info.plist,/System/Library/Extensions/apcctrlDummy.kext/Contents/Info.plist)
+	-$(V)$(call INSTDATA,644,apcctrlDummy.kext/Contents/_CodeSignature/CodeDirectory,/System/Library/Extensions/apcctrlDummy.kext/Contents/_CodeSignature/CodeDirectory)
+	-$(V)$(call INSTDATA,644,apcctrlDummy.kext/Contents/_CodeSignature/CodeRequirements,/System/Library/Extensions/apcctrlDummy.kext/Contents/_CodeSignature/CodeRequirements)
+	-$(V)$(call INSTDATA,644,apcctrlDummy.kext/Contents/_CodeSignature/CodeResources,/System/Library/Extensions/apcctrlDummy.kext/Contents/_CodeSignature/CodeResources)
+	-$(V)$(call INSTDATA,644,apcctrlDummy.kext/Contents/_CodeSignature/CodeSignature,/System/Library/Extensions/apcctrlDummy.kext/Contents/_CodeSignature/CodeSignature)
 	-$(V)chmod 755 $(DESTDIR)/System/Library/Extensions/apcctrlDummy.kext
 	-$(V)chmod 755 $(DESTDIR)/System/Library/Extensions/apcctrlDummy.kext/Contents
-	$(call INSTDATA,644,Info.plist,/System/Library/Extensions/apcctrlDummy.kext/Contents)
-	-$(V)chown root:wheel $(DESTDIR)/System/Library/Extensions/apcctrlDummy.kext/Contents/Info.plist
+	-$(V)chmod 755 $(DESTDIR)/System/Library/Extensions/apcctrlDummy.kext/Contents/_CodeSignature
+	-$(V)chown -R root:wheel $(DESTDIR)/System/Library/Extensions/apcctrlDummy.kext
 	$(call UNINST,/System/Library/Extensions.mkext)
 	$(call UNINST,/System/Library/Extensions.kextcache)
 	@echo "================================================="
@@ -60,8 +63,8 @@ uninstall-darwin:
 	-$(call UNINST,/System/Library/Extensions/apcctrlDummy.kext)
 	-$(call UNINST,/System/Library/Extensions.mkext)
 	-$(call UNINST,/System/Library/Extensions.kextcache)
-	-$(call UNINST,/sbin/apcctrl-uninstall)
-	-$(call UNINST,/sbin/apcctrl-start)
+	-$(call UNINST,$(sbindir)/apcctrl-uninstall)
+	-$(call UNINST,$(sbindir)/apcctrl-start)
 	-$(call UNINST,/Library/LaunchDaemons/org.apcctrl.apcctrl.plist)
 	@echo "================================================="
 	@echo " "
@@ -87,7 +90,7 @@ PKGKEY := $(shell \
       | grep "common name" | cut -d\" -f2)
 
 # Loose executables to sign
-EXES := sbin/apcctrl sbin/apcaccess sbin/apctest sbin/smtp
+EXES := $(sbindir)/apcctrl $(sbindir)/apcaccess $(sbindir)/apctest $(sbindir)/smtp
 
 # Make apcctrl installation package
 apcctrl.pkg:

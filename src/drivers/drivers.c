@@ -20,8 +20,8 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 #include "apc.h"
@@ -40,10 +40,6 @@
 
 #ifdef HAVE_USB_DRIVER
 # include "usb/usb.h"
-#endif
-
-#ifdef HAVE_SNMP_DRIVER
-# include "snmp/snmp.h"
 #endif
 
 #ifdef HAVE_SNMPLITE_DRIVER
@@ -82,10 +78,6 @@ static const UPSDRIVER drivers[] = {
 #ifdef HAVE_USB_DRIVER
    { "usb",       UsbUpsDriver::Factory },
 #endif   /* HAVE_USB_DRIVER */
-
-#ifdef HAVE_SNMP_DRIVER
-   { "snmp",      SnmpUpsDriver::Factory },
-#endif   /* HAVE_SNMP_DRIVER */
 
 #ifdef HAVE_SNMPLITE_DRIVER
    { "snmplite",  SnmpLiteUpsDriver::Factory },
@@ -171,10 +163,6 @@ UpsDriver *attach_driver(UPSINFO *ups)
 
    case USB_UPS:
       driver_name = "usb";
-      break;
-
-   case SNMP_UPS:
-      driver_name = "snmp";
       break;
 
    case SNMPLITE_UPS:

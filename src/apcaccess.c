@@ -19,8 +19,8 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 #include "apc.h"
@@ -49,7 +49,7 @@ static int do_pthreads_status(const char *host, int port, const char *par, int f
    char recvline[MAXSTRING + 1];
    char *line;
 
-   if ((sockfd = net_open(host, NULL, port)) == INVALID_SOCKET) {
+   if ((sockfd = net_open(host, NULL, port)) < 0) {
       fprintf(stderr, "Error contacting apcctrl @ %s:%d: %s\n",
          host, port, strerror(-sockfd));
       return 1;
@@ -141,6 +141,7 @@ int main(int argc, char **argv)
    int port = NISPORT;
    int flags = 0;
    FILE *cfg;
+   UPSINFO ups;
 
    // Process standard options
    int ch;
@@ -177,7 +178,6 @@ int main(int argc, char **argv)
    if ((cfg = fopen(cfgfile, "r")))
    {
       fclose(cfg);
-      UPSINFO ups;
       memset(&ups, 0, sizeof(UPSINFO));
       init_ups_struct(&ups);
       check_for_config(&ups, cfgfile);

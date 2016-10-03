@@ -18,8 +18,8 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 #include "apc.h"
@@ -208,7 +208,7 @@ int main(int argc, char *argv[])
 
    /* Create temp events file if we are not doing a hibernate or shutdown */
    if (!hibernate_ups && !shutdown_ups && ups->eventfile[0] != 0) {
-      ups->event_fd = open(ups->eventfile, O_RDWR | O_CREAT | O_APPEND, 0644);
+      ups->event_fd = open(ups->eventfile, O_RDWR | O_CREAT | O_APPEND | O_CLOEXEC, 0644);
       if (ups->event_fd < 0) {
          log_event(ups, LOG_WARNING, "Could not open events file %s: %s\n",
             ups->eventfile, strerror(errno));

@@ -21,12 +21,11 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 #include "apc.h"
-
 
 /* 
  * For Windows, we do NOT create a lock file. Even if we did
@@ -63,7 +62,7 @@ static int check_stale_lockfile(UPSINFO *ups)
    }
 
    errno = 0;
-   if ((ups->lockfile = open(ups->lockpath, O_RDONLY)) < 0) {
+   if ((ups->lockfile = open(ups->lockpath, O_RDONLY|O_CLOEXEC)) < 0) {
       /*
        * Cannot open the file (may be it doesn't exist and that's okay
        * for us so return success).
@@ -188,7 +187,7 @@ int create_lockfile(UPSINFO *ups)
     * Open it for creation and don't accept any kind of error.
     */
    errno = 0;
-   if ((ups->lockfile = open(ups->lockpath, O_CREAT | O_EXCL | O_RDWR, 0644)) < 0) {
+   if ((ups->lockfile = open(ups->lockpath, O_CREAT | O_EXCL | O_RDWR | O_CLOEXEC, 0644)) < 0) {
       /*
        * Okay there is some problem with the lock path or
        * something like that.

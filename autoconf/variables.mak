@@ -67,14 +67,14 @@ EXE =
 
 # Libraries
 APCLIBS = $(topdir)/src/lib/libapc.a $(if $(WIN32),$(topdir)/src/win32/compat/libwin32compat.a)
-APCDRVLIBS =  $(topdir)/src/drivers/libdrivers.a $(topdir)/src/drivers/apcsmart/libapcsmartdrv.a $(topdir)/src/drivers/dumb/libdumbdrv.a $(topdir)/src/drivers/net/libnetdrv.a $(topdir)/src/drivers/snmplite/libsnmplitedrv.a $(topdir)/src/drivers/brazil/libbrazildrv.a $(topdir)/src/drivers/pcnet/libpcnetdrv.a $(topdir)/src/drivers/modbus/libmodbusdrv.a
+APCDRVLIBS =  $(topdir)/src/drivers/libdrivers.a $(topdir)/src/drivers/apcsmart/libapcsmartdrv.a $(topdir)/src/drivers/dumb/libdumbdrv.a $(topdir)/src/drivers/net/libnetdrv.a $(topdir)/src/drivers/snmplite/libsnmplitedrv.a $(topdir)/src/drivers/brazil/libbrazildrv.a $(topdir)/src/drivers/pcnet/libpcnetdrv.a
 DRVLIBS = -lpthread 
 X_LIBS = 
 X_EXTRA_LIBS = 
 
 CPPFLAGS =  -I/usr/local/include -I$(topdir)/include $(EXTRAINCS)
-CFLAGS = $(CPPFLAGS) -g -O2 -Wall 
-CXXFLAGS = $(CPPFLAGS) -g -O2 -fno-exceptions -fno-rtti -Wall 
+CFLAGS = $(CPPFLAGS) -g -O2 
+CXXFLAGS = $(CPPFLAGS) -g -O2 -fno-exceptions -fno-rtti -Wall -Wno-unused-result 
 OBJCFLAGS = $(CPPFLAGS) $(CFLAGS)
 LDFLAGS =  -L/usr/local/lib64 -L/usr/local/lib
 LIBS =  -lm -lsupc++
@@ -93,9 +93,8 @@ DUMBDRV    := dumb
 USBDRV     := 
 NETDRV     := net
 PCNETDRV   := pcnet
-MODBUSDRV  := modbus
+MODBUSDRV  := 
 MODBUSUSB  := 
-SNMPDRV    := 
 SNMPLTDRV  := snmplite
 TESTDRV    := 
 BRAZILDRV  := brazil

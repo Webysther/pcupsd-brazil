@@ -20,8 +20,8 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 #include "apc.h"
@@ -181,7 +181,7 @@ static void logonfail(UPSINFO *ups, int ok)
    unlink(ups->nologinpath);
 
    if (ok == 0 &&
-       ((lgnfd = open(ups->nologinpath, O_CREAT | O_WRONLY, 0644)) >= 0)) {
+       ((lgnfd = open(ups->nologinpath, O_CREAT | O_WRONLY | O_CLOEXEC, 0644)) >= 0)) {
       write(lgnfd, POWERFAIL, strlen(POWERFAIL));
       close(lgnfd);
    }

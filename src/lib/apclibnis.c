@@ -2,18 +2,11 @@
  * apclibnis.c
  *
  * Network utility routines.
- *
- * Part of this code is derived from the Prentice Hall book
- * "Unix Network Programming" by W. Richard Stevens
- *
- * Developers, please note: do not include apcctrl headers
- * or other apcctrl internal information in this file
- * as it is used by independent client programs such as the cgi
- * programs.
  */
 
 /*
  * Copyright (C) 1999-2006 Kern Sibbald
+ * Copyright (C) 2007-2015 Adam Kropelin
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of version 2 of the GNU General
@@ -26,8 +19,8 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 #include "apc.h"
@@ -51,6 +44,7 @@ int dummy = WSA_Init();
 #define h_errno WSAGetLastError()
 
 #endif // HAVE_MINGW
+
 
 /*
  * Read nbytes from the network.
@@ -112,28 +106,6 @@ static int write_nbytes(sock_t fd, const char *ptr, int nbytes)
 
    nleft = nbytes;
    while (nleft > 0) {
-#if defined HAVE_OPENBSD_OS || defined HAVE_FREEBSD_OS
-      /*       
-       * Work around a bug in OpenBSD & FreeBSD userspace pthreads
-       * implementations.
-       *
-       * The pthreads implementation under the hood sets O_NONBLOCK
-       * implicitly on all fds. This setting is not visible to the user
-       * application but is relied upon by the pthreads library to prevent
-       * blocking syscalls in one thread from halting all threads in the
-       * process. When a process exit()s or exec()s, the implicit
-       * O_NONBLOCK flags are removed from all fds, EVEN THOSE IT INHERITED.
-       * If another process is still using the inherited fds, there will
-       * soon be trouble.
-       *
-       * apcctrl is bitten by this issue after fork()ing a child process to
-       * run apccontrol.
-       *
-       * This seemingly-pointless fcntl() call causes the pthreads
-       * library to reapply the O_NONBLOCK flag appropriately.
-       */
-      fcntl(fd, F_SETFL, fcntl(fd, F_GETFL));
-#endif
       nwritten = send(fd, ptr, nleft, 0);
 
       switch (nwritten) {
@@ -193,8 +165,8 @@ int net_recv(sock_t sockfd, char *buff, int maxlen)
  * Send a message over the network. The send consists of
  * two network packets. The first is sends a short containing
  * the length of the data packet which follows.
- * Returns number of bytes sent
- * Returns -1 on error
+ * Returns number of bytes sent, 0 for EOF
+ * Returns -errno on error
  */
 int net_send(sock_t sockfd, const char *buff, int len)
 {
@@ -221,7 +193,7 @@ int net_send(sock_t sockfd, const char *buff, int len)
 
 /*     
  * Open a TCP connection to the UPS network server
- * Returns -1 on error
+ * Returns -errno on error
  * Returns socket file descriptor otherwise
  */
 sock_t net_open(const char *host, char *service, int port)
@@ -260,14 +232,16 @@ sock_t net_open(const char *host, char *service, int port)
       if (!hp)
       {
          free(tmphstbuf);
-         return -h_errno;
+         Dmsg(100, "%s: gethostname fails: %d\n", __func__, h_errno);
+         return -ENXIO;
       }
 
       if (hp->h_length != sizeof(tcp_serv_addr.sin_addr.s_addr) || 
           hp->h_addrtype != AF_INET)
       {
          free(tmphstbuf);
-         return -EINVAL;
+         Dmsg(100, "%s: Bad address returned from gethostbyname\n", __func__);
+         return -EAFNOSUPPORT;
       }
 
       memcpy(&tcp_serv_addr.sin_addr.s_addr, hp->h_addr, 
@@ -276,29 +250,30 @@ sock_t net_open(const char *host, char *service, int port)
    }
 
    /* Open a TCP socket */
-   if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET)
-      return -errno;
+   if ((sockfd = socket_cloexec(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET)
+   {
+      rc = -errno;
+      Dmsg(100, "%s: socket fails: %s\n", __func__, strerror(-rc));
+      return rc;
+   }
 
    /* connect to server */
-#if defined HAVE_OPENBSD_OS || defined HAVE_FREEBSD_OS
-   /* 
-    * Work around a bug in OpenBSD & FreeBSD userspace pthreads
-    * implementations. Rationale is the same as described above.
-    */
-   fcntl(sockfd, F_SETFL, fcntl(sockfd, F_GETFL));
-#endif
 
    /* Set socket to non-blocking mode */
    if (ioctl(sockfd, FIONBIO, &nonblock) != 0) {
+      rc = -errno;
       close(sockfd);
-      return -errno;
+      Dmsg(100, "%s: ioctl(FIONBIO,nonblock) fails: %s\n", __func__, strerror(-rc));
+      return rc;
    }
 
    /* Initiate connection attempt */
    rc = connect(sockfd, (struct sockaddr *)&tcp_serv_addr, sizeof(tcp_serv_addr));
    if (rc == -1 && errno != EINPROGRESS) {
+      rc = -errno;
       close(sockfd);
-      return -errno;
+      Dmsg(100, "%s: connect fails: %s\n", __func__, strerror(-rc));
+      return rc;
    }
 
    /* If connection is in progress, wait for it to complete */
@@ -321,10 +296,13 @@ sock_t net_open(const char *host, char *service, int port)
          case -1: /* select error */
             if (errno == EINTR || errno == EAGAIN)
                continue;
+            err = -errno;
             close(sockfd);
-            return -errno;
+            Dmsg(100, "%s: select fails: %s\n", __func__, strerror(-err));
+            return err;
          case 0: /* timeout */
             close(sockfd);
+            Dmsg(100, "%s: select timeout\n", __func__);
             return -ETIMEDOUT;
          }
       }
@@ -332,23 +310,29 @@ sock_t net_open(const char *host, char *service, int port)
 
       /* Connection completed? Check error status. */
       if (getsockopt(sockfd, SOL_SOCKET, SO_ERROR, &err, &errlen) == -1) {
+         rc = -errno;
          close(sockfd);
-         return -errno;
+         Dmsg(100, "%s: getsockopt fails: %s\n", __func__, strerror(-rc));
+         return rc;
       }
       if (errlen != sizeof(err)) {
          close(sockfd);
+         Dmsg(100, "%s: getsockopt bad length\n", __func__);
          return -EINVAL;
       }
       if (err) {
          close(sockfd);
+         Dmsg(100, "%s: connection completion fails: %s\n", __func__, strerror(err));
          return -err;
       }
    }
 
    /* Connection completed successfully. Set socket back to blocking mode. */
    if (ioctl(sockfd, FIONBIO, &block) != 0) {
+      rc = -errno;
       close(sockfd);
-      return -errno;
+      Dmsg(100, "%s: ioctl(FIONBIO,block) fails: %s\n", __func__, strerror(-rc));
+      return rc;
    }
 
    return sockfd;
@@ -375,28 +359,8 @@ sock_t net_accept(sock_t fd, struct sockaddr_in *cli_addr)
 #endif
    sock_t newfd;
 
-#if defined HAVE_OPENBSD_OS || defined HAVE_FREEBSD_OS
-   int rc;
-   fd_set fds;
-#endif
-
    do {
-
-#if defined HAVE_OPENBSD_OS || defined HAVE_FREEBSD_OS
-      /*
-       * Work around a bug in OpenBSD & FreeBSD userspace pthreads
-       * implementations. Rationale is the same as described above.
-       */
-      do {
-         FD_ZERO(&fds);
-         FD_SET(fd, &fds);
-         rc = select(fd + 1, &fds, NULL, NULL, NULL);
-      } while (rc == -1 && (errno == EINTR || errno == EAGAIN));
-
-      if (rc < 0)
-         return -errno;              /* error */
-#endif
-      newfd = accept(fd, (struct sockaddr *)cli_addr, &clilen);
+      newfd = accept_cloexec(fd, (struct sockaddr *)cli_addr, &clilen);
    } while (newfd == INVALID_SOCKET && (errno == EINTR || errno == EAGAIN));
 
    if (newfd < 0)

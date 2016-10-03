@@ -1,4 +1,16 @@
              Release Notes for ApcCtrl 0.7.x
+             
+0.8.2 - 03 de outubro de 2016
+
+    * Atualizada versão base do apcupsd para versão 3.14.14
+    
+    * Versão 3.14.14 pode ser compilada no macos "el capitan"
+
+0.8.1 - 29 de setembro de 2016
+
+    * Correção do instalador para Windows para iniciar o serviço durante a
+      instalação
+
 
 0.8.0 - 27 de setembro de 2016
 
@@ -16,9 +28,6 @@
     * Mudança no nome do daemon para apcctrl
     
     * Mudança na classe brazilbattery 
-    
-    * Correção do instalador para Windows para iniciar o serviço durante a
-      instalação
 
 0.7.0 - 28 de junho de 2016
 

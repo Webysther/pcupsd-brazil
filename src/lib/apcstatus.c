@@ -18,8 +18,8 @@
  *
  * You should have received a copy of the GNU General Public
  * License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1335, USA.
  */
 
 #include "apc.h"
@@ -139,6 +139,9 @@ int output_status(UPSINFO *ups, int sockfd,
    if (ups->UPS_Cap[CI_LOAD])
       s_write(ups, "LOADPCT  : %.1f Percent\n", ups->UPSLoad);
 
+   if (ups->UPS_Cap[CI_LoadApparent])
+      s_write(ups, "LOADAPNT : %.1f Percent\n", ups->LoadApparent);
+
    if (ups->UPS_Cap[CI_BATTLEV])
       s_write(ups, "BCHARGE  : %.1f Percent\n", ups->BattChg);
 
@@ -224,6 +227,9 @@ int output_status(UPSINFO *ups, int sockfd,
 
    if (ups->UPS_Cap[CI_FREQ])
       s_write(ups, "LINEFREQ : %.1f Hz\n", ups->LineFreq);
+
+   if (ups->UPS_Cap[CI_OutputCurrent])
+      s_write(ups, "OUTCURNT : %.2f Amps\n", ups->OutputCurrent);
 
    /* Output cause of last transfer to batteries */
    switch (ups->lastxfer) {
@@ -356,6 +362,9 @@ int output_status(UPSINFO *ups, int sockfd,
 
    if (ups->UPS_Cap[CI_NOMPOWER])
       s_write(ups, "NOMPOWER : %d Watts\n", ups->NomPower);
+
+   if (ups->UPS_Cap[CI_NomApparent])
+      s_write(ups, "NOMAPNT  : %d VA\n", ups->NomApparentPower);
 
    if (ups->UPS_Cap[CI_HUMID])
       s_write(ups, "HUMIDITY : %.1f Percent\n", ups->humidity);

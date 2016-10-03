@@ -71,7 +71,7 @@ if test "$cross_compiling" = "no" ; then
 fi
 
 dnl Special considerations when cross-compiling for win32
-if test "$host_os" == "mingw32" ; then
+if test "$host_os" = "mingw32" ; then
    if test -z "$CROSSTOOLS" ; then 
       CROSSTOOLS=${topdir}/../cross-tools
    fi
@@ -214,7 +214,6 @@ if test x$mandir = x'${prefix}/man' ; then
    mandir=/usr/share/man
 fi
 
-
 dnl
 dnl Check for library functions.
 dnl
@@ -229,7 +228,7 @@ AC_CHECK_FUNCS(
 
 dnl Optional on all builds
 dnl We will provide our own implementations if needed
-AC_CHECK_FUNCS(snprintf vsnprintf strlcpy strlcat)
+AC_CHECK_FUNCS(snprintf vsnprintf strlcpy strlcat accept4)
 
 dnl Mandatory except for WIN32 builds where we provide our own
 if test "$host_os" != "mingw32" ; then
@@ -400,7 +399,6 @@ dnl halpolicydir configuration
 dnl
 
 dnl Establish default
-
 case $host in
    *-*-linux*)
       HALPOLICYDIR="/usr/share/hal/fdi/policy/20thirdparty"
@@ -586,29 +584,15 @@ AC_HELP_STRING([--disable-usb], [No USB UPS code (default)])],
          usbhost=$host
       fi
 
-      dnl Also force generic_usb if this is FreeBSD 8.0 or newer
-      case $usbhost in 
-         *-*-freebsd*)
-            tmp=`uname -r`
-            if test ${tmp%%.*} -ge 8 ; then
-               usbhost=forcegeneric
-            fi
-            ;;
-      esac
+      AC_DEFINE(HAVE_USB_DRIVER,, [Define if building USB driver])
+      USB_DRIVER="usb"
+      AC_SUBST(USB_DRIVER)
+      APCDRVLIBS="$APCDRVLIBS \$(topdir)/src/drivers/usb/libusbdrv.a"
 
       case $usbhost in
          *-*-linux*)
             USB_TYPE="linux"
             AC_MSG_RESULT([Using Linux USB driver.])
-            ;;
-         *-*-freebsd* | *-*-openbsd* | *-*-netbsd*)
-            LIBUSBHIDINC="-I\$(topdir)/src/libusbhid"
-            LIBUSBHID=libusbhid
-            APCDRVLIBS="$APCDRVLIBS \$(topdir)/src/libusbhid/libusbhid.a"
-            AC_SUBST(LIBUSBHID)
-            AC_SUBST(LIBUSBHIDINC)
-            USB_TYPE="bsd"
-            AC_MSG_RESULT([Using BSD USB driver.])
             ;;
          *)
             needlibusb=true
@@ -616,12 +600,7 @@ AC_HELP_STRING([--disable-usb], [No USB UPS code (default)])],
             ;;
       esac
 
-      AC_DEFINE(HAVE_USB_DRIVER,, [Define if building USB driver])
-      USB_DRIVER="usb"
-      AC_SUBST(USB_DRIVER)
       AC_SUBST(USB_TYPE)
-      APCDRVLIBS="$APCDRVLIBS \$(topdir)/src/drivers/usb/libusbdrv.a"
-
       DISPLAY_USB_DRIVER=$USB_TYPE-$USB_DRIVER
      fi ],
     [])
@@ -655,53 +634,6 @@ AC_HELP_STRING([--disable-snmp], [No SNMP driver])],
      DISPLAY_SNMP_DRIVER="snmp"
      AC_SUBST(SNMPLITE_DRIVER) 
      APCDRVLIBS="$APCDRVLIBS \$(topdir)/src/drivers/snmplite/libsnmplitedrv.a" ])
-
-AC_ARG_ENABLE(net-snmp, [
-AC_HELP_STRING([--enable-net-snmp], [Compile NET-SNMP UPS code (OBSOLETE)])
-AC_HELP_STRING([--disable-net-snmp], [No NET-SNMP UPS code (default)])],
-   [ if test "$enableval" = "yes" ; then
-        dnl Check for optional crypto lib
-        AC_CHECK_LIB(crypto, EVP_DigestInit,
-           [echo '   including crypto library for snmp.'
-            DRVLIBS="$DRVLIBS -lcrypto"],
-           [],
-           [])
-
-        SNMP_LIB_FOUND="no"
-
-        dnl libsnmp is often in /usr/local
-        CPPFLAGS="${CPPFLAGS} -I/usr/local/include"
-        LDFLAGS="${LDFLAGS} -L/usr/local/lib"
-
-        dnl Start by looking for libnetsnmp (net-snmp).
-        if test "$SNMP_LIB_FOUND" = "no" ; then
-           AC_CHECK_LIB(netsnmp, snmp_open,
-              [DRVLIBS="$DRVLIBS -lnetsnmp"
-               AC_DEFINE(HAVE_NET_SNMP,, [Define if you have libnetsnmp])
-               SNMP_LIB_FOUND="yes"], [], [$DRVLIBS])
-        fi
-
-        dnl If no lib yet, fall back on libsnmp (ucd-snmp)
-        if test "$SNMP_LIB_FOUND" = "no" ; then
-           AC_CHECK_LIB(snmp, snmp_open,
-              [DRVLIBS="$DRVLIBS -lsnmp"
-               AC_DEFINE(HAVE_UCD_SNMP,, [Define if you have libsnmp])
-               SNMP_LIB_FOUND="yes"], [], [$DRVLIBS])
-        fi
-
-        if test "$SNMP_LIB_FOUND" = "no" ; then
-           AC_MSG_ERROR([Cannot find SNMP libraries.])
-        fi
-
-        dnl If we get this far, we found a valid lib
-        AC_DEFINE(HAVE_SNMP_DRIVER,, [Define if building snmp driver])
-        DISPLAY_NETSNMP_DRIVER="net-snmp"
-
-        SNMP_DRIVER="snmp"
-        AC_SUBST(SNMP_DRIVER) 
-        APCDRVLIBS="$APCDRVLIBS \$(topdir)/src/drivers/snmp/libsnmpdrv.a"
-     fi ],
-   [])
 
 dnl Enable test driver
 AC_ARG_ENABLE(test, [
@@ -768,10 +700,7 @@ AC_HELP_STRING([--disable-modbus], [No MODBUS driver])],
         AC_SUBST(MODBUS_DRIVER)
         APCDRVLIBS="$APCDRVLIBS \$(topdir)/src/drivers/modbus/libmodbusdrv.a"
      fi],
-   [ AC_DEFINE(HAVE_MODBUS_DRIVER)
-     MODBUS_DRIVER="modbus"
-     AC_SUBST(MODBUS_DRIVER) 
-     APCDRVLIBS="$APCDRVLIBS \$(topdir)/src/drivers/modbus/libmodbusdrv.a" ])
+   [])
 
 dnl If USB or MODBUS driver need libusb, handle it now
 if test "$needlibusb" = "true" ; then
@@ -943,29 +872,15 @@ if test -n "$GCC"; then
       esac
       ;;
    esac
-
-   # See if GCC supports -fno-exceptions...
-   AC_MSG_CHECKING(if GCC supports -fno-exceptions)
-   OLDCXXFLAGS="$CXXFLAGS"
-   CXXFLAGS="$CXXFLAGS -fno-exceptions"
-   AC_TRY_COMPILE(,,       
-      AC_MSG_RESULT(yes),
-      AC_MSG_RESULT(no)
-      CXXFLAGS="$OLDCXXFLAGS")
-
-   # See if GCC supports -fno-rtti...
-   AC_MSG_CHECKING(if GCC supports -fno-rtti)
-   OLDCXXFLAGS="$CXXFLAGS"
-   CXXFLAGS="$CXXFLAGS -fno-rtti"
-   AC_TRY_COMPILE(,,       
-      AC_MSG_RESULT(yes),
-      AC_MSG_RESULT(no)
-      CXXFLAGS="$OLDCXXFLAGS")
-
-   # Use -Wall on gcc only
-   CFLAGS="$CFLAGS -Wall"
-   CXXFLAGS="$CXXFLAGS -Wall"
 fi
+
+dnl Disable exceptions and RTTI if compiler supports it
+AX_ADD_COMPILE_FLAG(-fno-exceptions)
+AX_ADD_COMPILE_FLAG(-fno-rtti)
+
+dnl Configure compile warnings
+AX_ADD_COMPILE_FLAG(-Wall)
+AX_ADD_COMPILE_FLAG(-Wno-unused-result)
 
 AC_SUBST(MAKE)
 AC_SUBST(CP)
@@ -1031,7 +946,7 @@ AC_ARG_WITH(distname,
 if test "x$DISTNAME" != "x"
 then
    echo "distname set to $DISTNAME"
-elif test "$host_os" == "mingw32" ; then
+elif test "$host_os" = "mingw32" ; then
    DISTNAME=mingw
 elif test $HAVE_UNAME=yes -a x`uname -s` = xOSF1
 then
@@ -1316,7 +1231,10 @@ darwin)
    PIDDIR=/var/run
    LOCKDIR=/var/tmp
    DFILES="\
-      platforms/darwin/apccontrol"
+      platforms/darwin/apccontrol \
+      platforms/darwin/apcctrl-start \
+      platforms/darwin/apcctrl-uninstall \
+      platforms/darwin/org.apcctrl.apcctrl.plist"
    ;;
 qnx)
    PTHREAD_LFLAGS=""
@@ -1506,7 +1424,7 @@ Configuration on `date`:
   UPSTYPE                     ${UPSTYPE}
   UPSCABLE                    ${UPSCABLE}
 
-  drivers (no-* are disabled): ${APCSMART_DRIVER:-no-apcsmart} ${DUMB_DRIVER:-no-dumb} ${NET_DRIVER:-no-net} ${DISPLAY_USB_DRIVER:-no-usb} ${DISPLAY_SNMP_DRIVER:-no-snmp} ${DISPLAY_NETSNMP_DRIVER:-no-net-snmp} ${PCNET_DRIVER:-no-pcnet} ${MODBUS_DRIVER:-no-modbus} ${MODBUS_USB_DRIVER:-no-modbus-usb} ${TEST_DRIVER:-no-test} ${BRAZIL_DRIVER:-no-brazil}
+  drivers (no-* are disabled): ${APCSMART_DRIVER:-no-apcsmart} ${DUMB_DRIVER:-no-dumb} ${NET_DRIVER:-no-net} ${DISPLAY_USB_DRIVER:-no-usb} ${PCNET_DRIVER:-no-pcnet} ${MODBUS_DRIVER:-no-modbus} ${MODBUS_USB_DRIVER:-no-modbus-usb} ${TEST_DRIVER:-no-test} ${BRAZIL_DRIVER:-no-brazil}
 
   enable-nis:                 ${NISSRV_ENABLED}
   with-nisip:                 ${NISIP}
