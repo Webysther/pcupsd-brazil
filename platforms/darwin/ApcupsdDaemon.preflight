@@ -1,6 +1,0 @@
-#!/bin/sh
-
-# Preserve apcctrl.conf, if it already exists (upgrade)
-if [ -f /etc/apcctrl/apcctrl.conf ] ; then
-	cp -p /etc/apcctrl/apcctrl.conf /etc/apcctrl/apcctrl.conf.SAVE
-fi
