@@ -32,8 +32,7 @@
 #define O_BINARY 0
 #endif
 
-BrazilUpsDriver::BrazilUpsDriver(UPSINFO *ups) :
-UpsDriver(ups)
+BrazilUpsDriver::BrazilUpsDriver(UPSINFO *ups) : UpsDriver(ups)
 {
 	this->model = 0;
 	this->_received = time(NULL);
