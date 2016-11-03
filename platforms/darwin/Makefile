@@ -3,7 +3,7 @@ topdir:=../..
 SUBDIRS =
 include $(topdir)/autoconf/targets.mak
 
-all-install: install-darwin install-$(USBDRV)
+all-install: install-darwin
 all-uninstall: uninstall-darwin
 
 install-darwin:
@@ -35,26 +35,6 @@ install-darwin:
 		echo " ";                                                                \
 		mv $(DESTDIR)/$(sysconfdir)/apcctrl $(DESTDIR)/$(sysconfdir)/apcctrl.obsolete;                 \
 	fi
-	@echo "================================================="
-
-install-usb:
-	$(call MKDIR,/System/Library/Extensions/apcctrlDummy.kext/Contents/_CodeSignature)
-	-$(V)$(call INSTDATA,644,apcctrlDummy.kext/Contents/Info.plist,/System/Library/Extensions/apcctrlDummy.kext/Contents/Info.plist)
-	-$(V)$(call INSTDATA,644,apcctrlDummy.kext/Contents/_CodeSignature/CodeDirectory,/System/Library/Extensions/apcctrlDummy.kext/Contents/_CodeSignature/CodeDirectory)
-	-$(V)$(call INSTDATA,644,apcctrlDummy.kext/Contents/_CodeSignature/CodeRequirements,/System/Library/Extensions/apcctrlDummy.kext/Contents/_CodeSignature/CodeRequirements)
-	-$(V)$(call INSTDATA,644,apcctrlDummy.kext/Contents/_CodeSignature/CodeResources,/System/Library/Extensions/apcctrlDummy.kext/Contents/_CodeSignature/CodeResources)
-	-$(V)$(call INSTDATA,644,apcctrlDummy.kext/Contents/_CodeSignature/CodeSignature,/System/Library/Extensions/apcctrlDummy.kext/Contents/_CodeSignature/CodeSignature)
-	-$(V)chmod 755 $(DESTDIR)/System/Library/Extensions/apcctrlDummy.kext
-	-$(V)chmod 755 $(DESTDIR)/System/Library/Extensions/apcctrlDummy.kext/Contents
-	-$(V)chmod 755 $(DESTDIR)/System/Library/Extensions/apcctrlDummy.kext/Contents/_CodeSignature
-	-$(V)chown -R root:wheel $(DESTDIR)/System/Library/Extensions/apcctrlDummy.kext
-	$(call UNINST,/System/Library/Extensions.mkext)
-	$(call UNINST,/System/Library/Extensions.kextcache)
-	@echo "================================================="
-	@echo " "
-	@echo "Driver installation complete." 
-	@echo "You must REBOOT before running apcctrl."
-	@echo " "
 	@echo "================================================="
 
 uninstall-darwin:
