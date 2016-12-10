@@ -94,7 +94,7 @@ bool BrazilUpsDriver::Open()
 	/* Save old settings */
 	tcgetattr(_ups->fd, &_oldtio);
 
-	_newtio.c_cflag = B9600 | CS8 | CLOCAL | CREAD;
+	_newtio.c_cflag = B9600 | CS8 | CSTOPB | CLOCAL | CREAD;
 	_newtio.c_iflag = IGNPAR;    /* Ignore errors, raw input */
 	_newtio.c_oflag = 0;         /* Raw output */
 	_newtio.c_lflag = 0;         /* No local echo */
@@ -103,20 +103,25 @@ bool BrazilUpsDriver::Open()
 		defined(HAVE_FREEBSD_OS) || \
 		defined(HAVE_NETBSD_OS) || \
 		defined(HAVE_QNX_OS)
-	_newtio.c_ispeed = DEFAULT_SPEED;    /* Set input speed */
-	_newtio.c_ospeed = DEFAULT_SPEED;    /* Set output speed */
+	_newtio.c_ispeed = B9600;    /* Set input speed */
+	_newtio.c_ospeed = B9600;    /* Set output speed */
 #endif   /* __openbsd__ || __freebsd__ || __netbsd__  */
 
 	/* This makes a non.blocking read() with TIMER_READ (10) sec. timeout */
 	_newtio.c_cc[VMIN] = 0;
 	_newtio.c_cc[VTIME] = TIMER_READ * 10;
 
-	tcflush(_ups->fd, TCIOFLUSH);
+#if defined(HAVE_OSF1_OS) || \
+    defined(HAVE_LINUX_OS) || defined(HAVE_DARWIN_OS)
+   (void)cfsetospeed(&_newtio, B9600);
+   (void)cfsetispeed(&_newtio, B9600);
+#endif  /* do it the POSIX way */
+
+   tcflush(_ups->fd, TCIOFLUSH);
 	tcsetattr(_ups->fd, TCSANOW, &_newtio);
 	sleep(2);  // without this usleep we can't flush the port buffer (usb-serial converter)
 	tcflush(_ups->fd, TCIOFLUSH);
 
-	sleep(1);
 	this->model = 0;			// force to instantiate a model again if there is a model already instantiated
 	return true;
 }
