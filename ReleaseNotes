@@ -1,6 +1,6 @@
              Release Notes for ApcCtrl 0.7.x
 
-0.8.4 - 03 de outubro de 2016
+0.8.4 - 10 de dezembro de 2016
 
 	* Corrigido bug para Mac. A porta serial não era configurada adequadamente.
              
