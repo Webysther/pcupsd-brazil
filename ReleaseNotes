@@ -1,4 +1,12 @@
              Release Notes for ApcCtrl 0.7.x
+             
+0.8.5 - 16 de dezembro de 2016
+
+	* Saídas para debug na função BrazilDriver::open()
+	
+	* Flag O_CLOEXEC na função BrazilDriver::open()
+	
+	* Removida a aplicação smtp. Não está adequada a internet atual. Utilize o ssmtp ou heirloom-mailx
 
 0.8.4 - 10 de dezembro de 2016
 

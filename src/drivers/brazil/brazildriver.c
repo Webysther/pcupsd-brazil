@@ -81,19 +81,22 @@ bool BrazilUpsDriver::Open()
 #endif
 
 	Dmsg(50, "Opening port %s\n", opendev);
-	if ((_ups->fd = open(opendev, O_RDWR | O_NOCTTY | O_NDELAY | O_BINARY)) < 0)
+	if ((_ups->fd = open(opendev, O_RDWR | O_NOCTTY | O_NDELAY | O_BINARY | O_CLOEXEC)) < 0)
 	{
 		Dmsg(50, "Cannot open UPS port %s: %s\n", opendev, strerror(errno));
 		return false;
 	}
-	tcflush(_ups->fd, TCIOFLUSH);
+
+	Dmsg(50, "Chamando a função fcntl\n");
 	/* Cancel the no delay we just set */
 	cmd = fcntl(_ups->fd, F_GETFL, 0);
 	fcntl(_ups->fd, F_SETFL, cmd & ~O_NDELAY);
 
+	Dmsg(50, "Carregando o oldtio\n");
 	/* Save old settings */
 	tcgetattr(_ups->fd, &_oldtio);
 
+	Dmsg(50, "Definindo a newtio\n");
 	_newtio.c_cflag = B9600 | CS8 | CSTOPB | CLOCAL | CREAD;
 	_newtio.c_iflag = IGNPAR;    /* Ignore errors, raw input */
 	_newtio.c_oflag = 0;         /* Raw output */
@@ -117,10 +120,15 @@ bool BrazilUpsDriver::Open()
    (void)cfsetispeed(&_newtio, B9600);
 #endif  /* do it the POSIX way */
 
-   tcflush(_ups->fd, TCIOFLUSH);
+	Dmsg(50, "Primeiro tcflush\n");
+    tcflush(_ups->fd, TCIFLUSH);
+
+	Dmsg(50, "Setando a newtio na porta\n");
 	tcsetattr(_ups->fd, TCSANOW, &_newtio);
+
+	Dmsg(50, "Segundo tcflush\n");
 	sleep(2);  // without this usleep we can't flush the port buffer (usb-serial converter)
-	tcflush(_ups->fd, TCIOFLUSH);
+	tcflush(_ups->fd, TCIFLUSH);
 
 	this->model = 0;			// force to instantiate a model again if there is a model already instantiated
 	return true;
