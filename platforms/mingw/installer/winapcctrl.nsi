@@ -293,7 +293,6 @@ Section "apcctrl Service" SecService
   File ${CROSSTOOLS}\mingw32\mingw32\bin\mingwm10.dll
   File ${DEPKGS}\libroot\lib\pthreadGCE.dll
   File ${TOPDIR}\src\apcctrl.exe
-  File ${TOPDIR}\src\smtp.exe
   File ${TOPDIR}\src\apcaccess.exe
   File ${TOPDIR}\src\apctest.exe
   File ${WINDIR}\popup.exe 
@@ -556,7 +555,6 @@ Section "Uninstall"
   Delete /REBOOTOK "$INSTDIR\bin\mingwm10.dll"
   Delete /REBOOTOK "$INSTDIR\bin\pthreadGCE.dll"
   Delete /REBOOTOK "$INSTDIR\bin\apcctrl.exe"
-  Delete /REBOOTOK "$INSTDIR\bin\smtp.exe"
   Delete /REBOOTOK "$INSTDIR\bin\apcaccess.exe"
   Delete /REBOOTOK "$INSTDIR\bin\apctest.exe"
   Delete /REBOOTOK "$INSTDIR\bin\popup.exe"

@@ -679,7 +679,7 @@ bool BrazilUpsDriver::read_volatile_data()
 
 	_ups->set_overload(this->model->isOverload());
 
-	Dmsg(10, "Extra status! LineOn: %s; "
+	Dmsg(99, "Extra status! LineOn: %s; "
 			"OutputOn: %s; "
 			"220V: %s; "
 			"Charging: %s; "
@@ -708,7 +708,6 @@ bool BrazilUpsDriver::read_volatile_data()
 			this->model->isScheduleSetDayOfWeek(Friday),
 			this->model->isScheduleSetDayOfWeek(Saturday)
 	);
-
 
 	write_unlock(_ups);
 	this->model->setBufferUnlock();
