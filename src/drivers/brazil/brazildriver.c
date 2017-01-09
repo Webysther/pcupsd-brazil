@@ -24,8 +24,10 @@
 
 #include "apc.h"
 #include "brazildriver.h"
-#include <termios.h>
 #include "brazilmodel.h"
+#include <termios.h>
+#include <dirent.h>
+//#include <unistd.h>
 
 
 #ifndef O_BINARY
@@ -70,6 +72,8 @@ bool BrazilUpsDriver::Open()
 	int cmd;
 	char *opendev = _ups->device;
 
+	sleep(1);
+
 #ifdef HAVE_MINGW
 	// On Win32 add \\.\ UNC prefix to COMx in order to correctly address
 	// ports >= COM10.
@@ -78,6 +82,45 @@ bool BrazilUpsDriver::Open()
 		snprintf(device, sizeof(device), "\\\\.\\%s", _ups->device);
 		opendev = device;
 	}
+#endif
+#ifdef HAVE_DARWIN_OS
+
+	Dmsg(50, "Buscando os devices com nome base configurado.\n");
+
+	char path[MAXSTRING];
+	char filebase[MAXSTRING];
+	char *pch;
+	pch=strrchr(opendev,'/');
+	strncpy ( path, opendev, pch - opendev);
+	strcpy ( path+(pch - opendev), "\0");
+	strcpy ( filebase, pch+1);
+
+	Dmsg(50, "Nome configurado quebrado em path e filename! %s = path(%s) e filebase(%s)\n",opendev,path,filebase);
+
+	if(strncmp(filebase,"cu.",3) != 0){
+		log_event(this->_ups, LOG_ERR, "Apcctrl error! Device name is incorrect! it MUST init with cu.");
+		return false;
+	}
+
+    DIR *dir;
+    struct dirent *entry;
+
+    if (!(dir = opendir(path)))
+        return false;
+
+    bool found = false;
+    while ((entry = readdir(dir)) != NULL){
+        if (strncmp(entry->d_name, filebase, strlen(filebase)) == 0){
+        	Dmsg(50, "Device localizado!!! %s/%s\n",path,entry->d_name);
+        	if(found){
+        		log_event(this->_ups, LOG_WARNING, "WARNING!!! Found more than 1 device with namebase %s!",filebase);
+        	}
+        	sprintf(opendev, "%s/%s",path,entry->d_name);
+        	found = true;
+        }
+    }
+    closedir(dir);
+
 #endif
 
 	Dmsg(50, "Opening port %s\n", opendev);
