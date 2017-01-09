@@ -1,5 +1,15 @@
              Release Notes for ApcCtrl 0.8.x
              
+0.8.7 - 09 de janeiro de 2017
+
+    * Para Mac OS X!!!! Criada uma função para listar os devices na pasta /dev e identificar
+      qual deles tem um nome similar ao configurado. Obrigatoriamente o nome do device deve
+      iniciar por "cu." para evitar escrever algo em um device inadequado e, por exemplo,
+      escrever no disco.
+    
+    * Adicionado um sleep de um segundo na função de abertura de porta para evitar que
+      o processo fique em loop quando o cabo do nobreak é removido.
+             
 0.8.5 - 16 de dezembro de 2016
 
 	* Saídas para debug na função BrazilDriver::open()
