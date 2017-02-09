@@ -10,7 +10,7 @@
 PACKAGE = apcctrl
 DISTNAME = debian
 DISTVER = 8.4
-VERSION = 0.8.2
+VERSION = 0.8.8
 
 #
 # programs needed by compilation

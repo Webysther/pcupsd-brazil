@@ -1002,6 +1002,9 @@ then
 elif test -f /etc/gentoo-release
 then
    DISTNAME=gentoo
+elif test -f /etc/arch-release
+then
+   DISTNAME=archlinux
 elif test -f /etc/engarde-version
 then
    DISTNAME=engarde
@@ -1195,6 +1198,11 @@ slackware)
       platforms/slackware/apcctrl \
       platforms/slackware/rc6.patch" 
    ;;
+archlinux)
+   DISTVER="Arch Linux"
+   SERIALDEV=/dev/ttyACM0
+   sbindir=/usr/sbin
+   ;; 
 sun)
    DISTVER=Solaris
    SERIALDEV=/dev/ttya

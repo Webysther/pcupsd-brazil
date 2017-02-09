@@ -83,6 +83,21 @@
  *
  */
 
+const double BrazilBattery::VOLTAGE_12V_REF = 12.0;
+const double BrazilBattery::VOLTAGE_12V_C1_MIN = 10.4;
+const double BrazilBattery::VOLTAGE_12V_C1_MAX = 12.2;
+const double BrazilBattery::LOAD_MIN = 0.6;
+const double BrazilBattery::LOAD_MAX = 5.0;
+const double BrazilBattery::PEUKERT_POW = 1.578;
+const double BrazilBattery::PEUKERT_MUL = 1.24;
+const double BrazilBattery::TIMELEFT_POW = 1.58;
+const double BrazilBattery::TIMELEFT_MUL = 1.2;
+
+const double BrazilBattery::CURRENT_RATE_C1_C20 = 0.74;
+
+const int BrazilBattery::COEF_1207_C1_SIZE = 4;
+const int BrazilBattery::COEF_1207_VI_SIZE = 4;
+const int BrazilBattery::COEF_1207_VF_SIZE = 4;
 
 const double BrazilBattery::COEF_1207_C1[4] = {-5976.6571433071,1695.1547620352,-160.3571428695,5.0595238099};
 const double BrazilBattery::COEF_1207_VI[4] = {12.760511,-0.669034,0.121307,-0.012784};

@@ -31,21 +31,23 @@ public:
 protected:
 	double calcTimeLeftC1(double voltage);
 
-	static const double VOLTAGE_12V_REF = 12.0;
-	static const double VOLTAGE_12V_C1_MIN = 10.4;
-	static const double VOLTAGE_12V_C1_MAX = 12.2;
-	static const double LOAD_MIN = 0.6;
-	static const double LOAD_MAX = 5.0;
-	static const double PEUKERT_POW = 1.578;
-	static const double PEUKERT_MUL = 1.24;
-	static const double TIMELEFT_POW = 1.58;
-	static const double TIMELEFT_MUL = 1.2;
+	static const double VOLTAGE_12V_REF;
+	static const double VOLTAGE_12V_C1_MIN;
+	static const double VOLTAGE_12V_C1_MAX;
+	static const double LOAD_MIN;
+	static const double LOAD_MAX;
+	static const double PEUKERT_POW;
+	static const double PEUKERT_MUL;
+	static const double TIMELEFT_POW;
+	static const double TIMELEFT_MUL;
 
-	static const double CURRENT_RATE_C1_C20 = 0.74;
+	static const double CURRENT_RATE_C1_C20;
 
-	static const int COEF_1207_C1_SIZE = 4;
-	static const int COEF_1207_VI_SIZE = 4;
-	static const int COEF_1207_VF_SIZE = 4;
+	static const int COEF_1207_C1_SIZE;
+	static const int COEF_1207_VI_SIZE;
+	static const int COEF_1207_VF_SIZE;
+
+
 	static const double COEF_1207_C1[];
 	static const double COEF_1207_VI[];
 	static const double COEF_1207_VF[];
