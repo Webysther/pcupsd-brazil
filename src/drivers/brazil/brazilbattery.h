@@ -47,7 +47,6 @@ protected:
 	static const int COEF_1207_VI_SIZE;
 	static const int COEF_1207_VF_SIZE;
 
-
 	static const double COEF_1207_C1[];
 	static const double COEF_1207_VI[];
 	static const double COEF_1207_VF[];

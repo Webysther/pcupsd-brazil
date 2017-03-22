@@ -5,7 +5,7 @@
 	* Contribuições feitas por Alan Franco (alanfr8.85 no gmail).
 	
 	* As declarações de constantes no arquivo brazilbattery.h foram alteradas para
-	  compatibilizar com gcc6 e os atuais padrões para linguágem de programação C. 
+	  compatibilizar com gcc6 (std c++11) e os atuais padrões para linguagem de programação C++. 
 
     * O arquivo configure.in foi alterado para identificar a distribuição ArchLinux e instalar
       os arquivos apropriados.

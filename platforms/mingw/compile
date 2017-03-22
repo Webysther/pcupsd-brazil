@@ -16,31 +16,29 @@ apcctrl_error()
 	exit 2
 }
 
+apcctrl_mingw()
+{
+	echo "mingw..."
+	mingw32-g++ -v &>.out.mingw
+	if [[ $? == "0" ]]; then
+		return 0;
+	fi;
+
+	cat .out.mingw
+	return 1;
+}
 apcctrl_path()
 {
-    echo "path..."
+	echo "path..."
 	if [[ -e "${APCCTRL_PATH}" ]]; then
 		apcctrl_error "O Caminho ${APCCTRL_PATH} já existe"
 	fi;
 	return 0;
 }
-
-apcctrl_mingw()
-{
-    echo "mingw..."
-    mingw32-g++ -v &>.out.mingw
-    if [[ $? == "0" ]]; then
-        return 0;
-    fi;
-
-    cat .out.mingw
-    return 1;
-}
-
 apcctrl_svn()
 {
 	echo "svn..."
-	svn checkout http://svn.code.sf.net/p/apcctrl-brazil/svn/tags/${TAG} ${APCCTRL_PATH} &>.out.svn
+	svn checkout http://svn.code.sf.net/p/apcupsd-brazil/svn/tags/${TAG} ${APCCTRL_PATH} &>.out.svn
 	if [[ $? == "0" ]]; then
 		return 0;
 	fi;
@@ -107,7 +105,6 @@ apcctrl_installer()
 }
 apcctrl_scp()
 {
-#platforms/mingw/installer/winapcctrl-0.6.0.exe
 	echo "scp..."
 	scp ${APCCTRL_PATH}/platforms/mingw/installer/winapcctrl-${TAG}.exe ${REMOTE_USER}@${REMOTE_SERVER}:${REMOTE_PATH} &>.out.scp
 	if [[ $? == "0" ]]; then
@@ -136,10 +133,10 @@ REMOTE_USER="wagner"
 REMOTE_SERVER="192.168.22.4"
 REMOTE_PATH=/home/wagner/workspace/apcctrl_brazil_tars
 
-APCCTRL_PATH="/home/wagner/apcctrl-brazil/apcctrl-brazil-${TAG}"
+APCCTRL_PATH="/home/wagner/apcctrl/apcctrl-${TAG}"
 
 PATH_OLD="${PATH}"
-export PATH="/home/wagner/apcctrl-brazil/cross-tools/mingw32/bin:${PATH}"
+export PATH="/home/wagner/apcctrl/cross-tools/mingw32/bin:${PATH}"
 
 echo -en "APCCTRL_PATH=${APCCTRL_PATH}\n"
 echo -en "PATH=${PATH}\n\n"
@@ -174,7 +171,7 @@ if [[ $? != "0" ]]; then
 fi;
 
 echo -en "\e[40m\e[32m\e[5m"
-echo -en "\nSUCCESS!!! File: ${REMOTE_USER}@${REMOTE_SERVER}:${REMOTE_PATH}/winapcctrl-${TAG}.exe\n\n";
+echo -en "\nSUCESS!!! File: ${APCCTRL_PATH}/platforms/mingw/installer/winapcctrl-${TAG}.exe\n";
 echo -en "\e[49m\e[39m\e[0m"
 
 export PATH="${PATH_OLD}"
