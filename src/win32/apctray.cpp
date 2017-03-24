@@ -208,8 +208,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
       NotifyUser("Apctray is already running");
       WSACleanup();
       return 0;
-   }else{
-	  NotifyUser("Ajude a melhorar o projeto ApcCtrl. Envie um email para wpopov@gmail.com com todos dados que voce tiver");
    }
 
    // On Win2K and above we spawn a thread to watch for exit requests.
