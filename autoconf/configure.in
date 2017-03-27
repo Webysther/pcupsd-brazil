@@ -1450,6 +1450,9 @@ Configuration on `date`:
   para os desenvolvedores através do site www.apcctrl.com.br. Atualmente apenas os modelos
   BACK UPS BR 1200VA e 1500VA foram reportados.
   
+  Deixe um review sobre o projeto no link:
+  https://sourceforge.net/projects/apcupsd-brazil/reviews/
+    
   " > config.out
 
 cat config.out
