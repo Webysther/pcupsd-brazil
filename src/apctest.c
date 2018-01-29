@@ -3146,7 +3146,7 @@ static void brazil_testBatteryHealth(){
 
 	pmsg("1) Iniciando teste!\n");
 	pmsg("2) Enviando comando para desligar a entrada.\n");
-	pmsg("2.1) Aguarde 5 segundos...\n");
+	pmsg("2.1) Aguarde 5 segundos para atualizar a tensão da bateria...\n");
 	((BrazilUpsDriver*)(ups)->driver)->turnLineOn(false);
 	sleep(5); // sleep para estabilizar a tensão da bateria de início.
 	((BrazilUpsDriver*)(ups)->driver)->refresh();
@@ -3155,11 +3155,14 @@ static void brazil_testBatteryHealth(){
 	bat0 = timeleft1 = br->getBatteryVoltage();
 	power0 = br->getOutputActivePower();
 
+	pmsg("2.2) Iniciando a monitoração do nível de tensão da bateria.\n");
+
 	int transcorrido = 0;
 	char datetime[50];
 	fprintf(CsvFile,"\n");
 	fprintf(CsvFile,"\"Data\",\"segundos\",\"Tensão da bateria (V)\",\"Expectativa do tempo restante (minutos)\",\"Fator de descarga(C)\"\n");
 	do{
+		sleep(1);
 		((BrazilUpsDriver*)(ups)->driver)->refresh();
 		time(&now);
 		gmtime_r(&now, &tm_now);
@@ -3171,7 +3174,7 @@ static void brazil_testBatteryHealth(){
 				br->getBatteryVoltage(),
 				br->getBatteryTimeLeft(),
 				br->getBatteryLoad());
-		pmsg("  2.2) Nível de tensão da bateria = %2.1f\%, Battery voltage = %2.2fV, Timeleft = %2.1f minutes.\n",br->getBatteryLevel(),br->getBatteryVoltage(),br->getBatteryTimeLeft());
+		pmsg("  Nível da bateria = %2.1f\%, Battery voltage = %2.2fV, Timeleft = %2.1f minutes...\n",br->getBatteryLevel(),br->getBatteryVoltage(),br->getBatteryTimeLeft());
 	}while((br->getBatteryLevel() > testlimit) && (! br->isBatteryCritical()));
 	fflush(CsvFile);
 	fclose(CsvFile);
