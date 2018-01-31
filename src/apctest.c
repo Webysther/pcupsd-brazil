@@ -292,7 +292,7 @@ int main(int argc, char *argv[])
 		exit(1);
 
 #ifdef HAVE_MINGW
-	system("chcp 65001 > nul");
+	system("chcp 65001");
 #endif
 
 	pmsg("\n\n");
