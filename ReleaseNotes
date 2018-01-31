@@ -1,4 +1,11 @@
              Release Notes for ApcCtrl 0.8.x
+
+0.8.11 - 31 de janeiro de 2018
+
+	* Correção de bug no apctest para Windows para teste de estado da bateria 
+	* Revisão das rotinas do apctest para teste do estado da bateria
+	* Revisão das constantes para cálculo da autonomia
+
              
 0.8.8 - 09 de fevereiro de 2017
 
