@@ -89,7 +89,7 @@ const double BrazilBattery::VOLTAGE_12V_C1_MAX = 12.2;
 const double BrazilBattery::LOAD_MIN = 0.6;
 const double BrazilBattery::LOAD_MAX = 5.0;
 const double BrazilBattery::PEUKERT_POW = 1.578;
-const double BrazilBattery::PEUKERT_MUL = 1.24;
+const double BrazilBattery::PEUKERT_MUL = 1.22;
 const double BrazilBattery::TIMELEFT_POW = 1.58;
 const double BrazilBattery::TIMELEFT_MUL = 1.2;
 
@@ -150,15 +150,19 @@ double BrazilBattery::calcTimeLeft(double load, double voltage){
 	double timeleft = BrazilBattery::TIMELEFT_MUL * this->calcTimeLeftC1(voltage_c1) / pow(load,BrazilBattery::TIMELEFT_POW);
 	return timeleft;
 }
+
 double BrazilBattery::calcTimeLeftPeukert(double load){
 	if(load < BrazilBattery::LOAD_MIN) load = BrazilBattery::LOAD_MIN;
 	double timeleft = BrazilBattery::PEUKERT_MUL * (this->getBatteryCurrentC1Nom()/pow(load*this->getBatteryCurrentC1Nom(),BrazilBattery::PEUKERT_POW)) * 60;
 	return timeleft;
 }
+
 double BrazilBattery::calcLevel(double load, double voltage){
 	double timeleft = this->calcTimeLeft(load, voltage);
 	double timeleft_max = this->calcTimeLeft(load, this->calcVoltageMax(load));
-	return 100 * (timeleft / timeleft_max);
+	double rate = (timeleft / timeleft_max);
+	if(rate > 1) return 100;
+	return 100 * rate;
 }
 
 double BrazilBattery::calcTimeLeftC1(double voltage){

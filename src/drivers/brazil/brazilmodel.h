@@ -54,6 +54,7 @@ public:
 	void setBufferUnlock();
 	void setDischarging(bool discharging, time_t* start);
 	bool getDischarging();
+	void refreshVariables();
 
 	virtual int testEvents(unsigned char *buffer, unsigned int datasize) = 0;
 	virtual bool setBuffer(unsigned char *buffer, unsigned int datasize) = 0;
@@ -61,12 +62,8 @@ public:
 	virtual int getEventsStr(char **out) = 0;
 
 	virtual double getTemperature() = 0;
-	virtual double getBatteryVoltage() = 0;
 	virtual double getLineVoltage() = 0;
 	virtual double getLineFrequency() = 0;
-	virtual double getOutputVoltage() = 0;
-	virtual double getOutputCurrent() = 0;
-	virtual double getOutputActivePower() = 0;
 
 	virtual bool isScheduleSet() = 0;
 
@@ -83,6 +80,10 @@ public:
 	virtual unsigned char getMinute() = 0;
 	virtual unsigned char getSecond() = 0;
 
+	double getBatteryVoltage();
+	double getOutputVoltage();
+	double getOutputCurrent();
+	double getOutputActivePower();
 	double getBatteryLevel();
 	double getBatteryTimeLeft();
 	double getBatteryVoltageExpectedInitial();
@@ -121,7 +122,7 @@ public:
 	virtual bool isBatteryCritical() = 0;
 
 	double getOutputPower(){
-		return this->getOutputCurrent() * this->getOutputVoltage();
+		return this->getOutputCurrentNow() * this->getOutputVoltageNow();
 	}
 
 	double getLoadPercent(){
@@ -129,7 +130,7 @@ public:
 		return load;
 	}
 	double getLoadActivePowerPercent(){
-		return (this->getOutputActivePower() / this->getOutputActivePowerNom())*100;
+		return (this->getOutputActivePowerNow() / this->getOutputActivePowerNom())*100;
 	}
 	unsigned char getModelNumber(){
 		return this->vmodel;
@@ -140,6 +141,11 @@ public:
 	BrazilBattery *bat;
 
 protected:
+	virtual double getBatteryVoltageNow() = 0;
+	virtual double getOutputVoltageNow() = 0;
+	virtual double getOutputCurrentNow() = 0;
+	virtual double getOutputActivePowerNow() = 0;
+
 	unsigned char _buffer[BrazilModelAbstract::BUFFERLEN];
 	unsigned char _events[BrazilModelAbstract::BUFFERLEN];
 	unsigned int _eventssize;
@@ -147,10 +153,10 @@ protected:
 	bool lock;
 	int regulating_relay;
 
-	double _load[5];
-	double _voltage[15];
-	double _timeleft[5][15];
-
+	double _batvolt[10];
+	double _outvolt[10];
+	double _outactpower[10];
+	double _outcurrent[10];
 
 private:
 };
@@ -167,12 +173,12 @@ public:
 	virtual int getEventsStr(char **out);
 
 	virtual double getTemperature();
-	virtual double getBatteryVoltage();
+	virtual double getBatteryVoltageNow();
 	virtual double getLineVoltage();
 	virtual double getLineFrequency();
-	virtual double getOutputVoltage();
-	virtual double getOutputCurrent();
-	virtual double getOutputActivePower();
+	virtual double getOutputVoltageNow();
+	virtual double getOutputCurrentNow();
+	virtual double getOutputActivePowerNow();
 
 	virtual bool isScheduleSet();
 
@@ -411,12 +417,12 @@ public:
 	virtual int getEventsStr(char **out);
 
 	virtual double getTemperature();
-	virtual double getBatteryVoltage();
+	virtual double getBatteryVoltageNow();
 	virtual double getLineVoltage();
 	virtual double getLineFrequency();
-	virtual double getOutputVoltage();
-	virtual double getOutputCurrent();
-	virtual double getOutputActivePower();
+	virtual double getOutputVoltageNow();
+	virtual double getOutputCurrentNow();
+	virtual double getOutputActivePowerNow();
 
 	virtual bool isScheduleSet();
 

@@ -3084,13 +3084,15 @@ static void brazil_cancelSchedule(){
 static void brazil_testBatteryHealth(){
 	BrazilModelAbstract *br = ((BrazilUpsDriver*)(ups)->driver)->model;
 
-	double testlimit = 40;
+	double batlevel_limit = 40;
+	int start_delay_offbat = 5;
+	int start_delay_onbat = 10;
 
 	char *cmd;
 	pmsg("\n"
-			"Attention!!! This test will disconnect the input and when the battery voltage level reaches %2.1f\% will connect the input of the UPS. Are you sure you want to continue?\n"
+			"Atenção!!! Este teste desconectará seu nobreak da rede elétrica e será executado até que o nível da bateria atingir %2.0f%%. Você quer continuar?\n"
 			"Y) Yes\n"
-			"N) No\n\n",testlimit);
+			"N) No\n\n",batlevel_limit);
 
 	cmd = get_cmd("Select the option: ");
 	if (tolower(*cmd) != 'y'){
@@ -3098,17 +3100,17 @@ static void brazil_testBatteryHealth(){
 	}
 	if(br->isCharging()){
 		pmsg("\n"
-				"Attention!!! The battery is charging. This test was designed for when the battery is fully charged. Do you want to continue anyway?\n"
-				"Y) Yes\n"
+				"Atenção!!! A bateria está sendo carregada. Este teste foi projetado para ser usado com a bateria carregada. Você quer continuar?\n"
+				"C) Continue\n"
 				"N) No\n\n");
 
 		cmd = get_cmd("Select the option: ");
-		if (tolower(*cmd) != 'y'){
+		if (tolower(*cmd) != 'c'){
 			return;
 		}
 	}
 	pmsg("\n"
-			"Attention!!! You should NOT vary the loading of the UPS during testing. Do you want to continue?\n"
+			"Atenção!!! Você não deve variar a carga no nobreak durante o teste. Você quer continuar?\n"
 			"Y) Yes\n"
 			"N) No\n\n");
 
@@ -3118,13 +3120,41 @@ static void brazil_testBatteryHealth(){
 	}
 
 	if(! br->isLineMode()){
-		pmsg("\nAttention!!! The UPS is not connected to mains. Correct and try again.\n\n");
+		pmsg("\nAtenção!!! Seu nobreak não está conectado na rede elétrica. Faça a correção e tente novamente.\n\n");
 		return;
 	}
 
+	double timeleft0, timeleft1, bat0, bat1, power_peukert, power0, power1, batload_peukert, batload0, batload1, bat_expected, timeleft_peukert, timeleft_diff, timeleft_rate, timeleft_rate_peukert, seconds;
+	bool batcritical = false;
+
+	pmsg("1) Iniciando teste!\n");
+	pmsg("2) Aguarde %d segundos para estabilizar o nobreak...\n",start_delay_offbat);
+	pmsg("   ");
+	for(int i=0 ; i<start_delay_offbat ; i++){ // necessário para estabilizar a tensão da bateria de início.
+		sleep(1);
+		((BrazilUpsDriver*)(ups)->driver)->refresh();
+		pmsg(".");
+	}
+	pmsg("\n");
+
+	bat_expected = br->getBatteryVoltageExpectedInitial();
+	timeleft_peukert = br->getBatteryTimeLeft();
+	batload_peukert = br->getBatteryLoad();
+	power_peukert = br->getOutputActivePower();
+
+	pmsg("3) Enviando comando para desligar a entrada.\n");
+	pmsg("4) Aguarde %d segundos para atualizar a tensão da bateria...\n",start_delay_onbat);
+	pmsg("   ");
+	((BrazilUpsDriver*)(ups)->driver)->turnLineOn(false);
+	for(int i=0 ; i<start_delay_onbat ; i++){ // necessário para estabilizar a tensão da bateria de início.
+		sleep(1);
+		((BrazilUpsDriver*)(ups)->driver)->refresh();
+		pmsg(".");
+	}
+	pmsg("\n");
+
 	time_t start,end,now;
 	struct tm tm_start,tm_end,tm_now;
-
 	time(&start);
 	gmtime_r(&start, &tm_start);
 
@@ -3133,51 +3163,50 @@ static void brazil_testBatteryHealth(){
 	FILE *CsvFile=fopen (csv_filename,"w");
 	setvbuf (CsvFile , NULL , _IOFBF , 65535 );
 
-	double timeleft0, timeleft1, bat0, bat1, power0, power1, batload0, batload1, bat_expected, timeleft_peukert, timeleft_rate, seconds;
-	bool batcritical;
-
-	bat_expected = br->getBatteryVoltageExpectedInitial();
-	timeleft_peukert = br->getBatteryTimeLeft();
 	batload0 = br->getBatteryLoad();
-
-	fprintf(CsvFile,"\"Fator de descarga da bateria no início do teste (C):\",%1.2f,\"O fator de descarga deve-se permanecer o mais constante possível.\"\n",batload0);
-	fprintf(CsvFile,"\"Tesão esperada no início do teste (V):\",%2.2f\n",bat_expected);
-	fprintf(CsvFile,"\"Tempo restante calculado pela formula de Peukert (minutos):\",%2.2f\n",timeleft_peukert);
-
-	pmsg("1) Iniciando teste!\n");
-	pmsg("2) Enviando comando para desligar a entrada.\n");
-	pmsg("2.1) Aguarde 5 segundos para atualizar a tensão da bateria...\n");
-	((BrazilUpsDriver*)(ups)->driver)->turnLineOn(false);
-	sleep(5); // sleep para estabilizar a tensão da bateria de início.
-	((BrazilUpsDriver*)(ups)->driver)->refresh();
-
 	timeleft0 = br->getBatteryTimeLeft();
 	bat0 = timeleft1 = br->getBatteryVoltage();
 	power0 = br->getOutputActivePower();
 
-	pmsg("2.2) Iniciando a monitoração do nível de tensão da bateria.\n");
+	fprintf(CsvFile,"\"Potência ativa no início do teste (W):\",%4.1f\n",br->getOutputActivePower());
+	fprintf(CsvFile,"\"Potência total no início do teste (VA):\",%4.1f\n",br->getOutputPower());
+	fprintf(CsvFile,"\"Fator de descarga da bateria no início do teste (C):\",%1.2f,\"O fator de descarga deve-se permanecer o mais constante possível.\"\n",batload0);
+	fprintf(CsvFile,"\"Tesão esperada no início do teste (V):\",%2.2f\n",bat_expected);
+	fprintf(CsvFile,"\"Tempo restante calculado pela formula de Peukert (minutos):\",%2.2f\n",timeleft_peukert);
 
-	int transcorrido = 0;
+	pmsg("5) Iniciando a monitoração do nível carga da bateria.\n");
+
+	int duration_h, duration_m, duration_s;
 	char datetime[50];
 	fprintf(CsvFile,"\n");
-	fprintf(CsvFile,"\"Data\",\"segundos\",\"Tensão da bateria (V)\",\"Expectativa do tempo restante (minutos)\",\"Fator de descarga(C)\"\n");
+	fprintf(CsvFile,"\"Data\",\"tempo em teste(s)\",\"Potência ativa de saida (W)\",\"Fator de descarga da bateria (C)\",\"Tensão da bateria (V)\",\"Expectativa do tempo restante (minutos)\",\"Fator de descarga(C)\"\n");
 	do{
 		sleep(1);
 		((BrazilUpsDriver*)(ups)->driver)->refresh();
 		time(&now);
 		gmtime_r(&now, &tm_now);
-		transcorrido = floor(now - start);
+		duration_s = floor(now - start);
 		sprintf(datetime,"%04d-%02d-%02d %02d:%02d:%02d",(tm_now.tm_year+1900),tm_now.tm_mon+1,tm_now.tm_mday,tm_now.tm_hour,tm_now.tm_min,tm_now.tm_sec);
-		fprintf(CsvFile,"\"%s\",\"%d\",\"%2.2f\",\"%2.1f\",\"%1.2f\"\n",
+		fprintf(CsvFile,"\"%s\",\"%d\",\"%4.0f\",\"%1.2f\",\"%2.2f\",\"%2.1f\",\"%1.2f\"\n",
 				datetime,
-				transcorrido,
+				duration_s,
+				br->getOutputActivePower(),
+				br->getBatteryLoad(),
 				br->getBatteryVoltage(),
 				br->getBatteryTimeLeft(),
 				br->getBatteryLoad());
-		pmsg("  Nível da bateria = %2.1f\%, Battery voltage = %2.2fV, Timeleft = %2.1f minutes...\n",br->getBatteryLevel(),br->getBatteryVoltage(),br->getBatteryTimeLeft());
-	}while((br->getBatteryLevel() > testlimit) && (! br->isBatteryCritical()));
+
+		duration_h = floor(duration_s / (3600));
+		duration_s = duration_s % 3600;
+		duration_m = floor(duration_s / (60));
+		duration_s = duration_s % 60;
+
+		pmsg("  Duração do teste: %02d:%02d:%02d; Potência de saída: %4.1f; Taxa de descarga: %01.2f; Nível de carga: %2.1f%%; Tensão: %2.2fV; Autonomia: %2.1f minutos; \n",duration_h,duration_m,duration_s,br->getOutputActivePower(),br->getBatteryLoad(),br->getBatteryLevel(),br->getBatteryVoltage(),br->getBatteryTimeLeft());
+	}while((br->getBatteryLevel() > batlevel_limit) && (! br->isBatteryCritical()));
 	fflush(CsvFile);
 	fclose(CsvFile);
+
+	pmsg("6) Fim do teste! Ligando a entrada do nobreak.\n");
 
 	time(&end);
 	gmtime_r(&end, &tm_end);
@@ -3191,55 +3220,88 @@ static void brazil_testBatteryHealth(){
 	power1 = br->getOutputActivePower();
 	batload1 = br->getBatteryLoad();
 
-	timeleft_rate = (timeleft0 - timeleft1) / (seconds / 60);
+	timeleft_diff = fabs(timeleft0 - timeleft1);
+	if(seconds == 0) seconds = 0.1;
+	timeleft_rate = timeleft_diff / (seconds / 60);
 
-	pmsg("3) Enviando comando para ligar a entrada.\n");
+	if(timeleft_peukert == 0) timeleft_peukert = 0.1;
+	timeleft_rate_peukert = timeleft0 / timeleft_peukert;
+
 	((BrazilUpsDriver*)(ups)->driver)->turnLineOn(true);
 
-	pmsg("4) Resultados:\n");
-	pmsg("Datas de início e fim do teste:\n");
-	pmsg("  Data de início:                    %04d-%02d-%02d %02d:%02d:%02d UTC\n",1900+tm_start.tm_year,tm_start.tm_mon,tm_start.tm_mday,tm_start.tm_hour,tm_start.tm_min,tm_start.tm_sec);
-	pmsg("  Data de fim:                       %04d-%02d-%02d %02d:%02d:%02d UTC\n",1900+tm_end.tm_year,tm_end.tm_mon,tm_end.tm_mday,tm_end.tm_hour,tm_end.tm_min,tm_end.tm_sec);
-	pmsg("Expectativa antes do início (em função apenas da carga):\n");
-	pmsg("  Tensão da bateria:                 %03.2f V\n",bat_expected);
-	pmsg("  Tempo restante Teórico Peukert:    %02.2f minutos\n",timeleft_peukert);
-	pmsg("No início do teste:\n");
-	pmsg("  Tensão da bateria:                 %03.2f V\n",bat0);
-	pmsg("  Tempo restante da bateria:         %02.2f minutos\n",timeleft0);
-	pmsg("  Potência na saída no início:       %03.2f W\n",power0);
-	pmsg("  Fator de descarga da bateria ini:  %01.2f C\n",batload0);
-	pmsg("No fim do teste:\n");
-	pmsg("  Tensão da bateria:                 %03.2f V\n",bat1);
-	pmsg("  Tempo restante da bateria:         %03.2f minutos\n",timeleft1);
-	pmsg("  Baterias atingiram nível crítico:  %s\n",(batcritical ? "SIM!" : "não"));
-	pmsg("  Potência na saída no fim:          %03.2f W\n",power1);
-	pmsg("  Fator de descarga da bateria fim:  %01.2f C\n",batload1);
-	pmsg("Análise dos resultados:\n");
-	pmsg("  Timeleft0 (estimado no início):    %02.1f minutos\n",timeleft0);
-	pmsg("  Timeleft1 (estimado no fim):       %02.1f minutos\n",timeleft1);
-	pmsg("  Duração teórica do teste:          %02.1f minutos = Timeleft0 - Timeleft1\n",timeleft0-timeleft1);
-	pmsg("  Duração medida do teste:           %02.1f minutos\n",seconds/60);
-	pmsg("  Relação (teórica / medida):        %01.2f\n",timeleft_rate);
-	if(batcritical){
-		pmsg("  Nível crítico:                     ATENÇÃO!!! O nobreak informou que as baterias atingiram um nível crítico!\n");
-		pmsg("                                     Ajuste os parâmetros de desligamento para evitar esse estado. Pode ser\n");
-		pmsg("                                     necessário trocar as baterias.\n");
+	pmsg("7) Resultados:\n");
+	pmsg("   Datas de início e fim do teste:\n");
+	pmsg("     Datetime no início:         datetime0        = %04d-%02d-%02d %02d:%02d:%02d UTC\n",1900+tm_start.tm_year,tm_start.tm_mon,tm_start.tm_mday,tm_start.tm_hour,tm_start.tm_min,tm_start.tm_sec);
+	pmsg("     Datatime no fim:            datetime1        = %04d-%02d-%02d %02d:%02d:%02d UTC\n",1900+tm_end.tm_year,tm_end.tm_mon,tm_end.tm_mday,tm_end.tm_hour,tm_end.tm_min,tm_end.tm_sec);
+	pmsg("   Expectativa antes do início (em função apenas da carga):\n");
+	pmsg("     Tensão da bateria:          batvolt_peukert  = %03.2f V\n",bat_expected);
+	pmsg("     Autonomia teórica:          timeleft_peukert = %02.2f minutos\n",timeleft_peukert);
+	pmsg("     Potência na saída:          power_peukert    = %03.2f W\n",power_peukert);
+	pmsg("     Fator de descarga:          batload_peukert  = %01.2f C\n",batload_peukert);
+	pmsg("   No início do teste:\n");
+	pmsg("     Tensão da bateria:          batvolt0         = %03.2f V\n",bat0);
+	pmsg("     Expectativa da autonomia:   timeleft0        = %02.2f minutos\n",timeleft0);
+	pmsg("     Potência na saída:          power0           = %03.2f W\n",power0);
+	pmsg("     Fator de descarga:          batload0         = %01.2f C\n",batload0);
+	pmsg("   No fim do teste:\n");
+	pmsg("     Nobreak informou alarme:    batcritical      = %s\n",(batcritical ? "SIM!" : "Não!"));
+	pmsg("     Tensão da bateria:          batvolt1         = %03.2f V\n",bat1);
+	pmsg("     Expectativa da autonomia:   timeleft1        = %03.2f minutos\n",timeleft1);
+	pmsg("     Potência na saída:          power1           = %03.2f W\n",power1);
+	pmsg("     Fator de descarga:          batload1         = %01.2f C\n",batload1);
+	pmsg("   Análise dos resultados quando conectado na rede elétrica (equação de Peukert):\n");
+	pmsg("     Expectativa da autonomia:   timeleft0        = %02.2f minutos\n",timeleft0);
+	pmsg("     Autonomia teórica:          timeleft_peukert = %02.2f minutos\n",timeleft_peukert);
+	pmsg("     Razão entre autonomias:     timeleft_rate    = %01.2f = timeleft0 / timeleft_peukert\n",timeleft_rate_peukert);
+	if((timeleft_rate_peukert < 0.8) || (timeleft_rate_peukert > 1.25)){
+		pmsg("     Resultado:                  Atenção! A razão entre a autonomia medida inicial e a calculada pela formulá\n");
+		pmsg("                                 de Peukert está com uma variação maior que 25%%. Isso pode ter sido ocasionado\n");
+		pmsg("                                 caso as baterias não estivessem em plena carga já que mesmo o nobreak indicando\n");
+		pmsg("                                 que as baterias não estão sendo carregadas diretamente, a forma de operação delas\n");
+		pmsg("                                 após a carga inicial é conhecida por flutuação. Nessa condição ela está sendo\n");
+		pmsg("                                 constantemente carregada de forma lenta.\n");
+		pmsg("                                 Para confirmar esse resultado repita esse teste dentro de dois dias. Dessa\n");
+		pmsg("                                 forma você poderá confirmar esse resultado. Esse pode ser um indicativo que\n");
+		pmsg("                                 suas baterias estão entrando no fim da vida útil. Lembrando que são cálculos\n");
+		pmsg("                                 teóricos e a decisão final cabe a sua avaliação.\n");
 	}else{
-		pmsg("  Nível crítico:                     OK! O nobreak não informou que as baterias chegaram em um nível crítico até\n");
-		pmsg("                                     esse ponto.\n");
+		pmsg("     Resultado:                  Sucesso! A razão entre a autonomia medida inicial e a calculada pela forma\n");
+		pmsg("                                 está dentro de uma variação menor que 25%%. Provavelmente suas baterias estavam\n");
+		pmsg("                                 em plena carga já que mesmo quando o nobreak indica que as baterias não estão\n");
+		pmsg("                                 sendo carregadas, a forma de operação delas após a carga inicial é conhecida por\n");
+		pmsg("                                 flutuação. Nessa condição ela está sendo constantemente carregada de forma lenta.\n");
 	}
-	if(timeleft_rate >= 0.75 && timeleft_rate <= 1.25){
-		pmsg("  Calculos de autonomia:             SUCESSO! O erro entre os Timeleft calculados e a duração medida foi menor que 25\%\n");
-		pmsg("                                     As baterias parecem estar em boa condição ou pode ser necessário revisar\n");
-		pmsg("                                     as rotinas de cálculo.\n");
+	pmsg("   Análise dos resultados quando operando desconectado da rede de energia:\n");
+	if(batcritical){
+		pmsg("     Nível crítico:              ATENÇÃO!!! O nobreak informou que as baterias atingiram um nível crítico!\n");
+		pmsg("                                 É muito provável que seja necessário trocar as baterias.\n");
 	}else{
-		pmsg("  Calculos de autonomia:             FALHOU! O erro entre os timeleft calculados e a duração medida foi maior que 25\%.\n");
-		pmsg("                                     Pode ser necessário trocar as baterias ou revisar as rotinas de cálculo.\n");
-		pmsg("                                     Ajuste os valores obtidos no arquivo de configuração.\n");
+		pmsg("     Nível crítico:              O nobreak não informou que as baterias chegaram em um nível crítico até\n");
+		pmsg("                                 o fim do teste. Caso isso tivesse ocorrido muito provavelmente seria necessário\n");
+		pmsg("                                 a troca imediata das baterias.\n");
+	}
+	pmsg("     Autonomia inicial estimada: timeleft0        = %02.1f minutos\n",timeleft0);
+	pmsg("     Autonomia final estimada:   timeleft1        = %02.1f minutos\n",timeleft1);
+	pmsg("     Duração estimada:           timeleft_diff    = %02.1f minutos = timeleft0 - timeleft1\n",timeleft_diff);
+	pmsg("     Duração medida do teste:    datetime_diff    = %02.1f minutos = datetime1 - datetime0\n",seconds/60);
+	pmsg("     Razão entre as durações:    timeleft_rate    = %01.2f = timeleft_diff / datetime_diff\n",timeleft_rate);
+
+	if(timeleft_rate >= 0.8 && timeleft_rate <= 1.25){
+		pmsg("     Calculos de autonomia:      SUCESSO! O erro entre a duração estimada (timeleft_diff) e a duração\n");
+		pmsg("                                 medida (datetime_diff) foi menor que 25%%. As baterias parecem estar\n");
+		pmsg("                                 em boa condição ou pode ser necessário revisar as configurações ou\n");
+		pmsg("                                 as rotinas de cálculo.\n");
+	}else{
+		pmsg("     Calculos de autonomia:      FALHOU! O erro entre a duração estimada (timeleft_diff) e a duração\n");
+		pmsg("                                 medida (datetime_diff) foi maior que 25%%. As baterias parecem estar\n");
+		pmsg("                                 em boa condição ou pode ser necessário revisar as configurações ou\n");
+		pmsg("                                 as rotinas de cálculo.\n");
+		pmsg("                                 Pode ser necessário trocar as baterias ou revisar as rotinas de cálculo.\n");
+		pmsg("                                 Ajuste os valores obtidos no arquivo de configuração.\n");
 	}
 	pmsg("\n");
-	pmsg("5) Dados extras gravados no arquivo:    %s\n",csv_filename);
-	pmsg("6) Fim do teste!\n");
+	pmsg("8) Dados extras gravados no arquivo:    %s\n",csv_filename);
+	pmsg("9) Fim do teste!\n");
 }
 static void brazil_testTimeLeftRoutines(){
 	pmsg("1) Iniciando teste das rotinas de calculo de autonomia!\n");

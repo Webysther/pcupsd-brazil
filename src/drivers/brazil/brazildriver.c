@@ -530,6 +530,7 @@ int BrazilUpsDriver::ReadData(bool getevents)
 				}
 				if(this->model != 0){
 					this->model->setBuffer(this->_buffer+bufpos, buflen-bufpos);
+					this->model->refreshVariables();
 					time(&this->_received);
 					ending = true;
 				}

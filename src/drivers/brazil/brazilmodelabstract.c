@@ -35,6 +35,13 @@ BrazilModelAbstract::BrazilModelAbstract(unsigned char model){
 	this->lock = false;
 	this->regulating_relay = 0;
 	this->bat = new BrazilBattery();
+
+	for(int i=0 ; i<10 ; i++){
+		this->_batvolt[i] = 0;
+		this->_outcurrent[i] = 0;
+		this->_outactpower[i] = 0;
+		this->_outvolt[i] = 0;
+	}
 }
 
 BrazilModelAbstract::~BrazilModelAbstract(){
@@ -147,9 +154,77 @@ double BrazilModelAbstract::getBatteryVoltageNom(){
 
 double BrazilModelAbstract::getBatteryLevel(){
 	if(this->isLineMode()){
-		return 100;
+		if(this->isCharging()){
+			return 50;
+		}else{
+			return 100;
+		}
 	}else{
 		return this->bat->calcLevel(this->getBatteryLoad(), this->getBatteryVoltage());
+	}
+}
+void BrazilModelAbstract::refreshVariables(){
+	for(int i=9 ; i>0 ; i--){
+		this->_batvolt[i] = this->_batvolt[i-1];
+		this->_outcurrent[i] = this->_outcurrent[i-1];
+		this->_outactpower[i] = this->_outactpower[i-1];
+		this->_outvolt[i] = this->_outvolt[i-1];
+	}
+	this->_batvolt[0] = this->getBatteryVoltageNow();
+	this->_outcurrent[0] = this->getOutputCurrentNow();
+	this->_outactpower[0] = this->getOutputActivePowerNow();
+	this->_outvolt[0] = this->getOutputVoltageNow();
+}
+double BrazilModelAbstract::getBatteryVoltage(){
+	double res = 0;
+	int i = 0;
+	while((i<10) && this->_batvolt[i] > 0){
+		res += this->_batvolt[i];
+		i++;
+	}
+	if(i>0){
+		return res / i;
+	}else{
+		return 0;
+	}
+}
+double BrazilModelAbstract::getOutputVoltage(){
+	double res = 0;
+	int i = 0;
+	while((i<10) && this->_outvolt[i] > 0){
+		res += this->_outvolt[i];
+		i++;
+	}
+	if(i>0){
+		return res / i;
+	}else{
+		return 0;
+	}
+}
+double BrazilModelAbstract::getOutputCurrent(){
+	double res = 0;
+	int i = 0;
+	while((i<10) && this->_outcurrent[i] > 0){
+		res += this->_outcurrent[i];
+		i++;
+	}
+	if(i>0){
+		return res / i;
+	}else{
+		return 0;
+	}
+}
+double BrazilModelAbstract::getOutputActivePower(){
+	double res = 0;
+	int i = 0;
+	while((i<10) && this->_outactpower[i] > 0){
+		res += this->_outactpower[i];
+		i++;
+	}
+	if(i>0){
+		return res / i;
+	}else{
+		return 0;
 	}
 }
 double BrazilModelAbstract::getBatteryTimeLeft(){
@@ -160,9 +235,9 @@ double BrazilModelAbstract::getBatteryTimeLeft(){
 		 * de que a Peukert's law só é uma boa aproximação com descarregamento constante.
 		 *
 		 */
-		return bat->calcTimeLeftPeukert(this->getBatteryLoad())*this->getInverterEfficiency();
+		return bat->calcTimeLeftPeukert(this->getBatteryLoad())*this->getInverterEfficiency()*(this->isCharging() ? 0.5 : 1);
 	}else{
-		return bat->calcTimeLeft(this->getBatteryLoad(),this->getBatteryVoltage())*this->getInverterEfficiency();
+		return bat->calcTimeLeft(this->getBatteryLoad(),this->getBatteryVoltageNow())*this->getInverterEfficiency();
 	}
 }
 double BrazilModelAbstract::getBatteryVoltageExpectedInitial(){

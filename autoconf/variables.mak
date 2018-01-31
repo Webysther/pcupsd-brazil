@@ -9,8 +9,8 @@
 # package version
 PACKAGE = apcctrl
 DISTNAME = debian
-DISTVER = 8.7
-VERSION = 0.8.9
+DISTVER = 8.10
+VERSION = 0.8.10
 
 #
 # programs needed by compilation
@@ -33,7 +33,7 @@ INSTALL_SCRIPT = ${INSTALL}
 MKINSTALLDIRS = /home/wagner/workspace/apcctrl/autoconf/mkinstalldirs
 CHKCONFIG = /sbin/chkconfig
 RST2HTML := /usr/bin/rst2html
-RST2PDF := /usr/bin/rst2pdf
+RST2PDF := 
 
 # Files and directories (paths)
 prefix = /usr
@@ -76,7 +76,7 @@ CPPFLAGS =  -I/usr/local/include -I$(topdir)/include $(EXTRAINCS)
 CFLAGS = $(CPPFLAGS) -g -O2 
 CXXFLAGS = $(CPPFLAGS) -g -O2 -fno-exceptions -fno-rtti -Wall -Wno-unused-result 
 OBJCFLAGS = $(CPPFLAGS) $(CFLAGS)
-LDFLAGS =  -L/usr/local/lib64 -L/usr/local/lib
+LDFLAGS =  -L/usr/local/lib
 LIBS =  -lm -lsupc++
 LIBGD = 
 GAPCMON_CFLAGS =  -DHAVE_FUNC_GETHOSTBYNAME_R_6

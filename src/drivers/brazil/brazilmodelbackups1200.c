@@ -79,7 +79,7 @@ double BrazilModelBackUPS1200::getBatteryCurrentNom(){
 	return 7;
 }
 double BrazilModelBackUPS1200::getInverterEfficiency(){
-	return 1.0;
+	return 0.7;
 }
 
 char *BrazilModelBackUPS1200::getModelName(){

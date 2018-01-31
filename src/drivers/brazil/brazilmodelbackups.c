@@ -264,7 +264,7 @@ unsigned char BrazilModelBackUPS::getMinute(){
 unsigned char BrazilModelBackUPS::getSecond(){
 	return this->_buffer[9];
 }
-double BrazilModelBackUPS::getBatteryVoltage(){
+double BrazilModelBackUPS::getBatteryVoltageNow(){
 	return this->TENSAO_BATERIA_F1 * this->_buffer[3] + this->TENSAO_BATERIA_F2;
 }
 double BrazilModelBackUPS::getLineVoltage(){
@@ -283,7 +283,7 @@ double BrazilModelBackUPS::getLineFrequency(){
 	freq = 0.37 * (257 - (freq >> 8));
 	return freq;
 }
-double BrazilModelBackUPS::getOutputVoltage(){
+double BrazilModelBackUPS::getOutputVoltageNow(){
 	if(! this->isOutputOn()){
 		return 0;
 	}else{
@@ -295,7 +295,7 @@ double BrazilModelBackUPS::getOutputVoltage(){
 		}
 	}
 }
-double BrazilModelBackUPS::getOutputCurrent(){
+double BrazilModelBackUPS::getOutputCurrentNow(){
 	if(this->isLineMode()){
 		return  this->CORRENTE_SAIDA_F1_MR * this->_buffer[5] + this->CORRENTE_SAIDA_F2_MR;;
 	}else{
@@ -305,7 +305,7 @@ double BrazilModelBackUPS::getOutputCurrent(){
 	}
 	return 0;
 }
-double BrazilModelBackUPS::getOutputActivePower(){
+double BrazilModelBackUPS::getOutputActivePowerNow(){
 	double pactive = this->_buffer[7] + this->_buffer[8] * 256;
 	double result = 0;
 
@@ -319,7 +319,7 @@ double BrazilModelBackUPS::getOutputActivePower(){
 	} else {
 		result = potRe;
 	}
-	if (this->getOutputCurrent() < 0.7) {
+	if (result < this->getOutputPower()) {
 		result = this->getOutputPower();
 	}
 	return result;

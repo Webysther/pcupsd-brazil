@@ -171,7 +171,7 @@ unsigned char BrazilModelSolis::getMinute(){
 unsigned char BrazilModelSolis::getSecond(){
 	return this->_buffer[9];
 }
-double BrazilModelSolis::getBatteryVoltage(){
+double BrazilModelSolis::getBatteryVoltageNow(){
 	return this->CST_BATT_VOLT_MULT * this->_buffer[3] + this->CST_BATT_VOLT_OFFSET;
 }
 double BrazilModelSolis::getLineVoltage(){
@@ -190,7 +190,7 @@ double BrazilModelSolis::getLineFrequency(){
 	freq = this->CST_INPUT_FREQUENCY / freq;
 	return freq;
 }
-double BrazilModelSolis::getOutputVoltage(){
+double BrazilModelSolis::getOutputVoltageNow(){
 		if(! this->isOutputOn()){
 		return 0;
 	}else{
@@ -205,7 +205,7 @@ double BrazilModelSolis::getOutputVoltage(){
 		}
 	}
 }
-double BrazilModelSolis::getOutputCurrent(){
+double BrazilModelSolis::getOutputCurrentNow(){
 	if(this->isLineMode()){
 		if(this->isOutput220V()){
 			return  this->CST_OUTPUT_CURRENT_220_MULT_LINE * this->_buffer[5] + this->CST_OUTPUT_CURRENT_220_OFFSET_LINE;
@@ -220,7 +220,7 @@ double BrazilModelSolis::getOutputCurrent(){
 		}
 	}
 }
-double BrazilModelSolis::getOutputActivePower(){
+double BrazilModelSolis::getOutputActivePowerNow(){
 	double pactive = this->_buffer[7] + this->_buffer[8] * 256;
 	double result = 0;
 	if(this->isLineMode()){

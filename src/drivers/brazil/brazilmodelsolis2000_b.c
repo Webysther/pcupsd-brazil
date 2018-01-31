@@ -94,7 +94,7 @@ double BrazilModelSolis2000_b::getBatteryCurrentNom(){
 	return 18;    // 1 x 18A/h = 1 * 2.57 * 7A/h
 }
 double BrazilModelSolis2000_b::getInverterEfficiency(){
-	return 1.0;
+	return 0.7;
 }
 
 char *BrazilModelSolis2000_b::getModelName(){
