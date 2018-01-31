@@ -1,8 +1,12 @@
-## apcctrl-brazil.conf v1.1 ##
+## apcctrl.conf v1.1 ##
 # 
-#  for apcctrl-brazil release @VERSION@ - win32-mingw
+#  for apcctrl release @VERSION@ - win32-mingw
 #
-# "apcctrl-brazil" POSIX config file
+# "apcctrl" POSIX config file
+
+#
+#  ATENÇÃO! Você precisa alterar ao menos o parâmetro "DEVICE" neste arquivo. 
+#
 
 #
 # Note that the apcctrl-brazil daemon must be restarted in order for changes to

@@ -291,6 +291,10 @@ int main(int argc, char *argv[])
 	if (parse_options(argc, argv))
 		exit(1);
 
+#ifdef HAVE_MINGW
+	system("chcp 65001 > nul");
+#endif
+
 	pmsg("\n\n");
 	ptime();
 	pmsg("apctest " APCCTRL_RELEASE " (" ADATE ") " APCCTRL_HOST "\n");
