@@ -5,11 +5,7 @@
 # "apcctrl" POSIX config file
 
 #
-#  ATENCÃO! Voce precisa alterar o parametro DEVICE. 
-#
-
-#
-# Note that the apcctrl-brazil daemon must be restarted in order for changes to
+# Note that the apcctrl daemon must be restarted in order for changes to
 # this configuration file to become active.
 #
 
