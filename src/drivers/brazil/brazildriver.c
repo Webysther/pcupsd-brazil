@@ -53,8 +53,8 @@ bool BrazilUpsDriver::check_state()
 bool BrazilUpsDriver::refresh()
 {
 	Dmsg(50, "Refresh.\n");
-	//	tcflush(_ups->fd, TCIFLUSH);
-	//	sleep(1);
+	tcflush(_ups->fd, TCIFLUSH);
+	sleep(1);
 	return ReadData(false) == SUCCESS ? true : false;
 }
 
@@ -310,7 +310,7 @@ bool BrazilUpsDriver::turnLineOn(bool turnon)
 			}else{
 				Dmsg(50, "LineOn programmation! set: %s; read_LineOn: %s.\n",(turnon?"true":"false"),(this->model->isLineMode()?"true":"false"));
 				whait++;
-				sleep(1);
+				this->refresh();
 			}
 		}
 		if(whait<10){
@@ -348,7 +348,7 @@ bool BrazilUpsDriver::turnOutputOn(bool turnon)
 			}else{
 				Dmsg(50, "LineOutput programmation! set: %s; read_OutputOn: %s.\n",(turnon?"true":"false"),(this->model->isOutputOn()?"true":"false"));
 				whait++;
-				sleep(1);
+				this->refresh();
 			}
 		}
 		if(whait<10){
@@ -500,9 +500,15 @@ int BrazilUpsDriver::ReadData(bool getevents)
 
 		Dmsg(199, "ReadData: going to read _ups->fd\n");
 
+		//		do {
+		//			retval = read(_ups->fd, &c, 1);
+		//		} while (retval <= 0 && (errno == EAGAIN || errno == EINTR));
 		do {
 			retval = read(_ups->fd, &c, 1);
-		} while (retval <= 0 && (errno == EAGAIN || errno == EINTR));
+		} while (retval == -1 && (errno == EAGAIN || errno == EINTR));
+		if (retval <= 0) {
+			return FAILURE;
+		}
 
 		Dmsg(199, "ReadData: reatval = %d\n",retval);
 
@@ -512,27 +518,23 @@ int BrazilUpsDriver::ReadData(bool getevents)
 			 */
 			if(now - this->_received > 5){
 				Dmsg(50, "Connection lost.\n");
-				bool commok = false;
+//				bool commok = false;
 				if(access(_ups->device, F_OK | W_OK) != -1 ) {
 					if (_ups->fd >= 0){
 						this->Close();
 					}
 					if(this->Open()){
-//						if(this->setup()){
-//							this->read_static_data();
-							commok = true;
-//						}
+						//						if(this->setup()){
+						//							this->read_static_data();
+	//					commok = true;
+						//						}
 					}
 				}
-				if(commok){
-					return SUCCESS;
-				}else{
-					if(! _ups->is_commlost()){
-						_ups->set_commlost();
-						generate_event(_ups, CMDCOMMFAILURE);
-					}
-					return FAILURE;
+				if(! _ups->is_commlost()){
+					_ups->set_commlost();
+					generate_event(_ups, CMDCOMMFAILURE);
 				}
+				return FAILURE;
 			}
 		}
 
