@@ -3171,7 +3171,7 @@ static void brazil_testBatteryHealth(){
 	gmtime_r(&start, &tm_start);
 
 	char csv_filename[120];
-	sprintf(csv_filename,"apctest.BatteryHealth.%04d-%02d-%02d-%02d-%02d-%02d.csv",(tm_start.tm_year+1900),tm_start.tm_mon+1,tm_start.tm_mday,tm_start.tm_hour,tm_start.tm_min,tm_start.tm_sec);
+	sprintf(csv_filename,"apctest.battery.%04d-%02d-%02d-%02d-%02d-%02d.csv",(tm_start.tm_year+1900),tm_start.tm_mon+1,tm_start.tm_mday,tm_start.tm_hour,tm_start.tm_min,tm_start.tm_sec);
 	FILE *CsvFile=fopen (csv_filename,"w");
 	setvbuf (CsvFile , NULL , _IOFBF , 65535 );
 
@@ -3193,7 +3193,6 @@ static void brazil_testBatteryHealth(){
 	fprintf(CsvFile,"\n");
 	fprintf(CsvFile,"\"Data\",\"tempo em teste(s)\",\"Potência ativa de saida (W)\",\"Fator de descarga da bateria (C)\",\"Tensão da bateria (V)\",\"Expectativa do tempo restante (minutos)\",\"Fator de descarga(C)\"\n");
 	do{
-		sleep(1);
 		((BrazilUpsDriver*)(ups)->driver)->refresh();
 		time(&now);
 		gmtime_r(&now, &tm_now);
@@ -3285,25 +3284,25 @@ static void brazil_testBatteryHealth(){
 		pmsg("    estavam em plena carga já que mesmo quando o nobreak indica que as baterias\n");
 		pmsg("    não estão sendo carregadas, a forma de operação delas após a carga inicial é\n");
 		pmsg("    conhecida por flutuação. Nessa condição ela está sendo constantemente\n");
-		pmsg("    carregada de forma lenta.");
+		pmsg("    carregada de forma lenta.\n");
 	}
 	pmsg("7.6) Análise dos resultados quando operando com as baterias:\n");
 	if(batcritical){
-		pmsg("  Nível crítico:              ATENÇÃO!!! O nobreak informou que as baterias\n");
-		pmsg("                              atingiram um nível crítico! É muito provável que\n");
-		pmsg("                              seja necessário trocar as baterias. Nessa\n");
-		pmsg("                              condição o nobreak se auto desligará.\n");
+		pmsg("  Nível crítico:\n");
+		pmsg("    ATENÇÃO!!! O nobreak informou que as baterias atingiram um nível crítico! É\n");
+		pmsg("    muito provável que seja necessário trocar as baterias. Nessa condição o\n");
+		pmsg("    nobreak se auto desligará em breve.\n");
 	}else{
-		pmsg("  Nível crítico:              O nobreak não informou que as baterias chegaram em\n");
-		pmsg("                              um nível crítico até o fim do teste. Caso isso\n");
-		pmsg("                              tivesse ocorrido, muito provavelmente seria\n");
-		pmsg("                              necessário a troca imediata das baterias.\n");
+		pmsg("  Nível crítico:\n");
+		pmsg("    O nobreak não informou que as baterias chegaram em um nível crítico até o\n");
+		pmsg("    fim do teste. Caso isso tivesse ocorrido, muito provavelmente, seria\n");
+		pmsg("    necessário a troca imediata das baterias.\n");
 	}
-	pmsg("  Autonomia inicial estimada: tl0              = %02.1f minutos\n",timeleft0);
-	pmsg("  Autonomia final estimada:   tl1              = %02.1f minutos\n",timeleft1);
-	pmsg("  Duração estimada do teste:  tl_diff          = %02.1f minutos = tl0 - tl1\n",timeleft_diff);
-	pmsg("  Duração medida do teste:    dt_diff          = %02.1f minutos = dt1 - dt0\n",seconds/60);
-	pmsg("  Razão entre as durações:    rate             = %01.2f = tl_diff / dt_diff\n",timeleft_rate);
+	pmsg("  Autonomia inicial:      tl0              = %02.1f minutos\n",timeleft0);
+	pmsg("  Autonomia final:        tl1              = %02.1f minutos\n",timeleft1);
+	pmsg("  Duração estimada:       tl_diff          = %02.1f minutos = tl0 - tl1\n",timeleft_diff);
+	pmsg("  Duração medida:         dt_diff          = %02.1f minutos = dt1 - dt0\n",seconds/60);
+	pmsg("  Razão entre durações:   rate             = %01.2f = tl_diff / dt_diff\n",timeleft_rate);
 
 	if(timeleft_rate >= 0.8 && timeleft_rate <= 1.25){
 		pmsg("  Conclusão parcial:\n");
@@ -3311,16 +3310,27 @@ static void brazil_testBatteryHealth(){
 		pmsg("    (datetime_diff) foi menor que 25%%. As baterias parecem estar em boas\n");
 		pmsg("    condições ou pode ser necessário revisar as configurações ou as rotinas de\n");
 		pmsg("    cálculo.\n");
+	}
+	if(timeleft_rate > 1.25){
+		pmsg("  Conclusão parcial:\n");
+		pmsg("    FALHOU! O erro entre a duração estimada (timeleft_diff) e a duração medida\n");
+		pmsg("    (datetime_diff) foi maior que 25%%. A duração do teste foi muito menor que\n");
+		pmsg("    a duração esperada. Isso indica que as baterias estão descarregando mais\n");
+		pmsg("    rapidamente que o esperado. Possivelmente é necessário trocar as baterias.\n");
+		pmsg("    Esse resultado também pode ser decorrente de erros nas rotinas de cáculo de\n");
+		pmsg("    autonomia. Recomenda-se repitir o teste após alguns dias para garantir que\n");
+		pmsg("    as baterias estejam realmente carregadas.\n");
 	}else{
 		pmsg("  Conclusão parcial:\n");
-		pmsg("    FALHOU! O erro entre a duração estimada (timeleft_diff) e a duração\n");
-		pmsg("    medida (datetime_diff) foi maior que 25%%. As baterias parecem estar\n");
-		pmsg("    em boa condição ou pode ser necessário revisar as configurações ou\n");
-		pmsg("    as rotinas de cálculo.\n");
-		pmsg("    Pode ser necessário trocar as baterias ou revisar as rotinas de cálculo.\n");
-		pmsg("    Ajuste os valores obtidos no arquivo de configuração.\n");
+		pmsg("    FALHOU! O erro entre a duração estimada (timeleft_diff) e a duração medida\n");
+		pmsg("    (datetime_diff) foi maior que 25%%. A duração do teste foi muito maior que\n");
+		pmsg("    a duração esperada. Isso indica que as baterias estão descarregando\n");
+		pmsg("    lentamente, o que é um bom sinal, mas também pode ser decorrentes de uma\n");
+		pmsg("    configuração equivocada do software ou erros nas rotinas de cálculo de\n");
+		pmsg("    autonomia. Recomenda-se repitir o teste após alguns dias para garantir que\n");
+		pmsg("    as baterias estejam realmente carregadas.\n");
 	}
-	pmsg("8) Dados extras gravados no arquivo:    %s\n",csv_filename);
+	pmsg("8) Dados extras no arquivo: %s\n",csv_filename);
 	pmsg("9) Fim do teste!\n\n");
 }
 static void brazil_testTimeLeftRoutines(){

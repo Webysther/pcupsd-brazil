@@ -122,7 +122,7 @@ public:
 	virtual bool isBatteryCritical() = 0;
 
 	double getOutputPower(){
-		return this->getOutputCurrentNow() * this->getOutputVoltageNow();
+		return this->getOutputCurrent() * this->getOutputVoltage();
 	}
 
 	double getLoadPercent(){
@@ -130,7 +130,7 @@ public:
 		return load;
 	}
 	double getLoadActivePowerPercent(){
-		return (this->getOutputActivePowerNow() / this->getOutputActivePowerNom())*100;
+		return (this->getOutputActivePower() / this->getOutputActivePowerNom())*100;
 	}
 	unsigned char getModelNumber(){
 		return this->vmodel;

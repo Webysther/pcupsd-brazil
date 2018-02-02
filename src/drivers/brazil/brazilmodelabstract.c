@@ -237,7 +237,7 @@ double BrazilModelAbstract::getBatteryTimeLeft(){
 		 */
 		return bat->calcTimeLeftPeukert(this->getBatteryLoad())*this->getInverterEfficiency()*(this->isCharging() ? 0.5 : 1);
 	}else{
-		return bat->calcTimeLeft(this->getBatteryLoad(),this->getBatteryVoltageNow())*this->getInverterEfficiency();
+		return bat->calcTimeLeft(this->getBatteryLoad(),this->getBatteryVoltage())*this->getInverterEfficiency();
 	}
 }
 double BrazilModelAbstract::getBatteryVoltageExpectedInitial(){
