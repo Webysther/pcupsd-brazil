@@ -498,11 +498,14 @@ int BrazilUpsDriver::ReadData(bool getevents)
 		}
 #endif
 
-		Dmsg(199, "going to read _ups->fd\n");
+		Dmsg(199, "ReadData: going to read _ups->fd\n");
 
 		do {
 			retval = read(_ups->fd, &c, 1);
 		} while (retval <= 0 && (errno == EAGAIN || errno == EINTR));
+
+		Dmsg(199, "ReadData: reatval = %d\n",retval);
+
 		if (retval <= 0) {
 			/*
 			 * Test if connection was losted.
@@ -515,12 +518,15 @@ int BrazilUpsDriver::ReadData(bool getevents)
 						this->Close();
 					}
 					if(this->Open()){
-						this->setup();
-						this->read_static_data();
-						commok = true;
+						if(this->setup()){
+							this->read_static_data();
+							commok = true;
+						}
 					}
 				}
-				if(! commok){
+				if(commok){
+					return SUCCESS;
+				}else{
 					if(! _ups->is_commlost()){
 						_ups->set_commlost();
 						generate_event(_ups, CMDCOMMFAILURE);
