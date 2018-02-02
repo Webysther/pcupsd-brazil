@@ -59,17 +59,25 @@ public:
 protected:
 
 	void send(unsigned char *cmd, int size);
-	char *strBuffer(unsigned char* buffer, int len, int first);
+	char *strBuffer(unsigned char* buffer, int len);
 private:
 
 	int ReadData(bool getevents);
 
 	struct termios _oldtio;
 	struct termios _newtio;
+
 	time_t _received;
 	unsigned char _buffer[BrazilModelAbstract::BUFFERLEN];  // Buffer
+	unsigned int _bufnxt;		// position off next char in buffer to be written
+	unsigned int _buffst;		// position off first char in buffer
 
 	bool _autosetup;
+
+	void bufferAdd(unsigned char c);
+	void bufferDel(unsigned int len);
+	unsigned int  bufferLen();
+	unsigned char *bufferGet();
 
 };
 

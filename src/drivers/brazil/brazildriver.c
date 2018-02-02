@@ -39,6 +39,8 @@ BrazilUpsDriver::BrazilUpsDriver(UPSINFO *ups) : UpsDriver(ups)
 	this->model = 0;
 	this->_received = time(NULL);
 	this->_autosetup = true;
+	this->_buffst = 0;
+	this->_bufnxt = 0;
 }
 /*
  * Read UPS events. I.e. state changes.
@@ -51,7 +53,8 @@ bool BrazilUpsDriver::check_state()
 bool BrazilUpsDriver::refresh()
 {
 	Dmsg(50, "Refresh.\n");
-	tcflush(_ups->fd, TCIFLUSH);
+	//	tcflush(_ups->fd, TCIFLUSH);
+	//	sleep(1);
 	return ReadData(false) == SUCCESS ? true : false;
 }
 
@@ -204,8 +207,8 @@ bool BrazilUpsDriver::setup()
 				if(! this->model->isOutputOn()){
 					this->turnOutputOn(true);
 				}
+				this->turnContinueMode();
 			}
-			this->turnContinueMode();
 		}
 		return true;
 	}
@@ -241,7 +244,7 @@ bool BrazilUpsDriver::kill_power()
 }
 
 void BrazilUpsDriver::send(unsigned char *cmd, int size){
-	Dmsg(50, "Buffer to send! len: %02d; data:%s.\n",size,this->strBuffer(cmd,size,0));
+	Dmsg(50, "Buffer to send! len: %02d; data:%s.\n",size,this->strBuffer(cmd,size));
 	tcflush(_ups->fd, TCIFLUSH);
 	char byte;
 	for(int i=0 ; i<size ; i++){
@@ -298,9 +301,11 @@ bool BrazilUpsDriver::turnLineOn(bool turnon)
 	if(size > 0){
 		int whait = 1;
 		while(whait > 0 && whait <= 10){
-			this->send(cmd,size);
 			returnreaddata = this->ReadData(false);
-			if((returnreaddata == SUCCESS) && ((turnon && this->model->isLineMode()) || (!turnon && !this->model->isLineMode()))){
+			if(returnreaddata == SUCCESS){
+				this->send(cmd,size);
+			}
+			if((turnon && this->model->isLineMode()) || (!turnon && !this->model->isLineMode())){
 				whait = 0;
 			}else{
 				Dmsg(50, "LineOn programmation! set: %s; read_LineOn: %s.\n",(turnon?"true":"false"),(this->model->isLineMode()?"true":"false"));
@@ -334,9 +339,11 @@ bool BrazilUpsDriver::turnOutputOn(bool turnon)
 	if(size > 0){
 		int whait = 1;
 		while(whait > 0 && whait <= 10){
-			this->send(cmd,size);
 			returnreaddata = this->ReadData(false);
-			if((returnreaddata == SUCCESS) && ((turnon && this->model->isOutputOn()) || (!turnon && !this->model->isOutputOn()))){
+			if(returnreaddata == SUCCESS){
+				this->send(cmd,size);
+			}
+			if((turnon && this->model->isOutputOn()) || (!turnon && !this->model->isOutputOn())){
 				whait = 0;
 			}else{
 				Dmsg(50, "LineOutput programmation! set: %s; read_OutputOn: %s.\n",(turnon?"true":"false"),(this->model->isOutputOn()?"true":"false"));
@@ -418,7 +425,11 @@ bool BrazilUpsDriver::Close()
  */
 int BrazilUpsDriver::ReadData(bool getevents)
 {
-	Dmsg(99, "ReadData(bool getevents)\n");
+	if(getevents){
+		Dmsg(99, "ReadData(true)\n");
+	}else{
+		Dmsg(99, "ReadData(false)\n");
+	}
 
 	/*
 	 * Message structure
@@ -429,8 +440,6 @@ int BrazilUpsDriver::ReadData(bool getevents)
 	 */
 
 	bool bufok = false;
-	unsigned int bufpos = 0;		// position on buffer to discart a wrong byte
-	unsigned int buflen = 0;		// length of buffer
 
 	bool ending = false;
 	unsigned char c;
@@ -459,7 +468,7 @@ int BrazilUpsDriver::ReadData(bool getevents)
 	}
 #endif
 
-	while (!ending && buflen < BrazilModelAbstract::BUFFERLEN - 50) {
+	while (!ending && this->bufferLen() < BrazilModelAbstract::BUFFERLEN) {
 
 #if !defined(HAVE_MINGW)
 		fd_set rfds;
@@ -489,6 +498,8 @@ int BrazilUpsDriver::ReadData(bool getevents)
 		}
 #endif
 
+		Dmsg(99, "going to read _ups->fd\n");
+
 		do {
 			retval = read(_ups->fd, &c, 1);
 		} while (retval <= 0 && (errno == EAGAIN || errno == EINTR));
@@ -514,56 +525,61 @@ int BrazilUpsDriver::ReadData(bool getevents)
 						_ups->set_commlost();
 						generate_event(_ups, CMDCOMMFAILURE);
 					}
+					return FAILURE;
 				}
-				return FAILURE;
 			}
 		}
 
-		this->_buffer[buflen++] = c;
+		this->bufferAdd(c);
+		Dmsg(199, "Buffer! len: %03d; fst: %03d: nxt: %03d; data:%s.\n",this->bufferLen(),this->_buffst, this->_bufnxt,this->strBuffer(this->bufferGet(),this->bufferLen()));
 
 		if(!getevents){
-			int ret = BrazilModelAbstract::testBuffer(this->_buffer+bufpos, buflen-bufpos);
+			int ret = BrazilModelAbstract::testBuffer(this->bufferGet(), this->bufferLen());
 			// ret == -1: error! rotate buffer
 			// ret == 0: get next byte
 			// ret == 1: test ok!
 			if(ret == 1){
+				Dmsg(99, "Buffer ok! len: %03d; data:%s.\n",this->bufferLen(),this->strBuffer(this->bufferGet(),this->bufferLen()));
+
 				bufok = true;
 				if(this->model == 0){
-					this->model = BrazilModelAbstract::newInstance(this->_buffer[bufpos],_ups->expander_ampere);
+					this->model = BrazilModelAbstract::newInstance(this->bufferGet()[0],_ups->expander_ampere);
 					if(this->model == 0){
-						log_event(_ups, LOG_ERR, "APC Brazil. Model %u not recognized.",this->_buffer[bufpos]);
-						bufpos++;
+						log_event(_ups, LOG_ERR, "APC Brazil. Model %u not recognized.",this->bufferGet()[0]);
+						this->bufferDel(1);
 					}
 				}
 				if(this->model != 0){
-					this->model->setBuffer(this->_buffer+bufpos, buflen-bufpos);
+					this->model->setBuffer(this->bufferGet(), this->bufferLen());
+					this->bufferDel(this->bufferLen());
 					this->model->refreshVariables();
 					time(&this->_received);
 					ending = true;
 				}
 
-			}else{
-				if(ret == -1){
-					bufpos++;
-				}
+			}
+			if(ret == -1){
+				this->bufferDel(1);
 			}
 		}else{
-			int ret = this->model->testEvents(this->_buffer+bufpos, buflen-bufpos);
+			int ret = this->model->testEvents(this->bufferGet(), this->bufferLen());
 			// ret == -1: error! rotate buffer
 			// ret == 0: get next byte
 			// ret == 1: test ok!
 			if(ret == 1){
+				Dmsg(99, "Buffer ok! len: %03d; data:%s.\n",this->bufferLen(),this->strBuffer(this->bufferGet(),this->bufferLen()));
+
 				bufok = true;
-				if(this->model->setEvents(this->_buffer+bufpos, buflen-bufpos)){
+				if(this->model->setEvents(this->bufferGet(), this->bufferLen())){
+					this->bufferDel(this->bufferLen());
 					ending = true;
 				}
 			}
 			if(ret == -1){
-				bufpos++;
+				this->bufferDel(1);
 			}
 		}
 	}
-	Dmsg(99, "Buffer! len: %02d; pos: %02d; data:%s.\n",buflen,bufpos,this->strBuffer(this->_buffer,buflen,0));
 
 	if(_ups->is_commlost() && ending){
 		_ups->clear_commlost();
@@ -771,10 +787,10 @@ bool BrazilUpsDriver::read_volatile_data()
 	return true;
 }
 
-char *BrazilUpsDriver::strBuffer(unsigned char* buffer, int len, int first){
+char *BrazilUpsDriver::strBuffer(unsigned char* buffer, int len){
 	static char out[900];
-	for(int i=0 ; i<len-first && i<99 ; i++){
-		sprintf (out+9*i," %02d(%03u);",i,*(buffer+i+first));
+	for(int i=0 ; i<len && i<99 ; i++){
+		sprintf (out+9*i," %02d(%03u);",i,*(buffer+i));
 	}
 	return out;
 }
@@ -795,6 +811,49 @@ int BrazilUpsDriver::getEventsStr(char **events){
 		this->ReadData(true);
 		sizeout = this->model->getEventsStr(events);
 	}
-
 	return sizeout;
 }
+
+void BrazilUpsDriver::bufferAdd(unsigned char c){
+	this->_buffer[this->_bufnxt] = c;
+	this->_bufnxt++;
+	if(this->_bufnxt == BrazilModelAbstract::BUFFERLEN){
+		this->_bufnxt = 0;
+	}
+
+	if(this->bufferLen() > BrazilModelAbstract::BUFFERLEN){
+		this->bufferDel(1);
+	}
+	Dmsg(199, "bufferAdd(%u) >> buflen = %u, buffst = %u, bufnxt = %u\n",c,this->bufferLen(), this->_buffst,this->_bufnxt);
+}
+void BrazilUpsDriver::bufferDel(unsigned int len){
+	if(len >= BrazilModelAbstract::BUFFERLEN){
+		log_event(_ups, LOG_ERR, "buffferDel! Len parameter greatest than BrazilModelAbstract::BUFFERLEN.");
+		return;
+	}
+	if(len > this->bufferLen()){
+		log_event(_ups, LOG_ERR, "buffferDel! Len parameter greatest than bufferLen function return.");
+		return;
+	}
+	this->_buffst += len;
+	this->_buffst = this->_buffst % BrazilModelAbstract::BUFFERLEN;
+	Dmsg(199, "bufferDel(%u) >> buflen = %u, buffst = %u, bufnxt = %u\n",len,this->bufferLen(), this->_buffst,this->_bufnxt);
+}
+unsigned int BrazilUpsDriver::bufferLen(){
+	unsigned int ret = 0;
+	if(this->_buffst > this->_bufnxt){
+		ret = BrazilModelAbstract::BUFFERLEN - this->_buffst;
+		ret += this->_bufnxt;
+	}else{
+		ret = this->_bufnxt - this->_buffst;
+	}
+	return ret;
+}
+unsigned char *BrazilUpsDriver::bufferGet(){
+	static unsigned char out[BrazilModelAbstract::BUFFERLEN];
+	for(unsigned int i=0 ; i<this->bufferLen() ; i++){
+		out[i] = this->_buffer[(this->_buffst + i) % BrazilModelAbstract::BUFFERLEN];
+	}
+	return out;
+}
+

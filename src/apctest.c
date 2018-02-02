@@ -3140,7 +3140,6 @@ static void brazil_testBatteryHealth(){
 	pmsg("1) Iniciando teste!\n");
 	pmsg("2) Aguarde %d segundos para estabilizar o nobreak.",start_delay_offbat);
 	for(int i=0 ; i<start_delay_offbat ; i++){ // necessário para estabilizar a tensão da bateria de início.
-		sleep(1);
 		((BrazilUpsDriver*)(ups)->driver)->refresh();
 		pmsg(".");
 	}
