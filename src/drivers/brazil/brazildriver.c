@@ -498,7 +498,7 @@ int BrazilUpsDriver::ReadData(bool getevents)
 		}
 #endif
 
-		Dmsg(99, "going to read _ups->fd\n");
+		Dmsg(199, "going to read _ups->fd\n");
 
 		do {
 			retval = read(_ups->fd, &c, 1);
