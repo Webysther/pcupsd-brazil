@@ -1,5 +1,9 @@
              Release Notes for ApcCtrl 0.8.x
 
+0.8.13 - 02 de fevereiro de 2018
+
+	* Correção de bug de perda de comunicação
+
 0.8.12 - 02 de fevereiro de 2018
 
 	* Correção de bug no apctest para Windows. Em alguns casos o nobreak se desconecta da
