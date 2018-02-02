@@ -3160,7 +3160,6 @@ static void brazil_testBatteryHealth(){
 	}
 
 	for(int i=0 ; i<start_delay_onbat ; i++){ // necessário para estabilizar a tensão da bateria de início.
-		sleep(1);
 		((BrazilUpsDriver*)(ups)->driver)->refresh();
 		pmsg(".");
 	}
