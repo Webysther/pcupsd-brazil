@@ -7,7 +7,7 @@
 ;
 ; Basics
 ;
-Name "ApcCtrl-brazil"
+Name "ApcCtrl"
 OutFile "winapcctrl-${VERSION}.exe"
 SetCompressor lzma
 InstallDir "c:\apcctrl"
@@ -449,8 +449,8 @@ Section "-Finish"
   WriteRegStr   HKLM "${UNINSTREG}" "UninstallString" "$INSTDIR\uninstall.exe"
   WriteRegStr   HKLM "${UNINSTREG}" "DisplayVersion"  "${VERSION}"
   WriteRegStr   HKLM "${UNINSTREG}" "Version"         "${VERSION}"
-  WriteRegStr   HKLM "${UNINSTREG}" "Publisher"       "http://apcctrl-brazil.sourceforge.net/"
-  WriteRegStr   HKLM "${UNINSTREG}" "URLInfoAbout"    "http://apcctrl-brazil.sourceforge.net/"
+  WriteRegStr   HKLM "${UNINSTREG}" "Publisher"       "http://www.apcctrl.com.br/"
+  WriteRegStr   HKLM "${UNINSTREG}" "URLInfoAbout"    "http://www.apcctrl.com.br/"
   WriteRegDWord HKLM "${UNINSTREG}" "NoRepair"        1
   WriteRegDWord HKLM "${UNINSTREG}" "NoModify"        1
 
