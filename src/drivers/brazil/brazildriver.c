@@ -38,7 +38,7 @@ BrazilUpsDriver::BrazilUpsDriver(UPSINFO *ups) : UpsDriver(ups)
 {
 	this->model = 0;
 	this->_received = time(NULL);
-
+	this->_autosetup = true;
 }
 /*
  * Read UPS events. I.e. state changes.
@@ -102,24 +102,24 @@ bool BrazilUpsDriver::Open()
 		return false;
 	}
 
-    DIR *dir;
-    struct dirent *entry;
+	DIR *dir;
+	struct dirent *entry;
 
-    if (!(dir = opendir(path)))
-        return false;
+	if (!(dir = opendir(path)))
+		return false;
 
-    bool found = false;
-    while ((entry = readdir(dir)) != NULL){
-        if (strncmp(entry->d_name, filebase, strlen(filebase)) == 0){
-        	Dmsg(50, "Device localizado!!! %s/%s\n",path,entry->d_name);
-        	if(found){
-        		log_event(this->_ups, LOG_WARNING, "WARNING!!! Found more than 1 device with namebase %s!",filebase);
-        	}
-        	sprintf(opendev, "%s/%s",path,entry->d_name);
-        	found = true;
-        }
-    }
-    closedir(dir);
+	bool found = false;
+	while ((entry = readdir(dir)) != NULL){
+		if (strncmp(entry->d_name, filebase, strlen(filebase)) == 0){
+			Dmsg(50, "Device localizado!!! %s/%s\n",path,entry->d_name);
+			if(found){
+				log_event(this->_ups, LOG_WARNING, "WARNING!!! Found more than 1 device with namebase %s!",filebase);
+			}
+			sprintf(opendev, "%s/%s",path,entry->d_name);
+			found = true;
+		}
+	}
+	closedir(dir);
 
 #endif
 
@@ -158,13 +158,13 @@ bool BrazilUpsDriver::Open()
 	_newtio.c_cc[VTIME] = TIMER_READ * 10;
 
 #if defined(HAVE_OSF1_OS) || \
-    defined(HAVE_LINUX_OS) || defined(HAVE_DARWIN_OS)
-   (void)cfsetospeed(&_newtio, B9600);
-   (void)cfsetispeed(&_newtio, B9600);
+		defined(HAVE_LINUX_OS) || defined(HAVE_DARWIN_OS)
+	(void)cfsetospeed(&_newtio, B9600);
+	(void)cfsetispeed(&_newtio, B9600);
 #endif  /* do it the POSIX way */
 
 	Dmsg(50, "Primeiro tcflush\n");
-    tcflush(_ups->fd, TCIFLUSH);
+	tcflush(_ups->fd, TCIFLUSH);
 
 	Dmsg(50, "Setando a newtio na porta\n");
 	tcsetattr(_ups->fd, TCSANOW, &_newtio);
@@ -193,14 +193,17 @@ bool BrazilUpsDriver::setup()
 		return false;
 	}else{
 		if(!(hibernate_ups || shutdown_ups)){
-			if(! this->model->isScheduleSet()){
-				this->programmation(false,0,false,0);
-			}
-			if(! this->model->isLineMode()){
-				this->turnLineOn(true);
-			}
-			if(! this->model->isOutputOn()){
-				this->turnOutputOn(true);
+			if(this->_autosetup){
+				this->_autosetup = false;
+				if(! this->model->isScheduleSet()){
+					this->programmation(false,0,false,0);
+				}
+				if(! this->model->isLineMode()){
+					this->turnLineOn(true);
+				}
+				if(! this->model->isOutputOn()){
+					this->turnOutputOn(true);
+				}
 			}
 			this->turnContinueMode();
 		}
@@ -226,11 +229,11 @@ bool BrazilUpsDriver::kill_power()
 		return false;
 	}
 	if(this->model->isLineMode()){
-	    printf("\n\nLine is present! Turn off in 1 or 2 minutes and turn on in 2 or 3 minutes!!!\n\n");
+		printf("\n\nLine is present! Turn off in 1 or 2 minutes and turn on in 2 or 3 minutes!!!\n\n");
 		Dmsg(50, "Setting kill_power with timeout!!! The UPS will turn off in 1 minute and turn on in 2 minutes!\n");
 		this->programmation(true, 1, true, 2);
 	}else{
-	    printf("\n\nSetting auto shutdown and auto turn on!!! The UPS only do this if there is NO load!!\n\n");
+		printf("\n\nSetting auto shutdown and auto turn on!!! The UPS only do this if there is NO load!!\n\n");
 		Dmsg(50, "Setting kill_power with shutdownAuto!!!\n");
 		this->shutdownAuto();
 	}

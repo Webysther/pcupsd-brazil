@@ -69,6 +69,8 @@ private:
 	time_t _received;
 	unsigned char _buffer[BrazilModelAbstract::BUFFERLEN];  // Buffer
 
+	bool _autosetup;
+
 };
 
 
