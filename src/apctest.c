@@ -3204,7 +3204,7 @@ static void brazil_testBatteryHealth(){
 				br->getBatteryTimeLeft(),
 				br->getBatteryLoad());
 
-		pmsg(" %04d; Carga: %02.1f%%; Tensão: %2.2fV; Autonomia: %2.1f min; Out Power: %4.1fW\n",duration_s,br->getBatteryLevel(),br->getBatteryVoltage(),br->getBatteryTimeLeft(),br->getOutputActivePower());
+		pmsg("  %04d; Carga: %02.1f%%; Tensão: %2.2fV; Out Power: %4.1fW; Autonomia: %2.1f min\n",duration_s,br->getBatteryLevel(),br->getBatteryVoltage(),br->getOutputActivePower(),br->getBatteryTimeLeft());
 	}while((! br->isLineMode()) && (br->getBatteryLevel() > batlevel_limit) && (! br->isBatteryCritical()));
 	fflush(CsvFile);
 	fclose(CsvFile);

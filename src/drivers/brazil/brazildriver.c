@@ -261,7 +261,7 @@ bool BrazilUpsDriver::programmation(bool turnoff, unsigned int turnoff_minutes, 
 
 	if(size > 0){
 		int whait = 1;
-		while(whait > 0 && whait <= 5){
+		while(whait > 0 && whait <= 10){
 			this->send(cmd,size);
 			this->ReadData(false);
 			if(((turnoff || turnon) && this->model->isScheduleSet()) || (!(turnoff || turnon) && !this->model->isScheduleSet())){
@@ -271,7 +271,7 @@ bool BrazilUpsDriver::programmation(bool turnoff, unsigned int turnoff_minutes, 
 				sleep(1);
 			}
 		}
-		if(whait<5){
+		if(whait<10){
 			if(turnoff || turnon){
 				log_event(_ups, LOG_NOTICE, "BrazilDriver: programmation set! turnoff: %s, turnoff_min: %02d, turnon: %s, turnon_min: %02d!",(turnoff?"true":"false"),turnoff_minutes,(turnon?"true":"false"),turnon_minutes);
 			}else{
@@ -292,14 +292,15 @@ bool BrazilUpsDriver::turnLineOn(bool turnon)
 		log_event(_ups, LOG_ERR, "TurnLineOn fail! There is no model instantiated.");
 		return false;
 	}
+	int returnreaddata = 0;
 	unsigned char *cmd = 0;
 	int size = this->model->generateCmdTurnLineOn(&cmd, turnon);
 	if(size > 0){
 		int whait = 1;
-		while(whait > 0 && whait <= 5){
+		while(whait > 0 && whait <= 10){
 			this->send(cmd,size);
-			this->ReadData(false);
-			if((turnon && this->model->isLineMode()) || (!turnon && !this->model->isLineMode())){
+			returnreaddata = this->ReadData(false);
+			if((returnreaddata == SUCCESS) && ((turnon && this->model->isLineMode()) || (!turnon && !this->model->isLineMode()))){
 				whait = 0;
 			}else{
 				Dmsg(50, "LineOn programmation! set: %s; read_LineOn: %s.\n",(turnon?"true":"false"),(this->model->isLineMode()?"true":"false"));
@@ -307,7 +308,7 @@ bool BrazilUpsDriver::turnLineOn(bool turnon)
 				sleep(1);
 			}
 		}
-		if(whait<5){
+		if(whait<10){
 			if(turnon){
 				log_event(_ups, LOG_NOTICE, "turn Line On!");
 			}else{
@@ -327,14 +328,15 @@ bool BrazilUpsDriver::turnOutputOn(bool turnon)
 		log_event(_ups, LOG_ERR, "TurnOutputOn fail! There is no model instantiated.");
 		return false;
 	}
+	int returnreaddata = 0;
 	unsigned char *cmd = 0;
 	int size = this->model->generateCmdTurnOutputOn(&cmd, turnon);
 	if(size > 0){
 		int whait = 1;
 		while(whait > 0 && whait <= 10){
 			this->send(cmd,size);
-			this->ReadData(false);
-			if((turnon && this->model->isOutputOn()) || (!turnon && !this->model->isOutputOn())){
+			returnreaddata = this->ReadData(false);
+			if((returnreaddata == SUCCESS) && ((turnon && this->model->isOutputOn()) || (!turnon && !this->model->isOutputOn()))){
 				whait = 0;
 			}else{
 				Dmsg(50, "LineOutput programmation! set: %s; read_OutputOn: %s.\n",(turnon?"true":"false"),(this->model->isOutputOn()?"true":"false"));
@@ -426,6 +428,7 @@ int BrazilUpsDriver::ReadData(bool getevents)
 	 * msg[24] end of msg. byte = 254
 	 */
 
+	bool bufok = false;
 	unsigned int bufpos = 0;		// position on buffer to discart a wrong byte
 	unsigned int buflen = 0;		// length of buffer
 
@@ -493,7 +496,7 @@ int BrazilUpsDriver::ReadData(bool getevents)
 			/*
 			 * Test if connection was losted.
 			 */
-			if(now - this->_received > 20){
+			if(now - this->_received > 5){
 				Dmsg(50, "Connection lost.\n");
 				bool commok = false;
 				if(access(_ups->device, F_OK | W_OK) != -1 ) {
@@ -524,6 +527,7 @@ int BrazilUpsDriver::ReadData(bool getevents)
 			// ret == 0: get next byte
 			// ret == 1: test ok!
 			if(ret == 1){
+				bufok = true;
 				if(this->model == 0){
 					this->model = BrazilModelAbstract::newInstance(this->_buffer[bufpos],_ups->expander_ampere);
 					if(this->model == 0){
@@ -549,6 +553,7 @@ int BrazilUpsDriver::ReadData(bool getevents)
 			// ret == 0: get next byte
 			// ret == 1: test ok!
 			if(ret == 1){
+				bufok = true;
 				if(this->model->setEvents(this->_buffer+bufpos, buflen-bufpos)){
 					ending = true;
 				}
@@ -571,7 +576,11 @@ int BrazilUpsDriver::ReadData(bool getevents)
 	if(this->model == 0){
 		return FAILURE;
 	}else{
-		return SUCCESS;
+		if(bufok){
+			return SUCCESS;
+		}else{
+			return FAILURE;
+		}
 	}
 }
 
