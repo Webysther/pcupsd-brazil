@@ -3117,7 +3117,7 @@ static void brazil_testBatteryHealth(){
 		}
 	}
 	pmsg("\n"
-			"Atenção!!! Você não deve variar a carga no nobreak durante o teste. Você quer"
+			"Atenção!!! Você não deve variar a carga no nobreak durante o teste. Você quer\n"
 			"continuar?\n\n"
 			"Y) Yes\n"
 			"N) No\n\n");
