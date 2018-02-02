@@ -3153,6 +3153,12 @@ static void brazil_testBatteryHealth(){
 	pmsg("3) Enviando comando para desligar a entrada.\n");
 	pmsg("4) Aguarde %d segundos para atualizar a tensão da bateria.",start_delay_onbat);
 	((BrazilUpsDriver*)(ups)->driver)->turnLineOn(false);
+
+	if(br->isLineMode()){
+		pmsg("\n5) ERRO! O nobreak não desligou a entrada de energia\n\n");
+		return;
+	}
+
 	for(int i=0 ; i<start_delay_onbat ; i++){ // necessário para estabilizar a tensão da bateria de início.
 		sleep(1);
 		((BrazilUpsDriver*)(ups)->driver)->refresh();

@@ -295,22 +295,18 @@ bool BrazilUpsDriver::turnLineOn(bool turnon)
 		log_event(_ups, LOG_ERR, "TurnLineOn fail! There is no model instantiated.");
 		return false;
 	}
-	int returnreaddata = 0;
 	unsigned char *cmd = 0;
 	int size = this->model->generateCmdTurnLineOn(&cmd, turnon);
 	if(size > 0){
 		int whait = 1;
 		while(whait > 0 && whait <= 10){
-			returnreaddata = this->ReadData(false);
-			if(returnreaddata == SUCCESS){
-				this->send(cmd,size);
-			}
+			this->send(cmd,size);
+			this->refresh();
 			if((turnon && this->model->isLineMode()) || (!turnon && !this->model->isLineMode())){
 				whait = 0;
 			}else{
 				Dmsg(50, "LineOn programmation! set: %s; read_LineOn: %s.\n",(turnon?"true":"false"),(this->model->isLineMode()?"true":"false"));
 				whait++;
-				this->refresh();
 			}
 		}
 		if(whait<10){
@@ -333,22 +329,18 @@ bool BrazilUpsDriver::turnOutputOn(bool turnon)
 		log_event(_ups, LOG_ERR, "TurnOutputOn fail! There is no model instantiated.");
 		return false;
 	}
-	int returnreaddata = 0;
 	unsigned char *cmd = 0;
 	int size = this->model->generateCmdTurnOutputOn(&cmd, turnon);
 	if(size > 0){
 		int whait = 1;
 		while(whait > 0 && whait <= 10){
-			returnreaddata = this->ReadData(false);
-			if(returnreaddata == SUCCESS){
-				this->send(cmd,size);
-			}
+			this->send(cmd,size);
+			this->refresh();
 			if((turnon && this->model->isOutputOn()) || (!turnon && !this->model->isOutputOn())){
 				whait = 0;
 			}else{
 				Dmsg(50, "LineOutput programmation! set: %s; read_OutputOn: %s.\n",(turnon?"true":"false"),(this->model->isOutputOn()?"true":"false"));
 				whait++;
-				this->refresh();
 			}
 		}
 		if(whait<10){
