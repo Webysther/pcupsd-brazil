@@ -518,10 +518,10 @@ int BrazilUpsDriver::ReadData(bool getevents)
 						this->Close();
 					}
 					if(this->Open()){
-						if(this->setup()){
-							this->read_static_data();
+//						if(this->setup()){
+//							this->read_static_data();
 							commok = true;
-						}
+//						}
 					}
 				}
 				if(commok){
