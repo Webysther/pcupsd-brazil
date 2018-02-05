@@ -468,6 +468,7 @@ void do_action(UPSINFO *ups)
       ups->SelfTest = 0;
       Dmsg(80, "UPS Self Test cancelled, fall-thru to On Battery. 0x%x\n",
          ups->Status);
+      break;
 
       /* ...FALL-THRU to st_OnBattery... */
 
