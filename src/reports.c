@@ -156,15 +156,12 @@ static void log_data(UPSINFO *ups)
    case SNMPLITE_UPS:
       toggle = !toggle;            /* flip bit */
       log_event(ups, LOG_INFO,
-         "%05.1f,%05.1f,%05.1f,%05.2f,%05.2f,%04.1f,%04.1f,%05.1f,%05.1f,%05.1f,%05.1f,%d",
-         ups->LineMin,
-         ups->LineMax,
+         "Line Voltage: %05.1fV; Output Voltage: %05.1fV; Battery Voltage: %02.2fV; UPS Load %02.1f%%; Timeleft: %02.1f minutes",
+		 ups->LineVoltage,
          ups->OutputVoltage,
          ups->BattVoltage,
-         ups->LineFreq,
          ups->UPSLoad,
-         ups->UPSTemp,
-         ups->ambtemp, ups->humidity, ups->LineVoltage, ups->BattChg, toggle);
+		 ups->TimeLeft);
       break;
    default:
       break;

@@ -1,5 +1,12 @@
              Release Notes for ApcCtrl 0.8.x
 
+0.8.14 - 05 de fevereiro de 2018
+
+	* Correção do bug na detecção de conexão perdida. O problema ocorria quando o serviço
+	  já estava rodando e conectado ao nobreak corretamente quando então o cabo era
+	  removido e a conexão era perdida.
+
+
 0.8.13 - 02 de fevereiro de 2018
 
 	* Correção de bug de perda de comunicação

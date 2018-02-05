@@ -58,13 +58,13 @@ bool BrazilUpsDriver::refresh()
 	return ReadData(false) == SUCCESS ? true : false;
 }
 
-char *printBuffer(unsigned char* buffer, int len, int first){
-	static char out[800];
-	for(int i=0 ; i<len-first && i<99 ; i++){
-		sprintf (out+8*i," %02d: %03u;",i,*buffer+i+first);
-	}
-	return out;
-}
+//char *printBuffer(unsigned char* buffer, int len, int first){
+//	static char out[800];
+//	for(int i=0 ; i<len-first && i<99 ; i++){
+//		sprintf (out+8*i," %02d: %03u;",i,*buffer+i+first);
+//	}
+//	return out;
+//}
 
 
 /*
@@ -500,7 +500,10 @@ int BrazilUpsDriver::ReadData(bool getevents)
 		} while (retval == -1 && (errno == EAGAIN || errno == EINTR));
 		if (retval <= 0) {
 
-			Dmsg(199, "ReadData: reatval = %d\n",retval);
+			Dmsg(199, "ReadData: reatval <= 0 == %d\n",retval);
+
+			Dmsg(199, "ReadData: usleep 100 ms\n",retval);
+			usleep(100000);
 
 			/*
 			 * Test if connection was losted.
@@ -522,8 +525,8 @@ int BrazilUpsDriver::ReadData(bool getevents)
 						//	}
 					}
 				}
-				return FAILURE;
 			}
+			return FAILURE;
 		}
 
 		this->bufferAdd(c);
