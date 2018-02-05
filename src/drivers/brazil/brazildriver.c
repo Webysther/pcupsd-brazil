@@ -502,8 +502,8 @@ int BrazilUpsDriver::ReadData(bool getevents)
 
 			Dmsg(199, "ReadData: reatval <= 0 == %d\n",retval);
 
-			Dmsg(199, "ReadData: usleep 100 ms\n",retval);
-			usleep(100000);
+			Dmsg(199, "ReadData: usleep 10 ms\n",retval);
+			usleep(10000);
 
 			/*
 			 * Test if connection was losted.
