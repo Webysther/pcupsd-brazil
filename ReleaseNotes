@@ -1,5 +1,11 @@
              Release Notes for ApcCtrl 0.8.x
 
+0.8.15 - 08 de fevereiro de 2018
+
+    * Implementação da leitura da potência aparente do nobreak e da corrente de saída.
+      Sugestão de Levi Pereira (https://sourceforge.net/u/leviweb/profile/)
+         
+
 0.8.14 - 05 de fevereiro de 2018
 
 	* Correção do bug na detecção de conexão perdida. O problema ocorria quando o serviço

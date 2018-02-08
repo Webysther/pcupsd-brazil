@@ -125,13 +125,15 @@ public:
 		return this->getOutputCurrent() * this->getOutputVoltage();
 	}
 
-	double getLoadPercent(){
-		double load = (this->getOutputPower() / this->getOutputPowerNom())*100;
-		return load;
+	double getLoadPowerPercent(){
+		double out = (this->getOutputPower() / this->getOutputPowerNom())*100;
+		return (out > 100 ? 100 : out);
 	}
 	double getLoadActivePowerPercent(){
-		return (this->getOutputActivePower() / this->getOutputActivePowerNom())*100;
+		double out = (this->getOutputActivePower() / this->getOutputActivePowerNom())*100;
+		return (out > 100 ? 100 : out);
 	}
+
 	unsigned char getModelNumber(){
 		return this->vmodel;
 	}

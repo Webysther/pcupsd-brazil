@@ -2967,7 +2967,7 @@ static void brazil_print(){
 	pmsg("LINE NOMINAL:           %03d V\n",((BrazilUpsDriver*)(ups)->driver)->model->getLineVoltageNom());
 	pmsg("LINE FREQUENCY:         %03.1f Hz\n",((BrazilUpsDriver*)(ups)->driver)->model->getLineFrequency());
 	pmsg("LOAD ACT POWER:         %02.1f \%\n",((BrazilUpsDriver*)(ups)->driver)->model->getLoadActivePowerPercent());
-	pmsg("LOAD TOTAL POWER:       %02.1f \%\n",((BrazilUpsDriver*)(ups)->driver)->model->getLoadPercent());
+	pmsg("LOAD TOTAL POWER:       %02.1f \%\n",((BrazilUpsDriver*)(ups)->driver)->model->getLoadPowerPercent());
 	pmsg("OUT VOLTAGE:            %03.1f V\n",((BrazilUpsDriver*)(ups)->driver)->model->getOutputVoltage());
 	pmsg("OUT VOLTAGE NOM:        %03d V\n",((BrazilUpsDriver*)(ups)->driver)->model->getOutputVoltageNom());
 	pmsg("OUT CURRENT:            %02.1f A\n",((BrazilUpsDriver*)(ups)->driver)->model->getOutputCurrent());

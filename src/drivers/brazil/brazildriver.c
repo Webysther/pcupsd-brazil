@@ -625,6 +625,13 @@ bool BrazilUpsDriver::get_capabilities()
 	_ups->UPS_Cap[CI_Overload] = TRUE;
 	_ups->UPS_Cap[CI_LowBattery] = TRUE;
 
+	/*
+	 * Sugestão de Levi Pereira (https://sourceforge.net/u/leviweb/profile/)
+	 */
+	_ups->UPS_Cap[CI_LoadApparent] = TRUE;
+    _ups->UPS_Cap[CI_OutputCurrent] = TRUE;
+    _ups->UPS_Cap[CI_NomApparent] = TRUE;
+
 	write_unlock(_ups);
 	return true;
 }
@@ -658,6 +665,7 @@ bool BrazilUpsDriver::read_static_data()
 	_ups->NomOutputVoltage = this->model->getOutputVoltageNom();
 
 	_ups->NomPower = this->model->getOutputActivePowerNom();
+	_ups->NomApparentPower = this->model->getOutputPowerNom();
 
 	/* there is no information about this. Battery need to be always present, I think.  */
 	_ups->set_battpresent();
@@ -709,14 +717,8 @@ bool BrazilUpsDriver::read_volatile_data()
 
 	_ups->TimeLeft = this->model->getBatteryTimeLeft();
 
-	/* LINE_VOLTAGE */
-	_ups->LineVoltage = this->model->getLineVoltage();
-
 	/* BATT_VOLTAGE */
 	_ups->BattVoltage = this->model->getBatteryVoltage();
-
-	/* OUTPUT_VOLTAGE */
-	_ups->OutputVoltage = this->model->getOutputVoltage();
 
 	/* BATT_FULL Battery level percentage */
 	double batlevel;
@@ -739,8 +741,17 @@ bool BrazilUpsDriver::read_volatile_data()
 	}
 	_ups->BattChg = batlevel;
 
-	/* UPS_LOAD */
+	/* LINE_VOLTAGE */
+	_ups->LineVoltage = this->model->getLineVoltage();
+
+	/* OUTPUT_VOLTAGE */
+	_ups->OutputVoltage = this->model->getOutputVoltage();
+
+	/* OUTPUT_CURRENT */
 	_ups->OutputCurrent = this->model->getOutputCurrent();
+
+	/* OUTPUT_LOAD */
+	_ups->LoadApparent = this->model->getLoadPowerPercent();
 
 	/* UPS_LOAD */
 	_ups->UPSLoad = this->model->getLoadActivePowerPercent();

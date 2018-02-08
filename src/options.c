@@ -84,6 +84,7 @@ static void print_usage(char *argv[])
          "\n"
          "  [*] Only one parameter of this kind and apcctrl must not already be running.\n"
          "\n"
+		 "Copyright (C) 2016-2018 Wagner Popov dos Santos\n"
          "Copyright (C) 2004-2009 Adam Kropelin\n"
          "Copyright (C) 1999-2005 Kern Sibbald\n"
          "Copyright (C) 1996-1999 Andre Hedrick\n"
@@ -92,7 +93,7 @@ static void print_usage(char *argv[])
          "under the terms of the GNU General Public License\n"
          "\n"
          "Report bugs to apcctrl Support Center:\n"
-         "  apcctrl-users@lists.sourceforge.net\n");
+         "  https://sourceforge.net/p/apcupsd-brazil/\n");
 }
 
 int parse_options(int argc, char *argv[])
