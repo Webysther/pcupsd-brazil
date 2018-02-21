@@ -1449,8 +1449,8 @@ Optional Features:
   --enable-dumb           Compile dumb UPS driver (default)
   --disable-dumb          No dumb UPS driver
 
-  --enable-usb            Compile USB UPS code
-  --disable-usb           No USB UPS code (default)
+  --enable-usb            Compile USB UPS code (default)
+  --disable-usb           No USB UPS code
 
   --enable-net            Compile networking driver for slaves (default)
   --disable-net           No network driver for slaves
@@ -1461,9 +1461,8 @@ Optional Features:
   --enable-test           Compile TEST driver code
   --disable-test          No TEST driver (default)
 
-  --enable-brazil         Compile APC-Microsol Brazil driver code (UPS made by
-                          microsol-apc Brazil)
-  --disable-brazil        No APC-Microsol Brazil driver
+  --enable-brazil         Compile APC Brazil driver code
+  --disable-brazil        No APC Brazil driver
 
   --enable-pcnet          Compile PCNET driver code (default)
   --disable-pcnet         No PCNET driver
@@ -7767,10 +7766,21 @@ if test "${with_generic_usb+set}" = set; then :
 fi
 
 
+BOOL_ENABLE_USB="no"
 # Check whether --enable-usb was given.
 if test "${enable_usb+set}" = set; then :
   enableval=$enable_usb;  if test "$enableval" = "yes" ; then
-                  if test $GENERICUSB = "yes" ; then
+		BOOL_ENABLE_USB="yes"
+     fi
+else
+   BOOL_ENABLE_USB="yes"
+fi
+
+
+if test $BOOL_ENABLE_USB = "yes" ; then
+
+
+      if test $GENERICUSB = "yes" ; then
          usbhost=forcegeneric
       else
          usbhost=$host
@@ -7797,9 +7807,7 @@ $as_echo "Using Linux USB driver." >&6; }
 
 
       DISPLAY_USB_DRIVER=$USB_TYPE-$USB_DRIVER
-     fi
 fi
-
 
 # Check whether --enable-net was given.
 if test "${enable_net+set}" = set; then :

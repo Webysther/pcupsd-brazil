@@ -572,12 +572,20 @@ AC_ARG_WITH(generic-usb,
 [AC_HELP_STRING([--with-generic-usb], [Force use of generic USB driver]) ],
    [GENERICUSB="yes" ])
 
+BOOL_ENABLE_USB="no"
 AC_ARG_ENABLE(usb, [
-AC_HELP_STRING([--enable-usb], [Compile USB UPS code])
-AC_HELP_STRING([--disable-usb], [No USB UPS code (default)])],
+AC_HELP_STRING([--enable-usb], [Compile USB UPS code (default)])
+AC_HELP_STRING([--disable-usb], [No USB UPS code])],
    [ if test "$enableval" = "yes" ; then
+		BOOL_ENABLE_USB="yes"
+     fi ],
+    [ BOOL_ENABLE_USB="yes" ])
+
+if test $BOOL_ENABLE_USB = "yes" ; then
+
       dnl USB driver is usually determined by host system.
       dnl But if user forces generic_usb then fake it out.
+      
       if test $GENERICUSB = "yes" ; then
          usbhost=forcegeneric
       else
@@ -602,8 +610,7 @@ AC_HELP_STRING([--disable-usb], [No USB UPS code (default)])],
 
       AC_SUBST(USB_TYPE)
       DISPLAY_USB_DRIVER=$USB_TYPE-$USB_DRIVER
-     fi ],
-    [])
+fi
 
 AC_ARG_ENABLE(net, [
 AC_HELP_STRING([--enable-net], [Compile networking driver for slaves (default)])
@@ -649,8 +656,8 @@ AC_HELP_STRING([--disable-test], [No TEST driver (default)])],
 
 dnl Enable Brazil driver
 AC_ARG_ENABLE(brazil, [
-AC_HELP_STRING([--enable-brazil], [Compile APC-Microsol Brazil driver code (UPS made by microsol-apc Brazil)])
-AC_HELP_STRING([--disable-brazil], [No APC-Microsol Brazil driver])],
+AC_HELP_STRING([--enable-brazil], [Compile APC Brazil driver code])
+AC_HELP_STRING([--disable-brazil], [No APC Brazil driver])],
    [ if test "$enableval" = "yes" ; then
         AC_DEFINE(HAVE_BRAZIL_DRIVER,, [Define if building APC-Microsol Brazil driver])
         BRAZIL_DRIVER="brazil"
